@@ -31,6 +31,14 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+Remember, in the context of this project we are using Flutter for Web only!
+
+## Riverpod
+
+For all state management (data binding and interactivity) we will be using https://riverpod.dev/
+
+If you are new to it, please have a read through the website and the tutorial here: [Flutter State Management with Riverpod: The Essential Guide](https://codewithandrea.com/articles/flutter-state-management-riverpod/)
+
 ## Firebase Firestore
 
 The support for Firestore was added using this guide:
