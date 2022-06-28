@@ -65,8 +65,8 @@ class _DevFrameLauncherState extends State<DevFrameLauncher> {
         }
       },
       child: LayoutBuilder(builder: (context, constraints) {
-        WidgetsBinding.instance.addPostFrameCallback(
-            (_) => _isFirstInsert ? _insertOverlay(context) : {});
+        // WidgetsBinding.instance.addPostFrameCallback(
+        //     (_) => _isFirstInsert ? _insertOverlay(context) : {});
         return widget.child;
       }));
 

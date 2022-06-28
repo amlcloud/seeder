@@ -7,7 +7,7 @@ Those who define AML rules need test data samples to test rules on.
 The purpose of this app is to configure individual entities (for instance a bank customer or a superfund member) with paramters of their income and spending. Based on those parameters transactions should be generated.
 
 Intended features:
-- Show list of entities
+- Show list of en
 - Configure individual entity parameters: income, min balance, recurring and random spending
 - Define transaction range parameters: period
 - Define additional specific transactions (for rule testing)

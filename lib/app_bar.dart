@@ -27,7 +27,6 @@ class MyAppBar {
               .toList(),
           onTap: (index) {
             Navigator.of(context).pushNamed(_tabs[index]);
-            // navigatePage(_tabs, context);
           },
         ));
   }
