@@ -9,10 +9,9 @@ class EntityListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
         child: ListTile(
-      leading: Icon(Icons.home),
-      title: Text('Entity ${entityId}'),
-      trailing: ElevatedButton(onPressed: () {}, child: Text('Edit')),
-      subtitle: Text('customer with a lot of debt'),
+      title: Text('John Smith'),
+      trailing: Text('12345678'),
+      subtitle: Text('description...'),
     ));
   }
 }
