@@ -5,7 +5,16 @@ import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/widgets/entity_details.dart';
 
 class EntitiesPage extends ConsumerWidget {
-  const EntitiesPage();
+  EntitiesPage();
+
+  String AssignData ='';
+  void OnClick(Data) {
+    AssignData = Data;
+  }
+
+  void PrintOut() {
+    print("$AssignData sample print");
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,12 +39,16 @@ class EntitiesPage extends ConsumerWidget {
                                         leading: Icon(Icons.home),
                                         title: Text('Entity ${entity.id}'),
                                         trailing: ElevatedButton(
-                                            onPressed: () {},
+                                            onPressed: () => OnClick(entity.id),
                                             child: Text('Edit')),
                                         subtitle:
                                             Text('customer with a lot of debt'),
                                       )))
                                   .toList()))),
+                                  ElevatedButton(
+                                    child: const Text('sampleout'),
+                                    onPressed: () => PrintOut(),
+                                  ),
                   Expanded(
                     child: EntityDetails('1'),
                   )
