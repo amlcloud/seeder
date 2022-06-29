@@ -2,7 +2,7 @@
 
 Transaction generator for AML Cloud users.
 
-Those who define AML rules need test data samples to test rules on.
+Those users (Compliance Specialists) who define AML rules need test data samples to test rules on.
 
 The purpose of this app is to configure individual entities (for instance a bank customer or a superfund member) with paramters of their income and spending. Based on those parameters transactions should be generated.
 
@@ -15,7 +15,7 @@ Intended features:
 - Combine entities' transaction into sets
 - Export transactions into CSV (to be imported into amlcloud.io)
 
-This repo is only the front-end of the app and it is built with Flutter backed by Firebase Firestore.
+This repo is only the front-end of the app and it is built with Flutter backed by Firebase Firestore. (Another repository will be created to define server functions, which will serve as a back-end of the application).
 
 Another goal of the project is educational, therefore there is an embeded sandbox for Widget testing added to it for better efficiency (experimental).
 
