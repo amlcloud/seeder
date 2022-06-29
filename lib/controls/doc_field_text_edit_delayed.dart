@@ -4,6 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/providers/firestore.dart';
 
+class DocFieldTextEditDelayed extends ConsumerStatefulWidget {
+  final DocumentReference docRef;
+  final String field;
+  final TextEditingController ctrl = TextEditingController();
+
+  DocFieldTextEditDelayed(this.docRef, this.field);
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      DocFieldTextEditDelayedState();
+}
+
 class DocFieldTextEditDelayedState
     extends ConsumerState<DocFieldTextEditDelayed> {
   Timer? descSaveTimer;
@@ -40,10 +52,10 @@ class DocFieldTextEditDelayedState
                     if (descSaveTimer != null && descSaveTimer!.isActive) {
                       descSaveTimer!.cancel();
                     }
-                    descSaveTimer = Timer(Duration(seconds: 1), () {
+                    descSaveTimer = Timer(Duration(microseconds: 1000), () {
                       if (docSnapshot.data() == null ||
                           v != docSnapshot.data()![widget.field]) {
-                        Map<String, dynamic> map = Map<String, dynamic>();
+                        Map<String, dynamic> map = {};
                         map[widget.field] = v;
                         // the document will get created, if not exists
                         widget.docRef.set(map, SetOptions(merge: true));
@@ -54,16 +66,4 @@ class DocFieldTextEditDelayedState
                   },
                 ));
   }
-}
-
-class DocFieldTextEditDelayed extends ConsumerStatefulWidget {
-  final DocumentReference docRef;
-  final String field;
-  final TextEditingController ctrl = TextEditingController();
-
-  DocFieldTextEditDelayed(this.docRef, this.field);
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      DocFieldTextEditDelayedState();
 }
