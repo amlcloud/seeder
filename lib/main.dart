@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/people_page.dart';
+import 'package:seeder/entities_page.dart';
 import 'package:seeder/sets_page.dart';
 import 'package:seeder/theme.dart';
 import 'firebase_options.dart';

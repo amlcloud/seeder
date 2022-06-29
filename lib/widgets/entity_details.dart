@@ -9,7 +9,12 @@ class EntityDetails extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
         child: Column(
-      children: [Text('Entity details')],
+      children: [
+        TextField(decoration: InputDecoration(hintText: 'Name')),
+        TextField(decoration: InputDecoration(hintText: 'ID')),
+        TextField(decoration: InputDecoration(hintText: 'Description')),
+        Divider()
+      ],
     ));
   }
 }
