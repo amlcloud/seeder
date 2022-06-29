@@ -2,11 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/entities_page.dart';
+import 'package:seeder/sandbox/sandbox.dart';
+import 'package:seeder/sandbox/sandbox_launcher.dart';
 import 'package:seeder/sets_page.dart';
 import 'package:seeder/theme.dart';
 import 'firebase_options.dart';
-
-import 'dev_frame.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,8 +29,9 @@ class TheApp extends StatelessWidget {
         darkTheme: darkTheme,
         home: WillPopScope(
           onWillPop: () async => false,
-          child: DevFrameLauncher(
-              child: DefaultTabController(
+          child: SandboxLauncher(
+              sandbox: Material(child: Sandbox()),
+              app: DefaultTabController(
                   initialIndex: 0,
                   length: 2,
                   child: Navigator(

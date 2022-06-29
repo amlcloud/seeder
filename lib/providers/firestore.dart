@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quiver/core.dart';
 
 /// Query parameter for [WhereFilter] used in [filteredColSP]
 ///
@@ -83,7 +85,7 @@ class QueryParams extends Equatable {
 }
 
 /// Riverpod Stream Provider that listens to a collection with specific query criteria
-/// (see [QueryParams]) and [distinct] function that is used by [Stream.distinct] to
+/// (see [QueryParams]) and [equals] function that is used by [Stream.distinct] to
 /// filter out events with unrelated changes.
 final AutoDisposeStreamProviderFamily<QuerySnapshot<Map<String, dynamic>>,
         QueryParams> filteredColSP =
@@ -114,6 +116,41 @@ final AutoDisposeStreamProviderFamily<DocumentSnapshot<Map<String, dynamic>>,
     StreamProvider.autoDispose
         .family<DocumentSnapshot<Map<String, dynamic>>, String>((ref, path) {
   return FirebaseFirestore.instance.doc(path).snapshots();
+});
+
+/// DocParam is used only to pass parameters (path and equals function)
+/// to distinct stream providers (docSPdistinct and colSPdistinct)
+@immutable
+class DocParam {
+  final String path;
+  final bool Function(DocumentSnapshot<Map<String, dynamic>>,
+      DocumentSnapshot<Map<String, dynamic>>)? equals;
+
+  const DocParam(this.path, this.equals);
+
+  @override
+  int get hashCode {
+    //print('path: ${path}, hash: ${hashObjects([path])}');
+    return hashObjects([path]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    // print(' ${path}==${(other as DocParam).path}');
+    return path == (other as DocParam).path; // && equals == other.equals;
+  }
+}
+
+/// Riverpod Provider listening to a Firestore document by the path specified
+/// with distinct function if you need to filter our unnecessarry changes.
+final AutoDisposeStreamProviderFamily<DocumentSnapshot<Map<String, dynamic>>,
+        DocParam> docSPdistinct =
+    StreamProvider.autoDispose
+        .family<DocumentSnapshot<Map<String, dynamic>>, DocParam>((ref, param) {
+  return FirebaseFirestore.instance
+      .doc(param.path)
+      .snapshots()
+      .distinct(param.equals);
 });
 
 /// Riverpod Provider that fetches a document once, as a promise.
