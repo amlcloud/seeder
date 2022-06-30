@@ -24,7 +24,6 @@ class _SandboxLauncherState extends State<SandboxLauncher> {
       onKey: (event) {
         // print(
         //     'Ctrl Right: ${RawKeyboard.instance.keysPressed.contains(LogicalKeyboardKey.metaRight)}, Ctrl Left: ${RawKeyboard.instance.keysPressed.contains(LogicalKeyboardKey.metaLeft)}');
-
         if (RawKeyboard.instance.keysPressed
                 .contains(LogicalKeyboardKey.metaRight) &&
             RawKeyboard.instance.keysPressed

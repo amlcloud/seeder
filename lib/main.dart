@@ -20,11 +20,12 @@ void main() async {
     title: 'Data Generator',
     themeMode: ThemeMode.dark,
     darkTheme: darkTheme,
-    home: SandboxLauncher(
-        // sandbox for texting individual widgets
-        sandbox: Material(child: Sandbox()),
+    // home: SandboxLauncher(
+    //     // sandbox for texting individual widgets
+    //     sandbox: Material(child: Sandbox()),
         // the main app
-        app: TheApp()),
+        // app: TheApp()),
+    home: TheApp(),
   )));
 }
 
