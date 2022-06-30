@@ -23,7 +23,7 @@ class EntitiesPage extends ConsumerWidget {
                 children: [
                   Flexible(
                       child: Column(
-                    children: [EntitiesList(), buildAddEntityButton(ref)],
+                    children: [EntitiesList(), buildAddEntityButton(ref), buildDeleteEntityButton(ref)],
                   )),
                   Expanded(
                     child: EntityDetails('1'),
@@ -37,4 +37,17 @@ class EntitiesPage extends ConsumerWidget {
     }, 
     child: Text('Add Entity'));
   }
+
+  buildDeleteEntityButton(WidgetRef ref) {
+    return ElevatedButton(onPressed: () {
+    
+    FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
+      myTransaction.delete(FirebaseFirestore.instance.collection('entity').doc());
+    });
+
+      
+    }, 
+    child: Text('Add Entity'));
+  }
+
 }
