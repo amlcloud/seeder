@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/providers/firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class EntityListItem extends ConsumerWidget {
   final String entityId;
@@ -20,10 +22,23 @@ class EntityListItem extends ConsumerWidget {
                   title: Text(entityDoc.data()!['name'] ?? 'name',),
                   trailing: Text(entityDoc.data()!['id'] ?? 'id'),
                   subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
-                )
+                ),
+                buildDeleteEntityButton(ref, entityId)
               ],
             )));
 
 
+  }
+
+  buildDeleteEntityButton(WidgetRef ref, id) {
+    return ElevatedButton(onPressed: () {
+    
+    FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
+      myTransaction.delete(FirebaseFirestore.instance.collection('entity').doc('/'+id));
+    });
+
+      
+    }, 
+    child: Text('Delete Entity'));
   }
 }
