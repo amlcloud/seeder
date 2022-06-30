@@ -34,7 +34,6 @@ class TheApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     return DefaultTabController(
         initialIndex: 0,
         length: 2,
@@ -50,33 +49,6 @@ class TheApp extends StatelessWidget {
               throw 'no page to show';
             }
           },
-=======
-    return MaterialApp(
-        title: 'Data Generator',
-        themeMode: ThemeMode.dark,
-        darkTheme: darkTheme,
-        home: WillPopScope(
-          onWillPop: () async => false,
-          child: SandboxLauncher(
-              sandbox: Material(child: Sandbox()),
-              app: DefaultTabController(
-                  initialIndex: 0,
-                  length: 2,
-                  child: Navigator(
-                    onGenerateRoute: (RouteSettings settings) {
-                      // print('onGenerateRoute: ${settings}');
-                      if (settings.name == '/' || settings.name == 'entities') {
-                        return PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => EntitiesPage());
-                      } else if (settings.name == 'sets') {
-                        return PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => SetsPage());
-                      } else {
-                        throw 'no page to show';
-                      }
-                    },
-                  ))),
->>>>>>> b00eb24 (new sandbox and text edit control added)
         ));
   }
 }

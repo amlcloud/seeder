@@ -24,19 +24,12 @@ class _SandboxLauncherState extends State<SandboxLauncher> {
       onKey: (event) {
         // print(
         //     'Ctrl Right: ${RawKeyboard.instance.keysPressed.contains(LogicalKeyboardKey.metaRight)}, Ctrl Left: ${RawKeyboard.instance.keysPressed.contains(LogicalKeyboardKey.metaLeft)}');
-<<<<<<< HEAD
-
-=======
->>>>>>> b00eb24 (new sandbox and text edit control added)
         if (RawKeyboard.instance.keysPressed
                 .contains(LogicalKeyboardKey.metaRight) &&
             RawKeyboard.instance.keysPressed
                 .contains(LogicalKeyboardKey.metaLeft)) {
-<<<<<<< HEAD
           // sandbox will be shown/hidden on Left and Right Ctrl pressed at the
           // same time
-=======
->>>>>>> b00eb24 (new sandbox and text edit control added)
           setState(() {
             _isSandbox = !_isSandbox;
           });
