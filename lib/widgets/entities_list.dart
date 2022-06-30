@@ -13,5 +13,7 @@ class EntitiesList extends ConsumerWidget {
           error: (e, s) => [ErrorWidget(e)],
           data: (entities) => entities.docs
               .map((entity) => EntityListItem(entity.id))
-              .toList()));
+              .toList())
+              );
+
 }
