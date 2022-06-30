@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/providers/firestore.dart';
 
+<<<<<<< HEAD
 class DocFieldTextEditDelayed extends ConsumerStatefulWidget {
   final DocumentReference docRef;
   final String field;
@@ -16,6 +17,8 @@ class DocFieldTextEditDelayed extends ConsumerStatefulWidget {
       DocFieldTextEditDelayedState();
 }
 
+=======
+>>>>>>> b00eb24 (new sandbox and text edit control added)
 class DocFieldTextEditDelayedState
     extends ConsumerState<DocFieldTextEditDelayed> {
   Timer? descSaveTimer;
@@ -52,10 +55,17 @@ class DocFieldTextEditDelayedState
                     if (descSaveTimer != null && descSaveTimer!.isActive) {
                       descSaveTimer!.cancel();
                     }
+<<<<<<< HEAD
                     descSaveTimer = Timer(Duration(microseconds: 1000), () {
                       if (docSnapshot.data() == null ||
                           v != docSnapshot.data()![widget.field]) {
                         Map<String, dynamic> map = {};
+=======
+                    descSaveTimer = Timer(Duration(seconds: 1), () {
+                      if (docSnapshot.data() == null ||
+                          v != docSnapshot.data()![widget.field]) {
+                        Map<String, dynamic> map = Map<String, dynamic>();
+>>>>>>> b00eb24 (new sandbox and text edit control added)
                         map[widget.field] = v;
                         // the document will get created, if not exists
                         widget.docRef.set(map, SetOptions(merge: true));
@@ -67,3 +77,18 @@ class DocFieldTextEditDelayedState
                 ));
   }
 }
+<<<<<<< HEAD
+=======
+
+class DocFieldTextEditDelayed extends ConsumerStatefulWidget {
+  final DocumentReference docRef;
+  final String field;
+  final TextEditingController ctrl = TextEditingController();
+
+  DocFieldTextEditDelayed(this.docRef, this.field);
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      DocFieldTextEditDelayedState();
+}
+>>>>>>> b00eb24 (new sandbox and text edit control added)
