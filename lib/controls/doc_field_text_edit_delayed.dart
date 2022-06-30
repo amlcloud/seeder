@@ -28,7 +28,7 @@ class DocFieldTextEditDelayedState
 
   @override
   Widget build(BuildContext context) {
-    //print('DocFieldTextEdit rebuild');
+    print('DocFieldTextEdit rebuild');
     return ref
         .watch(docSPdistinct(DocParam(widget.docRef.path, (prev, curr) {
           //print('equals called');
@@ -37,34 +37,38 @@ class DocFieldTextEditDelayedState
             return true;
           }
           if (widget.ctrl.text == curr.data()![widget.field]) {
-            // print(
-            //     'ctrl.text (${ctrl.text}) == snap text (${curr.data()![field]})');
             return true;
           }
+          print(
+              'field changed! ctrl: ${widget.ctrl.text}!=${curr.data()![widget.field]}');
           return false;
         })))
         .when(
             loading: () => Container(),
             error: (e, s) => ErrorWidget(e),
-            data: (docSnapshot) => TextField(
-                  controller: widget.ctrl
-                    ..text = docSnapshot.data()![widget.field],
-                  onChanged: (v) {
-                    if (descSaveTimer != null && descSaveTimer!.isActive) {
-                      descSaveTimer!.cancel();
+            data: (docSnapshot) {
+              print('snapshot ');
+              return TextField(
+                controller: widget.ctrl
+                  ..text = docSnapshot.data()![widget.field],
+                onChanged: (v) {
+                  if (descSaveTimer != null && descSaveTimer!.isActive) {
+                    descSaveTimer!.cancel();
+                  }
+                  descSaveTimer = Timer(Duration(milliseconds: 1000), () {
+                    print('saving...');
+                    if (docSnapshot.data() == null ||
+                        v != docSnapshot.data()![widget.field]) {
+                      Map<String, dynamic> map = {};
+                      map[widget.field] = v;
+                      // the document will get created, if not exists
+                      widget.docRef.set(map, SetOptions(merge: true));
+                      // throws exception if document doesn't exist
+                      //widget.docRef.update({widget.field: v});
                     }
-                    descSaveTimer = Timer(Duration(microseconds: 1000), () {
-                      if (docSnapshot.data() == null ||
-                          v != docSnapshot.data()![widget.field]) {
-                        Map<String, dynamic> map = {};
-                        map[widget.field] = v;
-                        // the document will get created, if not exists
-                        widget.docRef.set(map, SetOptions(merge: true));
-                        // throws exception if document doesn't exist
-                        //widget.docRef.update({widget.field: v});
-                      }
-                    });
-                  },
-                ));
+                  });
+                },
+              );
+            });
   }
 }
