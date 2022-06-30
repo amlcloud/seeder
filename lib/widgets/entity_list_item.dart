@@ -20,6 +20,7 @@ class EntityListItem extends ConsumerWidget {
                   title: Text(entityDoc.data()!['name'] ?? 'name',),
                   trailing: Text(entityDoc.data()!['id'] ?? 'id'),
                   subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
+
                 )
               ],
             )));
