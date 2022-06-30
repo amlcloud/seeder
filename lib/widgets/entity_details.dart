@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/controls/doc_field_text_edit_delayed.dart';
 import 'package:seeder/providers/firestore.dart';
 
 class EntityDetails extends ConsumerWidget {
@@ -13,30 +16,28 @@ class EntityDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(docSP('entity/1')).when(
-        loading: () => Container(),
-        error: (e, s) => ErrorWidget(e),
-        data: (entityDoc) => entityDoc.exists == false
-            ? Center(child: Text('No entity data exists'))
-            : Card(
-                child: Column(
-                children: [
-                  TextField(
-                    decoration: InputDecoration(hintText: 'Name'),
-                    controller: nameCtrl
-                      ..text = entityDoc.data()!['name'] ?? '',
-                  ),
-                  TextField(
-                    decoration: InputDecoration(hintText: 'ID'),
-                    controller: idCtrl..text = entityDoc.data()!['id'] ?? '',
-                  ),
-                  TextField(
-                    decoration: InputDecoration(hintText: 'Description'),
-                    controller: descCtrl
-                      ..text = entityDoc.data()!['desc'] ?? '',
-                  ),
-                  Divider()
-                ],
-              )));
+    print('entity details build');
+    return Column(
+      children: [
+        DocFieldTextEditDelayed(
+            FirebaseFirestore.instance.doc('entity/1'), 'name',
+            key: Key('name')),
+
+        // TextField(
+        //   decoration: InputDecoration(hintText: 'Name'),
+        //   controller: nameCtrl
+        //     ..text = entityDoc.data()!['name'] ?? '',
+        // ),
+        // TextField(
+        //   decoration: InputDecoration(hintText: 'ID'),
+        //   controller: idCtrl..text = entityDoc.data()!['id'] ?? '',
+        // ),
+        // TextField(
+        //   decoration: InputDecoration(hintText: 'Description'),
+        //   controller: descCtrl..text = entityDoc.data()!['desc'] ?? '',
+        // ),
+        Divider()
+      ],
+    );
   }
 }
