@@ -28,7 +28,6 @@ class DocFieldTextEditDelayedState
 
   @override
   Widget build(BuildContext context) {
-    print('DocFieldTextEdit rebuild');
     return ref
         .watch(docSPdistinct(DocParam(widget.docRef.path, (prev, curr) {
           //print('equals called');

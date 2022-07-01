@@ -5,13 +5,40 @@ import 'package:seeder/widgets/entity_list_item.dart';
 
 class EntitiesList extends ConsumerWidget {
   @override
-  Widget build(BuildContext context, WidgetRef ref) => ListView(
-      padding: EdgeInsets.zero,
-      shrinkWrap: true,
-      children: ref.watch(colSP('entity')).when(
-          loading: () => [Container()],
-          error: (e, s) => [ErrorWidget(e)],
-          data: (entities) => entities.docs
-              .map((entity) => EntityListItem(entity.id))
-              .toList()));
+  Widget build(BuildContext context, WidgetRef ref) => Column(
+        children: [
+          Row(
+            children: [
+              Text('sort by:'),
+              DropdownButton<String>(
+                value: null,
+                icon: const Icon(Icons.arrow_downward),
+                elevation: 16,
+                // style: const TextStyle(color: Colors.deepPurple),
+                underline: Container(
+                  height: 2,
+                  // color: Colors.deepPurpleAccent,
+                ),
+                onChanged: (String? newValue) {},
+                items: <String>['time created', 'name', 'id']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              )
+            ],
+          ),
+          ListView(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              children: ref.watch(colSP('entity')).when(
+                  loading: () => [Container()],
+                  error: (e, s) => [ErrorWidget(e)],
+                  data: (entities) => entities.docs //..sort((a,b))
+                      .map((entity) => EntityListItem(entity.id))
+                      .toList()))
+        ],
+      );
 }
