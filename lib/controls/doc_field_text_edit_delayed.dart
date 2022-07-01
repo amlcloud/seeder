@@ -39,23 +39,23 @@ class DocFieldTextEditDelayedState
           if (widget.ctrl.text == curr.data()![widget.field]) {
             return true;
           }
-          print(
-              'field changed! ctrl: ${widget.ctrl.text}!=${curr.data()![widget.field]}');
+          // print(
+          //     'field changed! ctrl: ${widget.ctrl.text}!=${curr.data()![widget.field]}');
           return false;
         })))
         .when(
             loading: () => Container(),
             error: (e, s) => ErrorWidget(e),
             data: (docSnapshot) {
-              print('snapshot ');
               return TextField(
+                decoration: InputDecoration(hintText: 'field name'),
                 controller: widget.ctrl
                   ..text = docSnapshot.data()![widget.field],
                 onChanged: (v) {
                   if (descSaveTimer != null && descSaveTimer!.isActive) {
                     descSaveTimer!.cancel();
                   }
-                  descSaveTimer = Timer(Duration(milliseconds: 1000), () {
+                  descSaveTimer = Timer(Duration(milliseconds: 200), () {
                     print('saving...');
                     if (docSnapshot.data() == null ||
                         v != docSnapshot.data()![widget.field]) {

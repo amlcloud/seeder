@@ -17,27 +17,40 @@ class EntityDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     print('entity details build');
-    return Column(
-      children: [
-        DocFieldTextEditDelayed(
-            FirebaseFirestore.instance.doc('entity/1'), 'name',
-            key: Key('name')),
+    return Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            border: Border.all(
+              color: Colors.grey,
+            )),
+        child: Column(
+          children: [
+            DocFieldTextEditDelayed(
+                FirebaseFirestore.instance.doc('entity/1'), 'id'),
+            DocFieldTextEditDelayed(
+              FirebaseFirestore.instance.doc('entity/1'),
+              'name',
+            ),
+            DocFieldTextEditDelayed(
+              FirebaseFirestore.instance.doc('entity/1'),
+              'desc',
+            ),
 
-        // TextField(
-        //   decoration: InputDecoration(hintText: 'Name'),
-        //   controller: nameCtrl
-        //     ..text = entityDoc.data()!['name'] ?? '',
-        // ),
-        // TextField(
-        //   decoration: InputDecoration(hintText: 'ID'),
-        //   controller: idCtrl..text = entityDoc.data()!['id'] ?? '',
-        // ),
-        // TextField(
-        //   decoration: InputDecoration(hintText: 'Description'),
-        //   controller: descCtrl..text = entityDoc.data()!['desc'] ?? '',
-        // ),
-        Divider()
-      ],
-    );
+            // TextField(
+            //   decoration: InputDecoration(hintText: 'Name'),
+            //   controller: nameCtrl
+            //     ..text = entityDoc.data()!['name'] ?? '',
+            // ),
+            // TextField(
+            //   decoration: InputDecoration(hintText: 'ID'),
+            //   controller: idCtrl..text = entityDoc.data()!['id'] ?? '',
+            // ),
+            // TextField(
+            //   decoration: InputDecoration(hintText: 'Description'),
+            //   controller: descCtrl..text = entityDoc.data()!['desc'] ?? '',
+            // ),
+            Divider()
+          ],
+        ));
   }
 }

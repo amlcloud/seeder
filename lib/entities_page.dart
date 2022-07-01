@@ -4,7 +4,7 @@ import 'package:seeder/app_bar.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/widgets/entities_list.dart';
 import 'package:seeder/widgets/entity_details.dart';
-import 'package:seeder/widgets/entity_list_item.dart';                                // new
+import 'package:seeder/widgets/entity_list_item.dart'; // new
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EntitiesPage extends ConsumerWidget {
@@ -32,9 +32,12 @@ class EntitiesPage extends ConsumerWidget {
   }
 
   buildAddEntityButton(WidgetRef ref) {
-    return ElevatedButton(onPressed: () {
-      FirebaseFirestore.instance.collection('entity').add({'id':'', 'name':'', 'desc':''});
-    }, 
-    child: Text('Add Entity'));
+    return ElevatedButton(
+        onPressed: () {
+          FirebaseFirestore.instance
+              .collection('entity')
+              .add({'id': '', 'name': '', 'desc': ''});
+        },
+        child: Text('Add Entity'));
   }
 }

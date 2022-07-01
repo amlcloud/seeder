@@ -8,7 +8,7 @@ class EntitiesList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => ListView(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
-      children: ref.watch(colStreamProvider('entity')).when(
+      children: ref.watch(colSP('entity')).when(
           loading: () => [Container()],
           error: (e, s) => [ErrorWidget(e)],
           data: (entities) => entities.docs
