@@ -1,21 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/app_bar.dart';
+import 'package:seeder/batches_page/batch_details.dart';
+import 'package:seeder/batches_page/batch_list.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
-import 'package:seeder/widgets/entities_list.dart';
-import 'package:seeder/widgets/entity_details.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-final activeEntity =
+final activeBatch =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
         (ref) => GenericStateNotifier<String?>(null));
 
-class EntitiesPage extends ConsumerWidget {
-  const EntitiesPage();
-
+class BatchesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('entity page rebuild');
     return Scaffold(
         appBar: MyAppBar.getBar(context),
         body: Container(
@@ -26,19 +23,19 @@ class EntitiesPage extends ConsumerWidget {
                 children: [
                   Flexible(
                       child: Column(
-                    children: [EntitiesList(), buildAddEntityButton(ref)],
+                    children: [BatchList(), buildAddSetButton(ref)],
                   )),
                   Expanded(
-                    child: EntityDetails(ref.watch(activeEntity)),
+                    child: BatchDetails(ref.watch(activeBatch)),
                   )
                 ])));
   }
 
-  buildAddEntityButton(WidgetRef ref) {
+  Widget buildAddSetButton(WidgetRef ref) {
     return ElevatedButton(
         onPressed: () {
           FirebaseFirestore.instance
-              .collection('entity')
+              .collection('set')
               .add({'id': '', 'name': '', 'desc': ''});
         },
         child: Text('Add Entity'));

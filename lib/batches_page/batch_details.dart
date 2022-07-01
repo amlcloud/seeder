@@ -2,17 +2,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/batches_page/entities_selector.dart';
 import 'package:seeder/controls/doc_field_text_edit_delayed.dart';
 import 'package:seeder/providers/firestore.dart';
+import 'package:seeder/state/generic_state_notifier.dart';
 
-class EntityDetails extends ConsumerWidget {
+final activeEntity =
+    StateNotifierProvider<GenericStateNotifier<String?>, String?>(
+        (ref) => GenericStateNotifier<String?>(null));
+
+class BatchDetails extends ConsumerWidget {
   final String? entityId;
 
   final TextEditingController idCtrl = TextEditingController(),
       nameCtrl = TextEditingController(),
       descCtrl = TextEditingController();
 
-  EntityDetails(this.entityId);
+  BatchDetails(this.entityId);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => entityId == null
@@ -27,30 +33,23 @@ class EntityDetails extends ConsumerWidget {
             children: [
               Text(entityId!),
               DocFieldTextEditDelayed(
-                  FirebaseFirestore.instance.doc('entity/${entityId}'), 'id'),
+                  FirebaseFirestore.instance.doc('set/${entityId}'), 'id'),
               DocFieldTextEditDelayed(
-                FirebaseFirestore.instance.doc('entity/${entityId}'),
+                FirebaseFirestore.instance.doc('set/${entityId}'),
                 'name',
               ),
               DocFieldTextEditDelayed(
-                FirebaseFirestore.instance.doc('entity/${entityId}'),
+                FirebaseFirestore.instance.doc('set/${entityId}'),
                 'desc',
               ),
-
-              // TextField(
-              //   decoration: InputDecoration(hintText: 'Name'),
-              //   controller: nameCtrl
-              //     ..text = entityDoc.data()!['name'] ?? '',
-              // ),
-              // TextField(
-              //   decoration: InputDecoration(hintText: 'ID'),
-              //   controller: idCtrl..text = entityDoc.data()!['id'] ?? '',
-              // ),
-              // TextField(
-              //   decoration: InputDecoration(hintText: 'Description'),
-              //   controller: descCtrl..text = entityDoc.data()!['desc'] ?? '',
-              // ),
-              Divider()
+              Divider(),
+              EntitiesSelector(),
+              Divider(),
+              ElevatedButton(onPressed: () {}, child: Text('Generate')),
+              Text("Output:"),
+              Card(
+                child: Text(''),
+              )
             ],
           ));
 }

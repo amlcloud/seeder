@@ -12,7 +12,7 @@ Intended features:
 - Define transaction range parameters: period
 - Define additional specific transactions (for rule testing)
 - See entity transactions
-- Combine entities' transaction into sets
+- Combine entities' transaction into batches
 - Export transactions into CSV (to be imported into amlcloud.io)
 
 This repo is only the front-end of the app and it is built with Flutter backed by Firebase Firestore. (Another repository will be created to define server functions, which will serve as a back-end of the application).

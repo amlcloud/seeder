@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/batches_page/batch_page.dart';
 import 'package:seeder/entities_page.dart';
 import 'package:seeder/providers/firestore.dart';
 
-class EntityListItem extends ConsumerWidget {
-  final String entityId;
-  const EntityListItem(this.entityId);
+class BatchListItem extends ConsumerWidget {
+  final String setId;
+  const BatchListItem(this.setId);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(docSP('entity/' + entityId)).when(
+    return ref.watch(docSP('set/' + setId)).when(
         loading: () => Container(),
         error: (e, s) => ErrorWidget(e),
         data: (entityDoc) => entityDoc.exists == false
@@ -24,7 +25,7 @@ class EntityListItem extends ConsumerWidget {
                     trailing: Text(entityDoc.data()!['id'] ?? 'id'),
                     subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
                     onTap: () {
-                      ref.read(activeEntity.notifier).value = entityId;
+                      ref.read(activeBatch.notifier).value = setId;
                     },
                   )
                 ],
