@@ -11,25 +11,24 @@ class EntityListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(docSP('entity/' + entityId)).when(
-          loading: () => Container(),
-          error: (e, s) => ErrorWidget(e),
-          data: (entityDoc) => entityDoc.exists == false
-              ? Center(child: Text('No entity data exists'))
-              : Card(
-                  child: Column(
-                  children: [
-                    ListTile(
-                      title: Text(
-                        entityDoc.data()!['name'] ?? 'name',
-                      ),
-                      //trailing: Text(entityDoc.data()!['id'] ?? 'id'),
-                      subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
-                      trailing: ElevatedButton(
-                          onPressed: () {},
-                          child: Text('View')),
-                    )
-                  ],
-                )),
-        );
+        loading: () => Container(),
+        error: (e, s) => ErrorWidget(e),
+        data: (entityDoc) => entityDoc.exists == false
+            ? Center(child: Text('No entity data exists'))
+            : Card(
+                child: Column(
+                children: [
+                  ListTile(
+                    title: Text(
+                      entityDoc.data()!['name'] ?? 'name',
+                    ),
+                    trailing: Text(entityDoc.data()!['id'] ?? 'id'),
+                    subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
+                    onTap: () {
+                      ref.read(activeEntity.notifier).value = entityId;
+                    },
+                  )
+                ],
+              )));
   }
 }

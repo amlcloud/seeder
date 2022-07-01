@@ -180,7 +180,7 @@ final AutoDisposeFutureProviderFamily<QuerySnapshot<Map<String, dynamic>>,
 ///
 /// To work with large collections consider using [filteredColSP]
 final AutoDisposeStreamProviderFamily<QuerySnapshot<Map<String, dynamic>>,
-        String> colStreamProvider =
+        String> colSP =
     StreamProvider.autoDispose
         .family<QuerySnapshot<Map<String, dynamic>>, String>((ref, path) {
   return FirebaseFirestore.instance.collection(path).snapshots();
