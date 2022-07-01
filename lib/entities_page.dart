@@ -41,6 +41,7 @@ class EntitiesPage extends ConsumerWidget {
   //   child: Text('Add Entity'));
   // }
 
+
   // Edited version: vnguyen
   buildAddEntityButton(BuildContext context, WidgetRef ref) {
     TextEditingController id_inp = TextEditingController();
@@ -94,5 +95,6 @@ class EntitiesPage extends ConsumerWidget {
             });
       },
     );
+
   }
 }
