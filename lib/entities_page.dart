@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/app_bar.dart';
@@ -15,26 +16,38 @@ class EntitiesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('entity page rebuild');
+    print(
+        'entity page rebuild with user: ${FirebaseAuth.instance.currentUser}');
     return Scaffold(
         appBar: MyAppBar.getBar(context),
-        body: Container(
-            alignment: Alignment.topLeft,
-            child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
+        body: FirebaseAuth.instance.currentUser == null
+            ? Column(
                 children: [
-                  Flexible(
-                      child: Column(
+                  Text('please log in'),
+                  ElevatedButton(
+                      onPressed: () {
+                        FirebaseAuth.instance.signInAnonymously();
+                      },
+                      child: Text('log-in'))
+                ],
+              )
+            : Container(
+                alignment: Alignment.topLeft,
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
-                      EntitiesList(),
-                      buildAddEntityButton(context, ref)
-                    ],
-                  )),
-                  Expanded(
-                    child: EntityDetails(ref.watch(activeEntity)),
-                  )
-                ])));
+                      Flexible(
+                          child: Column(
+                        children: [
+                          EntitiesList(),
+                          buildAddEntityButton(context, ref)
+                        ],
+                      )),
+                      Expanded(
+                        child: EntityDetails(ref.watch(activeEntity)),
+                      )
+                    ])));
   }
   // Code written by Joanne
   // buildAddEntityButton(WidgetRef ref) {
@@ -43,7 +56,6 @@ class EntitiesPage extends ConsumerWidget {
   //   },
   //   child: Text('Add Entity'));
   // }
-
 
   // Edited version: vnguyen
   buildAddEntityButton(BuildContext context, WidgetRef ref) {
@@ -66,9 +78,7 @@ class EntitiesPage extends ConsumerWidget {
                       children: <Widget>[
                         TextFormField(
                           controller: id_inp,
-                          decoration: InputDecoration(
-                            labelText: 'ID'
-                            ),
+                          decoration: InputDecoration(labelText: 'ID'),
                         ),
                         TextFormField(
                           controller: name_inp,
@@ -90,7 +100,12 @@ class EntitiesPage extends ConsumerWidget {
                   TextButton(
                       child: Text("Submit"),
                       onPressed: () {
-                        FirebaseFirestore.instance.collection('entity').add({'id': id_inp.text.toString(), 'name': name_inp.text.toString(), 'desc': desc_inp.text.toString()});
+                        FirebaseFirestore.instance.collection('entity').add({
+                          'id': id_inp.text.toString(),
+                          'name': name_inp.text.toString(),
+                          'desc': desc_inp.text.toString(),
+                          'author': FirebaseAuth.instance.currentUser!.uid
+                        });
                         Navigator.of(context).pop();
                       })
                 ],
@@ -98,6 +113,5 @@ class EntitiesPage extends ConsumerWidget {
             });
       },
     );
-
   }
 }
