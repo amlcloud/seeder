@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/batches_page/batch_list_item.dart';
 import 'package:seeder/providers/firestore.dart';
-import 'package:seeder/state/generic_state_notifier.dart';
-import 'package:seeder/widgets/entity_list_item.dart';
 import 'package:seeder/widgets/filter_my_entities.dart';
 
-class EntitiesList extends ConsumerWidget {
-  printEntity(tempData) {
-    print(tempData);
-  }
-
+class BatchList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => Column(
         children: [
@@ -17,7 +12,7 @@ class EntitiesList extends ConsumerWidget {
             children: [
               Text('sort by:'),
               DropdownButton<String>(
-                value: ref.watch(activeSort),
+                value: null,
                 icon: const Icon(Icons.arrow_downward),
                 elevation: 16,
                 // style: const TextStyle(color: Colors.deepPurple),
@@ -25,10 +20,8 @@ class EntitiesList extends ConsumerWidget {
                   height: 2,
                   // color: Colors.deepPurpleAccent,
                 ),
-                onChanged: (String? newValue) {
-                  ref.read(activeSort.notifier).value = newValue;
-                },
-                items: <String>['name', 'id']
+                onChanged: (String? newValue) {},
+                items: <String>['time created', 'name', 'id']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -42,13 +35,11 @@ class EntitiesList extends ConsumerWidget {
           ListView(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
-              children: ref.watch(colSP('entity')).when(
+              children: ref.watch(colSP('set')).when(
                   loading: () => [Container()],
                   error: (e, s) => [ErrorWidget(e)],
-                  data: (entities) => (entities.docs
-                        ..sort((a, b) => a[ref.watch(activeSort) ?? 'id']
-                            .compareTo(b[ref.watch(activeSort) ?? 'id'])))
-                      .map((entity) => EntityListItem(entity.id))
+                  data: (entities) => entities.docs //..sort((a,b))
+                      .map((entity) => BatchListItem(entity.id))
                       .toList()))
         ],
       );
