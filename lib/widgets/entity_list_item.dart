@@ -16,11 +16,14 @@ class EntityListItem extends ConsumerWidget {
             :   Card(
             child: Column(
               children: [
-                ListTile(
+                FlatButton(
+                  onPressed:(){
+                    print('pressed');
+                }, child: ListTile(
                   title: Text(entityDoc.data()!['name'] ?? 'name',),
                   trailing: Text(entityDoc.data()!['id'] ?? 'id'),
                   subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
-                )
+                )),
               ],
             )));
 

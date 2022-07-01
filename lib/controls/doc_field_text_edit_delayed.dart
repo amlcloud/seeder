@@ -8,6 +8,7 @@ class DocFieldTextEditDelayed extends ConsumerStatefulWidget {
   final DocumentReference docRef;
   final String field;
   final TextEditingController ctrl = TextEditingController();
+  
 
   DocFieldTextEditDelayed(this.docRef, this.field, {Key? key})
       : super(key: key);
@@ -48,7 +49,7 @@ class DocFieldTextEditDelayedState
             error: (e, s) => ErrorWidget(e),
             data: (docSnapshot) {
               return TextField(
-                decoration: InputDecoration(hintText: 'field name'),
+                decoration: InputDecoration(hintText: widget.field),
                 controller: widget.ctrl
                   ..text = docSnapshot.data()![widget.field],
                 onChanged: (v) {
