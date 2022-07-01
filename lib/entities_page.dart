@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/app_bar.dart';
-import 'package:seeder/providers/firestore.dart';
+import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:seeder/widgets/entities_list.dart';
 import 'package:seeder/widgets/entity_details.dart';
-import 'package:seeder/widgets/entity_list_item.dart'; // new
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+final activeEntity =
+    StateNotifierProvider<GenericStateNotifier<String?>, String?>(
+        (ref) => GenericStateNotifier<String?>(null));
 
 class EntitiesPage extends ConsumerWidget {
   const EntitiesPage();
@@ -29,7 +32,7 @@ class EntitiesPage extends ConsumerWidget {
                     ],
                   )),
                   Expanded(
-                    child: EntityDetails('1'),
+                    child: EntityDetails(ref.watch(activeEntity)),
                   )
                 ])));
   }

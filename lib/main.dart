@@ -1,10 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/batches_page/batch_page.dart';
 import 'package:seeder/entities_page.dart';
 import 'package:seeder/sandbox/sandbox.dart';
 import 'package:seeder/sandbox/sandbox_launcher.dart';
-import 'package:seeder/sets_page.dart';
 import 'package:seeder/theme.dart';
 import 'firebase_options.dart';
 
@@ -23,8 +23,8 @@ void main() async {
     // home: SandboxLauncher(
     //     // sandbox for texting individual widgets
     //     sandbox: Material(child: Sandbox()),
-        // the main app
-        // app: TheApp()),
+    // the main app
+    // app: TheApp()),
     home: TheApp(),
   )));
 }
@@ -43,8 +43,9 @@ class TheApp extends StatelessWidget {
             if (settings.name == '/' || settings.name == 'entities') {
               return PageRouteBuilder(
                   pageBuilder: (_, __, ___) => EntitiesPage());
-            } else if (settings.name == 'sets') {
-              return PageRouteBuilder(pageBuilder: (_, __, ___) => SetsPage());
+            } else if (settings.name == 'batches') {
+              return PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => BatchesPage());
             } else {
               throw 'no page to show';
             }

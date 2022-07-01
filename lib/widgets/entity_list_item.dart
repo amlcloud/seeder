@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/entities_page.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -10,11 +11,12 @@ class EntityListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(docSP('entity/'+entityId)).when(
+    return ref.watch(docSP('entity/' + entityId)).when(
         loading: () => Container(),
         error: (e, s) => ErrorWidget(e),
         data: (entityDoc) => entityDoc.exists == false
             ? Center(child: Text('No entity data exists'))
+
             :   Card(
             child: Column(
               children: [
@@ -22,6 +24,9 @@ class EntityListItem extends ConsumerWidget {
                   title: Text(entityDoc.data()!['name'] ?? 'name',),
                   trailing: Text(entityDoc.data()!['id'] ?? 'id'),
                   subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
+                  onTap: () {
+                      ref.read(activeEntity.notifier).value = entityId;
+                    },
                 ),
                 buildDeleteEntityButton(context, ref, entityId)
               ],

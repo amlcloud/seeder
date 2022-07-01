@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MyAppBar {
-  static final List<String> _tabs = ['entities', 'sets'];
+  static final List<String> _tabs = ['entities', 'batches'];
 
   static PreferredSizeWidget getBar(BuildContext context) {
     return AppBar(
