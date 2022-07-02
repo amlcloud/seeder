@@ -4,11 +4,10 @@ import 'package:seeder/entities_page.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class EntityListItem extends ConsumerWidget {
   final String entityId;
-  //final Function(String) callback;
   const EntityListItem(this.entityId);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(docSP('entity/' + entityId)).when(
@@ -16,26 +15,26 @@ class EntityListItem extends ConsumerWidget {
         error: (e, s) => ErrorWidget(e),
         data: (entityDoc) => entityDoc.exists == false
             ? Center(child: Text('No entity data exists'))
-            : Card(
-                child: Column(
-                children: [
-                  ListTile(
-                    title: Text(
-                      entityDoc.data()!['name'] ?? 'name',
-                    ),
-                    trailing: Text(entityDoc.data()!['id'] ?? 'id'),
-                    subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
-                    onTap: () {
-                      ref.read(activeEntity.notifier).value = entityId;
-                    },
-                  ),
-                  buildDeleteEntityButton(context, ref, entityId)
-                ],
-              )));
+            : ListTile(
+              tileColor: Color.fromARGB(255, 44, 44, 44),
+              focusColor: Color.fromARGB(255, 133, 116, 116),
+                title: Text(
+                  entityDoc.data()!['name'] ?? 'name',
+                ),
+                trailing: 
+                  Column(
+                    children: <Widget>[
+                    Text(entityDoc.data()!['id'] ?? 'id'),buildDeleteEntityButton(context, ref, entityId)]),
+                subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
+                onTap: () {
+                  ref.read(activeEntity.notifier).value = entityId;
+                },
+              ),
+    );
   }
 
   buildDeleteEntityButton(BuildContext context, WidgetRef ref, id) {
-    return ElevatedButton(
+    return IconButton(
         onPressed: () {
           showDialog<String>(
             context: context,
@@ -51,11 +50,8 @@ class EntityListItem extends ConsumerWidget {
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context, 'OK');
-                    FirebaseFirestore.instance
-                        .runTransaction((Transaction myTransaction) async {
-                      myTransaction.delete(FirebaseFirestore.instance
-                          .collection('entity')
-                          .doc(id));
+                    FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
+                      myTransaction.delete(FirebaseFirestore.instance.collection('entity').doc(id));
                     });
                   },
                   child: const Text('OK'),
@@ -64,6 +60,9 @@ class EntityListItem extends ConsumerWidget {
             ),
           );
         },
-        child: Text('Delete Entity'));
+        icon: Icon(Icons.delete),
+        padding: EdgeInsets.zero,
+        constraints: BoxConstraints(),
+        );
   }
 }
