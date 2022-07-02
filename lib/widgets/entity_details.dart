@@ -35,15 +35,15 @@ class EntityDetails extends ConsumerWidget {
                     Text(entityId!),
                     DocFieldTextEditDelayed(
                         FirebaseFirestore.instance.doc('entity/${entityId}'),
-                        'id'),
+                        'id', placeholder: "ID"),
                     DocFieldTextEditDelayed(
                       FirebaseFirestore.instance.doc('entity/${entityId}'),
-                      'name',
-                    ),
+                      'name', placeholder: "Name",
+                  ),
                     DocFieldTextEditDelayed(
                       FirebaseFirestore.instance.doc('entity/${entityId}'),
-                      'desc',
-                    ),
+                      'desc', placeholder: "Description",
+                  ),
                     Divider(),
                     GenerateTransactionsButton(entityId!),
                     Divider(),

@@ -7,9 +7,10 @@ import 'package:seeder/providers/firestore.dart';
 class DocFieldTextEditDelayed extends ConsumerStatefulWidget {
   final DocumentReference docRef;
   final String field;
+  final String placeholder;
   final TextEditingController ctrl = TextEditingController();
 
-  DocFieldTextEditDelayed(this.docRef, this.field, {Key? key})
+  DocFieldTextEditDelayed(this.docRef, this.field, {this.placeholder = "field_name", Key? key})
       : super(key: key);
 
   @override
@@ -47,7 +48,7 @@ class DocFieldTextEditDelayedState
             error: (e, s) => ErrorWidget(e),
             data: (docSnapshot) {
               return TextField(
-                decoration: InputDecoration(hintText: 'field name'),
+                decoration: InputDecoration(hintText: widget.placeholder),
                 controller: widget.ctrl
                   ..text = docSnapshot.data()![widget.field],
                 onChanged: (v) {

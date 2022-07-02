@@ -9,3 +9,6 @@ class GenericStateNotifier<V> extends StateNotifier<V> {
 
   V get value => state;
 }
+
+
+
