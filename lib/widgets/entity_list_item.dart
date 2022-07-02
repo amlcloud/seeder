@@ -4,10 +4,11 @@ import 'package:seeder/entities_page.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 class EntityListItem extends ConsumerWidget {
   final String entityId;
+  //final Function(String) callback;
   const EntityListItem(this.entityId);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(docSP('entity/' + entityId)).when(

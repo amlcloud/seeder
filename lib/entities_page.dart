@@ -12,14 +12,12 @@ final activeEntity =
         (ref) => GenericStateNotifier<String?>(null));
 
 class EntitiesPage extends ConsumerWidget {
-  const EntitiesPage();
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     print(
         'entity page rebuild with user: ${FirebaseAuth.instance.currentUser}');
     return Scaffold(
-        appBar: MyAppBar.getBar(context),
+        appBar: MyAppBar.getBar(context), 
         body:
             //  FirebaseAuth.instance.currentUser == null
             //     ? Column(
