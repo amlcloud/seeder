@@ -5,11 +5,10 @@ import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:seeder/widgets/entity_list_item.dart';
 import 'package:seeder/widgets/filter_my_entities.dart';
 
+final activeSort =
+    StateNotifierProvider<GenericStateNotifier<String?>, String?>(
+        (ref) => GenericStateNotifier<String?>(null));
 class EntitiesList extends ConsumerWidget {
-  printEntity(tempData) {
-    print(tempData);
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) => Column(
         children: [
@@ -17,7 +16,7 @@ class EntitiesList extends ConsumerWidget {
             children: [
               Text('sort by:'),
               DropdownButton<String>(
-                value: ref.watch(activeSort),
+                value: ref.watch(activeSort) ?? 'id',
                 icon: const Icon(Icons.arrow_downward),
                 elevation: 16,
                 // style: const TextStyle(color: Colors.deepPurple),

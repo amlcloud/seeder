@@ -12,8 +12,6 @@ final activeEntity =
         (ref) => GenericStateNotifier<String?>(null));
 
 class EntitiesPage extends ConsumerWidget {
- // const EntitiesPage();
-  static String entityViewId = '1';
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     print(
