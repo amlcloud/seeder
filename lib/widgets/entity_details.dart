@@ -30,22 +30,27 @@ class EntityDetails extends ConsumerWidget {
                   )),
               child: Column(
                 children: [
-                  Text(entityId!),
-                  DocFieldTextEditDelayed(
+                  Flexible(
+                      child: Column(children: [
+                    Text(entityId!),
+                    DocFieldTextEditDelayed(
+                        FirebaseFirestore.instance.doc('entity/${entityId}'),
+                        'id'),
+                    DocFieldTextEditDelayed(
                       FirebaseFirestore.instance.doc('entity/${entityId}'),
-                      'id'),
-                  DocFieldTextEditDelayed(
-                    FirebaseFirestore.instance.doc('entity/${entityId}'),
-                    'name',
-                  ),
-                  DocFieldTextEditDelayed(
-                    FirebaseFirestore.instance.doc('entity/${entityId}'),
-                    'desc',
-                  ),
-                  Divider(),
-                  GenerateTransactionsButton(entityId!),
-                  Divider(),
-                  TransactionList(entityId!)
+                      'name',
+                    ),
+                    DocFieldTextEditDelayed(
+                      FirebaseFirestore.instance.doc('entity/${entityId}'),
+                      'desc',
+                    ),
+                    Divider(),
+                    GenerateTransactionsButton(entityId!),
+                    Divider(),
+                  ])),
+                  Flexible(
+                    child: TransactionList(entityId!),
+                  )
                 ],
               ));
 }
