@@ -7,8 +7,15 @@ class EntitiesSelector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => Row(
         children: [
-          Flexible(child: AvailableEntitiesList()),
-          Flexible(child: SelectedEntitiesList())
+          Flexible(
+              child: Column(
+            children: [Text('Available entities:'), AvailableEntitiesList()],
+          )),
+          Flexible(
+              child: Column(children: [
+            Text('Selected entities:'),
+            SelectedEntitiesList()
+          ]))
         ],
       );
 }
