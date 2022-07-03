@@ -8,13 +8,14 @@ import 'package:seeder/widgets/filter_my_entities.dart';
 final activeSort =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
         (ref) => GenericStateNotifier<String?>(null));
+
 class EntitiesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => Column(
         children: [
           Row(
             children: [
-              Text('sort by:'),
+              Text('sort by: '),
               DropdownButton<String>(
                 value: ref.watch(activeSort) ?? 'id',
                 icon: const Icon(Icons.arrow_downward),
@@ -27,11 +28,12 @@ class EntitiesList extends ConsumerWidget {
                 onChanged: (String? newValue) {
                   ref.read(activeSort.notifier).value = newValue;
                 },
-                items: <String>['name', 'id']
+                items: <String>['name', 'id', 'time Created']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child:
+                        Text(value.toUpperCase()),
                   );
                 }).toList(),
               ),
