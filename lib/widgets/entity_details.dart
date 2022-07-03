@@ -6,6 +6,8 @@ import 'package:seeder/controls/doc_field_text_edit_delayed.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/widgets/generate_transactions_button.dart';
 import 'package:seeder/widgets/transaction_list.dart';
+import 'package:csv/csv.dart';
+import 'data_export_csv.dart';
 
 class EntityDetails extends ConsumerWidget {
   final String? entityId;
@@ -30,22 +32,33 @@ class EntityDetails extends ConsumerWidget {
                   )),
               child: Column(
                 children: [
-                  Text(entityId!),
-                  DocFieldTextEditDelayed(
+                  Flexible(
+                      child: Column(children: [
+                    Text(entityId!),
+                    DocFieldTextEditDelayed(
+                        FirebaseFirestore.instance.doc('entity/${entityId}'),
+                        'id',
+                        placeholder: "ID"),
+                    DocFieldTextEditDelayed(
                       FirebaseFirestore.instance.doc('entity/${entityId}'),
-                      'id', placeholder: "ID"),
-                  DocFieldTextEditDelayed(
-                    FirebaseFirestore.instance.doc('entity/${entityId}'),
-                    'name', placeholder: "Name",
-                  ),
-                  DocFieldTextEditDelayed(
-                    FirebaseFirestore.instance.doc('entity/${entityId}'),
-                    'desc', placeholder: "Description",
-                  ),
-                  Divider(),
-                  GenerateTransactionsButton(entityId!),
-                  Divider(),
-                  TransactionList(entityId!)
+                      'name',
+                      placeholder: "Name",
+                    ),
+                    DocFieldTextEditDelayed(
+                      FirebaseFirestore.instance.doc('entity/${entityId}'),
+                      'desc',
+                      placeholder: "Description",
+                    ),
+                    Divider(),
+                    GenerateTransactionsButton(entityId!),
+                    Divider(),
+                    Expanded(
+                      child: DataExportButton(entityId!),
+                    )
+                  ])),
+                  Flexible(
+                    child: TransactionList(entityId!),
+                  )
                 ],
               ));
 }
