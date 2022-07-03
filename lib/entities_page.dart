@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/app_bar.dart';
@@ -11,36 +12,106 @@ final activeEntity =
         (ref) => GenericStateNotifier<String?>(null));
 
 class EntitiesPage extends ConsumerWidget {
-  const EntitiesPage();
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('entity page rebuild');
+    print(
+        'entity page rebuild with user: ${FirebaseAuth.instance.currentUser}');
     return Scaffold(
-        appBar: MyAppBar.getBar(context),
-        body: Container(
-            alignment: Alignment.topLeft,
-            child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Flexible(
-                      child: Column(
-                    children: [EntitiesList(), buildAddEntityButton(ref)],
-                  )),
-                  Expanded(
-                    child: EntityDetails(ref.watch(activeEntity)),
-                  )
-                ])));
+        appBar: MyAppBar.getBar(context), 
+        body:
+            //  FirebaseAuth.instance.currentUser == null
+            //     ? Column(
+            //         children: [
+            //           Text('please log in'),
+            //           ElevatedButton(
+            //               onPressed: () {
+            //                 FirebaseAuth.instance.signInAnonymously();
+            //               },
+            //               child: Text('log-in'))
+            //         ],
+            //       )
+            //     :
+            Container(
+                alignment: Alignment.topLeft,
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Flexible(
+                          child: Column(
+                        children: [
+                          EntitiesList(),
+                          buildAddEntityButton(context, ref)
+                        ],
+                      )),
+                      Expanded(
+                        child: EntityDetails(ref.watch(activeEntity)),
+                      )
+                    ])));
   }
+  // Code written by Joanne
+  // buildAddEntityButton(WidgetRef ref) {
+  //   return ElevatedButton(onPressed: () {
+  //     FirebaseFirestore.instance.collection('entity').add({'id':'', 'name':'', 'desc':''});
+  //   },
+  //   child: Text('Add Entity'));
+  // }
 
-  buildAddEntityButton(WidgetRef ref) {
+  // Edited version: vnguyen
+  buildAddEntityButton(BuildContext context, WidgetRef ref) {
+    TextEditingController id_inp = TextEditingController();
+    TextEditingController name_inp = TextEditingController();
+    TextEditingController desc_inp = TextEditingController();
     return ElevatedButton(
-        onPressed: () {
-          FirebaseFirestore.instance
-              .collection('entity')
-              .add({'id': '', 'name': '', 'desc': ''});
-        },
-        child: Text('Add Entity'));
+      child: Text("Add Entity"),
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                scrollable: true,
+                title: Text('Adding Entity...'),
+                content: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Form(
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          controller: id_inp,
+                          decoration: InputDecoration(labelText: 'ID'),
+                        ),
+                        TextFormField(
+                          controller: name_inp,
+                          decoration: InputDecoration(
+                            labelText: 'Name',
+                          ),
+                        ),
+                        TextFormField(
+                          controller: desc_inp,
+                          decoration: InputDecoration(
+                            labelText: 'Description',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                      child: Text("Submit"),
+                      onPressed: () {
+                        FirebaseFirestore.instance.collection('entity').add({
+                          'id': id_inp.text.toString(),
+                          'name': name_inp.text.toString(),
+                          'desc': desc_inp.text.toString(),
+                          // 'author': FirebaseAuth.instance.currentUser!.uid
+                        });
+                        Navigator.of(context).pop();
+                      })
+                ],
+              );
+            });
+      },
+    );
   }
 }

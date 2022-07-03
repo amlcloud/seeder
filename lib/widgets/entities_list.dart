@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/providers/firestore.dart';
+import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:seeder/widgets/entity_list_item.dart';
 import 'package:seeder/widgets/filter_my_entities.dart';
 
+final activeSort =
+    StateNotifierProvider<GenericStateNotifier<String?>, String?>(
+        (ref) => GenericStateNotifier<String?>(null));
 class EntitiesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => Column(
@@ -12,7 +16,7 @@ class EntitiesList extends ConsumerWidget {
             children: [
               Text('sort by:'),
               DropdownButton<String>(
-                value: null,
+                value: ref.watch(activeSort) ?? 'id',
                 icon: const Icon(Icons.arrow_downward),
                 elevation: 16,
                 // style: const TextStyle(color: Colors.deepPurple),
@@ -20,8 +24,10 @@ class EntitiesList extends ConsumerWidget {
                   height: 2,
                   // color: Colors.deepPurpleAccent,
                 ),
-                onChanged: (String? newValue) {},
-                items: <String>['time created', 'name', 'id']
+                onChanged: (String? newValue) {
+                  ref.read(activeSort.notifier).value = newValue;
+                },
+                items: <String>['name', 'id']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -39,9 +45,8 @@ class EntitiesList extends ConsumerWidget {
                   loading: () => [Container()],
                   error: (e, s) => [ErrorWidget(e)],
                   data: (entities) => (entities.docs
-                        ..sort((a, b) {
-                          return 0;
-                        }))
+                        ..sort((a, b) => a[ref.watch(activeSort) ?? 'id']
+                            .compareTo(b[ref.watch(activeSort) ?? 'id'])))
                       .map((entity) => EntityListItem(entity.id))
                       .toList()))
         ],

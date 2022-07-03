@@ -20,7 +20,7 @@ class BatchListItem extends ConsumerWidget {
                 children: [
                   ListTile(
                     title: Text(
-                      entityDoc.data()!['name'] ?? 'name',
+                      'batch ' + (entityDoc.data()!['name'] ?? 'name'),
                     ),
                     trailing: Text(entityDoc.data()!['id'] ?? 'id'),
                     subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
