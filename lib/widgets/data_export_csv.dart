@@ -29,13 +29,16 @@ class DataExportButton extends ConsumerWidget {
                 child: ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
-                    DocumentSnapshot doc = snapshot.data!.docs[index];
-                    exportList.add(<String>[
-                      doc.get("amount").toString(),
-                      doc.get("balance").toString(),
-                      doc.get("ben_name").toString(),
-                      doc.get("rem_name").toString()
-                    ]);
+                    // DocumentSnapshot doc = snapshot.data!.docs[index];
+                    snapshot.data!.docs.forEach((doc) {
+                      exportList.add(<String>[
+                        doc.get("amount").toString(),
+                        doc.get("balance").toString(),
+                        doc.get("ben_name").toString(),
+                        doc.get("rem_name").toString()
+                      ]);
+                    });
+
                     return ElevatedButton(
                         onPressed: () {
                           generateCSV(exportList);
