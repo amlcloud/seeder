@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 
-final filterMine = StateNotifierProvider<GenericStateNotifier<bool?>, bool?>(
-    (ref) => GenericStateNotifier<bool?>(false));
+final filterMine = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
+    (ref) => GenericStateNotifier<bool>(false));
 
 class FilterMyEntities extends ConsumerWidget {
   @override

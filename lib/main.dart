@@ -31,8 +31,8 @@ void main() async {
   )));
 }
 
-final islogedin = StateNotifierProvider<GenericStateNotifier<bool?>, bool?>(
-    (ref) => GenericStateNotifier<bool?>(false));
+final isLogedIn = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
+    (ref) => GenericStateNotifier<bool>(false));
 
 class TheApp extends ConsumerStatefulWidget {
   const TheApp({Key? key}) : super(key: key);
@@ -48,7 +48,7 @@ class TheAppState extends ConsumerState<TheApp> {
       if (user == null) {
         // print('User is currently signed out!');
       } else {
-        ref.read(islogedin.notifier).value = true;
+        ref.read(isLogedIn.notifier).value = true;
         // print('User is signed in!');
       }
     });
@@ -57,14 +57,14 @@ class TheAppState extends ConsumerState<TheApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ref.watch(islogedin) == false
+        body: ref.watch(isLogedIn) == false
             ? Column(
                 children: [
                   Text('please log in'),
                   ElevatedButton(
                       onPressed: () {
                         FirebaseAuth.instance.signInAnonymously();
-                        ref.read(islogedin.notifier).value = true;
+                        ref.read(isLogedIn.notifier).value = true;
                       },
                       child: Text('log-in')),
                 ],
