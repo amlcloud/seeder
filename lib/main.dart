@@ -31,8 +31,11 @@ void main() async {
   )));
 }
 
-final islogedin = StateNotifierProvider<GenericStateNotifier<bool?>, bool?>(
-    (ref) => GenericStateNotifier<bool?>(false));
+final isLogedIn = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
+    (ref) => GenericStateNotifier<bool>(false));
+
+final isLoading = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
+    (ref) => GenericStateNotifier<bool>(false));
 
 class TheApp extends ConsumerStatefulWidget {
   const TheApp({Key? key}) : super(key: key);
@@ -41,14 +44,17 @@ class TheApp extends ConsumerStatefulWidget {
 }
 
 class TheAppState extends ConsumerState<TheApp> {
+  //bool isLoading = false;
   @override
   void initState() {
     super.initState();
-      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    ref.read(isLoading.notifier).value = true;
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
         print('User is currently signed out!');
       } else {
-        ref.read(islogedin.notifier).value = true;
+        ref.read(isLogedIn.notifier).value = true;
+        ref.read(isLoading.notifier).value = false;
         print('User is signed in!');
       }
     });
@@ -56,36 +62,50 @@ class TheAppState extends ConsumerState<TheApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: ref.watch(islogedin) == false
-            ? Column(
-                children: [
-                  Text('please log in'),
-                  ElevatedButton(
-                      onPressed: () {
-                        FirebaseAuth.instance.signInAnonymously();
-                        ref.read(islogedin.notifier).value = true;
-                      },
-                      child: Text('log-in')),
-                      
-                ],
-              )
-            : DefaultTabController(
-                initialIndex: 0,
-                length: 2,
-                child: Navigator(
-                  onGenerateRoute: (RouteSettings settings) {
-                    // print('onGenerateRoute: ${settings}');
-                    if (settings.name == '/' || settings.name == 'entities') {
-                      return PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => EntitiesPage());
-                    } else if (settings.name == 'batches') {
-                      return PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => BatchesPage());
-                    } else {
-                      throw 'no page to show';
-                    }
-                  },
-                )));
+    if (ref.watch(isLoading)) {
+      return Center(
+        child: Container(
+          alignment: Alignment(0.0, 0.0),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    } else {
+      return Scaffold(
+          body: ref.watch(isLogedIn) == false
+              ? Column(
+                  children: [
+                    Text('please log in'),
+                    ElevatedButton(
+                        onPressed: () async {
+                          ref.read(isLoading.notifier).value = true;
+                          await FirebaseAuth.instance
+                              .signInAnonymously()
+                              .then((a) => {
+                                    print(' samplue signin $a'),
+                                    ref.read(isLogedIn.notifier).value = true,
+                                    ref.read(isLoading.notifier).value = false,
+                                  });
+                        },
+                        child: Text('log-in')),
+                  ],
+                )
+              : DefaultTabController(
+                  initialIndex: 0,
+                  length: 2,
+                  child: Navigator(
+                    onGenerateRoute: (RouteSettings settings) {
+                      // print('onGenerateRoute: ${settings}');
+                      if (settings.name == '/' || settings.name == 'entities') {
+                        return PageRouteBuilder(
+                            pageBuilder: (_, __, ___) => EntitiesPage());
+                      } else if (settings.name == 'batches') {
+                        return PageRouteBuilder(
+                            pageBuilder: (_, __, ___) => BatchesPage());
+                      } else {
+                        throw 'no page to show';
+                      }
+                    },
+                  )));
+    }
   }
 }
