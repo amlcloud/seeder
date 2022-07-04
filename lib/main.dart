@@ -31,7 +31,7 @@ void main() async {
   )));
 }
 
-final isLogedIn = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
+final isLoggedIn = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
     (ref) => GenericStateNotifier<bool>(false));
 
 final isLoading = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
@@ -53,7 +53,7 @@ class TheAppState extends ConsumerState<TheApp> {
       if (user == null) {
         // print('User is currently signed out!');
       } else {
-        ref.read(isLogedIn.notifier).value = true;
+        ref.read(isLoggedIn.notifier).value = true;
         ref.read(isLoading.notifier).value = false;
         print('User is signed in!');
       }
@@ -71,7 +71,7 @@ class TheAppState extends ConsumerState<TheApp> {
       );
     } else {
       return Scaffold(
-          body: ref.watch(isLogedIn) == false
+          body: ref.watch(isLoggedIn) == false
               ? Column(
                   children: [
                     Text('please log in'),
@@ -82,7 +82,7 @@ class TheAppState extends ConsumerState<TheApp> {
                               .signInAnonymously()
                               .then((a) => {
                                     print(' samplue signin $a'),
-                                    ref.read(isLogedIn.notifier).value = true,
+                                    ref.read(isLoggedIn.notifier).value = true,
                                     ref.read(isLoading.notifier).value = false,
                                   });
                         },
