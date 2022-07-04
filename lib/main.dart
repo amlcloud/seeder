@@ -46,10 +46,10 @@ class TheAppState extends ConsumerState<TheApp> {
     super.initState();
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
-        print('User is currently signed out!');
+        // print('User is currently signed out!');
       } else {
         ref.read(islogedin.notifier).value = true;
-        print('User is signed in!');
+        // print('User is signed in!');
       }
     });
   }
@@ -67,7 +67,6 @@ class TheAppState extends ConsumerState<TheApp> {
                         ref.read(islogedin.notifier).value = true;
                       },
                       child: Text('log-in')),
-                      
                 ],
               )
             : DefaultTabController(

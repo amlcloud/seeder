@@ -12,7 +12,6 @@ class FilterMyEntities extends ConsumerWidget {
         Switch(
             value: ref.watch(filterMine) ?? false,
             onChanged: (value) {
-              print("Mine $value");
               ref.read(filterMine.notifier).value = value;
             })
       ]);
