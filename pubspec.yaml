@@ -50,6 +50,11 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.1
 
+  csv: ^5.0.0
+  path_provider: ^2.0.2
+  permission_handler: ^7.1.0
+  fluttertoast: ^8.0.9
+  universal_html: ^2.0.8
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
