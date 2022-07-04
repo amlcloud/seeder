@@ -52,12 +52,13 @@ class EntityDetails extends ConsumerWidget {
                     Divider(),
                     GenerateTransactionsButton(entityId!),
                     Divider(),
-                    Expanded(
-                      child: DataExportButton(entityId!),
-                    )
+                    // Expanded(
+                    //   child: DataExportButton(entityId!),
+                    //)
                   ])),
                   Flexible(
-                    child: TransactionList(entityId!),
+                    child: DataExportButton(entityId!),
+                    //child: TransactionList(entityId!),
                   )
                 ],
               ));

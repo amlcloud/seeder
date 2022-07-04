@@ -24,30 +24,29 @@ class DataExportButton extends ConsumerWidget {
               .collection('entity/$entityId/transaction')
               .snapshots(),
           builder: (context, snapshot) {
-            return Column(children: <Widget>[
+            return Column(children: [
               Expanded(
                 child: ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
-                    // DocumentSnapshot doc = snapshot.data!.docs[index];
-                    snapshot.data!.docs.forEach((doc) {
-                      exportList.add(<String>[
-                        doc.get("amount").toString(),
-                        doc.get("balance").toString(),
-                        doc.get("ben_name").toString(),
-                        doc.get("rem_name").toString()
-                      ]);
-                    });
-
-                    return ElevatedButton(
-                        onPressed: () {
-                          generateCSV(exportList);
-                          Fluttertoast.showToast(msg: 'CSV exported');
-                        },
-                        child: Text('Export CSV'));
+                    DocumentSnapshot doc = snapshot.data!.docs[index];
+                    exportList.add(<String>[
+                      doc.get("amount").toString(),
+                      doc.get("balance").toString(),
+                      doc.get("ben_name").toString(),
+                      doc.get("rem_name").toString()
+                    ]);
+                    return Text(
+                        '${doc.get("ben_name").toString()}     ${doc.get("balance").toString()}     ${doc.get("amount").toString()}     ${doc.get("rem_name").toString()}       ${doc.get("reference").toString()}');
                   },
                 ),
-              )
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    generateCSV(exportList);
+                    Fluttertoast.showToast(msg: 'CSV exported');
+                  },
+                  child: Text('Export CSV'))
             ]);
           }));
 }
@@ -67,22 +66,3 @@ generateCSV(List<List<String>> list) async {
   anchor.click();
   html.Url.revokeObjectUrl(url);
 }
-
-// genCSV(BuildContext context, WidgetRef ref, String entityId) {
-//   final List<List<String>> exportList = [
-//     <String>["amount", "balance", "ben_name", "rem_name"]
-//   ];
-//   final docs = FirebaseFirestore.instance
-//       .collection('entity/$entityId/transaction')
-//       .snapshots()
-//       .forEach((snapshot) {
-//     snapshot.docs.forEach((doc) async {
-//       exportList.add(<String>[
-//         doc.get("amount").toString(),
-//         doc.get("balance").toString(),
-//         doc.get("ben_name").toString(),
-//         doc.get("rem_name").toString()
-//       ]);
-//     });
-//   });
-// }
