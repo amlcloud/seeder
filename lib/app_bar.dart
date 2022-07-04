@@ -37,7 +37,7 @@ class MyAppBar {
             onPressed: () {
               ref.read(isLogedIn.notifier).value = false;
               FirebaseAuth.instance.signOut();
-              print("Signed out");
+              // print("Signed out");
             },
             icon: Icon(Icons.exit_to_app))
       ],
