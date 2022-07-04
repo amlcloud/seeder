@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/batches_page/batch_page.dart';
 import 'package:seeder/entities_page.dart';
+import 'package:seeder/login_page.dart';
 import 'package:seeder/sandbox/sandbox.dart';
 import 'package:seeder/sandbox/sandbox_launcher.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
@@ -51,7 +52,9 @@ class TheAppState extends ConsumerState<TheApp> {
     ref.read(isLoading.notifier).value = true;
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
-        // print('User is currently signed out!');
+        print('User is currently signed out!');
+        ref.read(isLoggedIn.notifier).value = false;
+        ref.read(isLoading.notifier).value = false;
       } else {
         ref.read(isLoggedIn.notifier).value = true;
         ref.read(isLoading.notifier).value = false;
@@ -72,23 +75,24 @@ class TheAppState extends ConsumerState<TheApp> {
     } else {
       return Scaffold(
           body: ref.watch(isLoggedIn) == false
-              ? Column(
-                  children: [
-                    Text('please log in'),
-                    ElevatedButton(
-                        onPressed: () async {
-                          ref.read(isLoading.notifier).value = true;
-                          await FirebaseAuth.instance
-                              .signInAnonymously()
-                              .then((a) => {
-                                    print(' samplue signin $a'),
-                                    ref.read(isLoggedIn.notifier).value = true,
-                                    ref.read(isLoading.notifier).value = false,
-                                  });
-                        },
-                        child: Text('log-in')),
-                  ],
-                )
+              // ? Column(
+              //     children: [
+              //       Text('please log in'),
+              //       ElevatedButton(
+              //           onPressed: () async {
+              //             ref.read(isLoading.notifier).value = true;
+              //             await FirebaseAuth.instance
+              //                 .signInAnonymously()
+              //                 .then((a) => {
+              //                       print(' samplue signin $a'),
+              //                       ref.read(isLogedIn.notifier).value = true,
+              //                       ref.read(isLoading.notifier).value = false,
+              //                     });
+              //           },
+              //           child: Text('log-in')),
+              //     ],
+              //   )
+              ? LoginPage()
               : DefaultTabController(
                   initialIndex: 0,
                   length: 2,
