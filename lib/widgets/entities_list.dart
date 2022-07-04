@@ -18,7 +18,7 @@ class EntitiesList extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Text('sort by:'),
+              Text('sort by: '),
               DropdownButton<String>(
                 value: ref.watch(activeSort) ?? 'id',
                 icon: const Icon(Icons.arrow_downward),
@@ -31,11 +31,11 @@ class EntitiesList extends ConsumerWidget {
                 onChanged: (String? newValue) {
                   ref.read(activeSort.notifier).value = newValue;
                 },
-                items: <String>['name', 'id']
+                items: <String>['name', 'id', 'time Created']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(value.toUpperCase()),
                   );
                 }).toList(),
               ),
@@ -48,11 +48,11 @@ class EntitiesList extends ConsumerWidget {
               children: ref.watch(colSP('entity')).when(
                   loading: () => [Container()],
                   error: (e, s) => [ErrorWidget(e)],
-                  data: (entities) => (ref.watch(filterMine) == true
+                  data: (entities) => (((ref.watch(filterMine) ?? false)
                           ? entities.docs
                               .where((d) => d['author'] == currentAuthorId)
                               .toList()
-                          : entities.docs
+                          : entities.docs)
                         ..sort((a, b) => a[ref.watch(activeSort) ?? 'id']
                             .compareTo(b[ref.watch(activeSort) ?? 'id'])))
                       .map((entity) => EntityListItem(entity.id))
