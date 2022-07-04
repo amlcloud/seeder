@@ -48,8 +48,13 @@ class BatchDetails extends ConsumerWidget {
               ElevatedButton(onPressed: () {}, child: Text('Generate')),
               Text("Output:"),
               Card(
-                child: Text(''),
-              )
+                child: Text('CSV output goes here...'),
+              ),
+              ElevatedButton(
+                  onPressed: () {
+//copy CSV to clipboard
+                  },
+                  child: Text('Copy To Clipboard'))
             ],
           ));
 }
