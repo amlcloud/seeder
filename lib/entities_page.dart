@@ -17,20 +17,20 @@ class EntitiesPage extends ConsumerWidget {
     print(
         'entity page rebuild with user: ${FirebaseAuth.instance.currentUser}');
     return Scaffold(
-        appBar: MyAppBar.getBar(context), 
+        appBar: MyAppBar.getBar(context),
         body:
-             FirebaseAuth.instance.currentUser == null
-                ? Column(
-                    children: [
-                      Text('please log in'),
-                      ElevatedButton(
-                          onPressed: () {
-                            FirebaseAuth.instance.signInAnonymously();
-                          },
-                          child: Text('log-in'))
-                    ],
-                  )
-                :
+            //  FirebaseAuth.instance.currentUser == null
+            //     ? Column(
+            //         children: [
+            //           Text('please log in'),
+            //           ElevatedButton(
+            //               onPressed: () {
+            //                 FirebaseAuth.instance.signInAnonymously();
+            //               },
+            //               child: Text('log-in'))
+            //         ],
+            //       )
+            //     :
             Container(
                 alignment: Alignment.topLeft,
                 child: Row(
