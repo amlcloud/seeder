@@ -17,7 +17,7 @@ class EntitiesPage extends ConsumerWidget {
     print(
         'entity page rebuild with user: ${FirebaseAuth.instance.currentUser}');
     return Scaffold(
-        appBar: MyAppBar.getBar(context),
+        appBar: MyAppBar.getBar(context, ref),
         body:
             //  FirebaseAuth.instance.currentUser == null
             //     ? Column(
@@ -104,7 +104,8 @@ class EntitiesPage extends ConsumerWidget {
                           'id': id_inp.text.toString(),
                           'name': name_inp.text.toString(),
                           'desc': desc_inp.text.toString(),
-                          'time Created': DateTime.now().millisecondsSinceEpoch,
+                          'time Created': FieldValue.serverTimestamp(),
+                          'author': FirebaseAuth.instance.currentUser!.uid,
                           // 'author': FirebaseAuth.instance.currentUser!.uid
                         });
                         Navigator.of(context).pop();

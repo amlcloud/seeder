@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,7 @@ import 'package:seeder/batches_page/batch_page.dart';
 import 'package:seeder/entities_page.dart';
 import 'package:seeder/sandbox/sandbox.dart';
 import 'package:seeder/sandbox/sandbox_launcher.dart';
+import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:seeder/theme.dart';
 import 'firebase_options.dart';
 
@@ -29,27 +31,61 @@ void main() async {
   )));
 }
 
-class TheApp extends StatelessWidget {
+final islogedin = StateNotifierProvider<GenericStateNotifier<bool?>, bool?>(
+    (ref) => GenericStateNotifier<bool?>(false));
+
+class TheApp extends ConsumerStatefulWidget {
   const TheApp({Key? key}) : super(key: key);
+  @override
+  TheAppState createState() => TheAppState();
+}
+
+class TheAppState extends ConsumerState<TheApp> {
+  @override
+  void initState() {
+    super.initState();
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        ref.read(islogedin.notifier).value = true;
+        print('User is signed in!');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        initialIndex: 0,
-        length: 2,
-        child: Navigator(
-          onGenerateRoute: (RouteSettings settings) {
-            // print('onGenerateRoute: ${settings}');
-            if (settings.name == '/' || settings.name == 'entities') {
-              return PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => EntitiesPage());
-            } else if (settings.name == 'batches') {
-              return PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => BatchesPage());
-            } else {
-              throw 'no page to show';
-            }
-          },
-        ));
+    return Scaffold(
+        body: ref.watch(islogedin) == false
+            ? Column(
+                children: [
+                  Text('please log in'),
+                  ElevatedButton(
+                      onPressed: () {
+                        FirebaseAuth.instance.signInAnonymously();
+                        ref.read(islogedin.notifier).value = true;
+                      },
+                      child: Text('log-in')),
+                      
+                ],
+              )
+            : DefaultTabController(
+                initialIndex: 0,
+                length: 2,
+                child: Navigator(
+                  onGenerateRoute: (RouteSettings settings) {
+                    // print('onGenerateRoute: ${settings}');
+                    if (settings.name == '/' || settings.name == 'entities') {
+                      return PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => EntitiesPage());
+                    } else if (settings.name == 'batches') {
+                      return PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => BatchesPage());
+                    } else {
+                      throw 'no page to show';
+                    }
+                  },
+                )));
   }
 }

@@ -14,7 +14,7 @@ class BatchesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-        appBar: MyAppBar.getBar(context),
+        appBar: MyAppBar.getBar(context, ref),
         body: Container(
             alignment: Alignment.topLeft,
             child: Row(

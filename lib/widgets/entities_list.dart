@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/providers/firestore.dart';
@@ -8,6 +9,8 @@ import 'package:seeder/widgets/filter_my_entities.dart';
 final activeSort =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
         (ref) => GenericStateNotifier<String?>(null));
+
+final currentAuthorId = FirebaseAuth.instance.currentUser!.uid;
 
 class EntitiesList extends ConsumerWidget {
   @override
@@ -32,8 +35,7 @@ class EntitiesList extends ConsumerWidget {
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child:
-                        Text(value.toUpperCase()),
+                    child: Text(value.toUpperCase()),
                   );
                 }).toList(),
               ),
@@ -46,7 +48,11 @@ class EntitiesList extends ConsumerWidget {
               children: ref.watch(colSP('entity')).when(
                   loading: () => [Container()],
                   error: (e, s) => [ErrorWidget(e)],
-                  data: (entities) => (entities.docs
+                  data: (entities) => (((ref.watch(filterMine) ?? false)
+                          ? entities.docs
+                              .where((d) => d['author'] == currentAuthorId)
+                              .toList()
+                          : entities.docs)
                         ..sort((a, b) => a[ref.watch(activeSort) ?? 'id']
                             .compareTo(b[ref.watch(activeSort) ?? 'id'])))
                       .map((entity) => EntityListItem(entity.id))
