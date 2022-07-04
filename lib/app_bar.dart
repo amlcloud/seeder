@@ -34,6 +34,7 @@ class MyAppBar {
         IconButton(
             onPressed: () {
               FirebaseAuth.instance.signOut();
+              print("Signed out");
             },
             icon: Icon(Icons.exit_to_app))
       ],

@@ -19,18 +19,18 @@ class EntitiesPage extends ConsumerWidget {
     return Scaffold(
         appBar: MyAppBar.getBar(context), 
         body:
-            //  FirebaseAuth.instance.currentUser == null
-            //     ? Column(
-            //         children: [
-            //           Text('please log in'),
-            //           ElevatedButton(
-            //               onPressed: () {
-            //                 FirebaseAuth.instance.signInAnonymously();
-            //               },
-            //               child: Text('log-in'))
-            //         ],
-            //       )
-            //     :
+             FirebaseAuth.instance.currentUser == null
+                ? Column(
+                    children: [
+                      Text('please log in'),
+                      ElevatedButton(
+                          onPressed: () {
+                            FirebaseAuth.instance.signInAnonymously();
+                          },
+                          child: Text('log-in'))
+                    ],
+                  )
+                :
             Container(
                 alignment: Alignment.topLeft,
                 child: Row(
@@ -104,7 +104,7 @@ class EntitiesPage extends ConsumerWidget {
                           'id': id_inp.text.toString(),
                           'name': name_inp.text.toString(),
                           'desc': desc_inp.text.toString(),
-                          // 'author': FirebaseAuth.instance.currentUser!.uid
+                          'author': FirebaseAuth.instance.currentUser!.uid
                         });
                         Navigator.of(context).pop();
                       })
