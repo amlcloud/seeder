@@ -25,12 +25,8 @@ class SelectedListItem extends ConsumerWidget {
                 trailing: 
                   Column(
                     children: <Widget>[
-                    Text(entityDoc.data()!['id'] ?? 'id'),buildDeleteEntityButton(context, ref, entityId)]),
-                subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
-                onTap: () {
-                  // ref.read(activeEntity.notifier).value = entityId;
-                  print(entityDoc.data()!['name']);
-                },
+                    Text(entityDoc.data()!['id'] ?? 'id')]),
+                subtitle: Text(entityDoc.data()!['desc'] ?? 'desc')
               ),
     );
   }

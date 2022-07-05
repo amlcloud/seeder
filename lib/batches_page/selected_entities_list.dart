@@ -47,10 +47,41 @@ class SelectedEntitiesList extends ConsumerWidget {
                       Expanded(
                         child: SelectedListItem(entity.id),
                       ),
-                      IconButton(onPressed: () {
-                        print(entity.id);
-                      }, icon: Icon(Icons.remove))
-                    ]),
-                  ))
-              .toList()));
+                      buildDeleteEntityButton(context, ref, entity.id),
+                  ]),
+                )).toList()));
 }
+
+  buildDeleteEntityButton(BuildContext context, WidgetRef ref, id) {
+    return IconButton(
+      onPressed: () {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Deleting entity'),
+            content: const Text('Are you sure you want to delete this entity?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'Cancel'),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                  FirebaseFirestore.instance
+                      .runTransaction((Transaction myTransaction) async {
+                      myTransaction.delete(
+                        FirebaseFirestore.instance.collection('set').doc(ref.watch(activeBatch)).collection('SelectedEntity').doc(id));
+                  });
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      },
+      icon: Icon(Icons.remove),
+      padding: EdgeInsets.zero,
+      constraints: BoxConstraints(),
+    );
+  }
