@@ -46,15 +46,23 @@ class BatchList extends ConsumerWidget {
               children: ref.watch(colSP('set')).when(
                   loading: () => [Container()],
                   error: (e, s) => [ErrorWidget(e)],
-                  data: (entities) => (((ref.watch(isMineBatchNotifierProvider) ?? false)
-                          ? entities.docs
-                              .where((d) => d['author'] == currentAuthorId)
-                              .toList()
-                          : entities.docs)
-                        ..sort((a, b) => a[ref.watch(sortStateNotifierProvider) ?? 'id']
-                            .compareTo(b[ref.watch(sortStateNotifierProvider) ?? 'id'])))
-                      .map((entity) => BatchListItem(entity.id))
-                      .toList()))
+                  data: (data){
+                    bool onlyMineSwitchStatus =ref.watch(isMineBatchNotifierProvider)??false;
+                    var all_batches = data.docs;
+                    var authors_only_batch = data.docs.where((doc) => doc['author']==currentAuthorId).toList();
+                    var author_filtered_batches = (onlyMineSwitchStatus==true?authors_only_batch : all_batches);
+                    var sorted_batches = author_filtered_batches..sort(
+                        (a,b) {
+                          var sortedBy = ref.watch(sortStateNotifierProvider) ?? 'id';
+                          // print(sortedBy);
+                          return a[sortedBy]
+                            .compareTo(b[sortedBy]);
+                        }
+                    );
+                    return sorted_batches
+                        .map((e) => BatchListItem(e.id)).toList();
+                  }
+  ))
         ],
       );
 }
