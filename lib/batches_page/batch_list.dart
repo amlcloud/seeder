@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/batches_page/batch_list_item.dart';
 import 'package:seeder/providers/firestore.dart';
-import 'package:seeder/widgets/filter_my_entities.dart';
+import 'package:seeder/state/generic_state_notifier.dart';
+import '../widgets/entities_list.dart';
+import 'filter_my_batches.dart';
+
+final sortStateNotifierProvider =
+    StateNotifierProvider<GenericStateNotifier<String?>, String?>(
+        (ref) => GenericStateNotifier<String?>(null));
 
 class BatchList extends ConsumerWidget {
   @override
@@ -12,7 +18,7 @@ class BatchList extends ConsumerWidget {
             children: [
               Text('sort by:'),
               DropdownButton<String>(
-                value: null,
+                value: ref.watch(sortStateNotifierProvider) ?? 'id',
                 icon: const Icon(Icons.arrow_downward),
                 elevation: 16,
                 // style: const TextStyle(color: Colors.deepPurple),
@@ -20,16 +26,18 @@ class BatchList extends ConsumerWidget {
                   height: 2,
                   // color: Colors.deepPurpleAccent,
                 ),
-                onChanged: (String? newValue) {},
-                items: <String>['time created', 'name', 'id']
+                onChanged: (String? newValue) {
+                  ref.read(sortStateNotifierProvider.notifier).value = newValue;
+                },
+                items: <String>['time Created', 'name', 'id']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(value.toUpperCase()),
                   );
                 }).toList(),
               ),
-              FilterMyEntities()
+              BatchFilter()
             ],
           ),
           ListView(
@@ -38,7 +46,13 @@ class BatchList extends ConsumerWidget {
               children: ref.watch(colSP('set')).when(
                   loading: () => [Container()],
                   error: (e, s) => [ErrorWidget(e)],
-                  data: (entities) => entities.docs //..sort((a,b))
+                  data: (entities) => (((ref.watch(isMineBatchNotifierProvider) ?? false)
+                          ? entities.docs
+                              .where((d) => d['author'] == currentAuthorId)
+                              .toList()
+                          : entities.docs)
+                        ..sort((a, b) => a[ref.watch(sortStateNotifierProvider) ?? 'id']
+                            .compareTo(b[ref.watch(sortStateNotifierProvider) ?? 'id'])))
                       .map((entity) => BatchListItem(entity.id))
                       .toList()))
         ],
