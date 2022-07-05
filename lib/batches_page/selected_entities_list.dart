@@ -9,29 +9,6 @@ import 'package:seeder/widgets/entity_list_item.dart';
 
 import 'batch_page.dart';
 
-// class SelectedEntitiesList extends ConsumerWidget {
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) => ListView(
-//       padding: EdgeInsets.zero,
-//       shrinkWrap: true,
-//       children: ref
-//           .watch(
-//               colSP('set/AJTOzkGsch2sO9tviKQF/SelectedEntity'))
-//           .when(
-//               loading: () => [Container()],
-//               error: (e, s) => [ErrorWidget(e)],
-//               data: (entities) => entities.docs
-//                   .map((entity) => Card(
-//                         child: Row(children: [
-//                           Expanded(
-//                             child: SelectedListItem(entity.id),
-//                           ),
-//                           IconButton(onPressed: () {}, icon: Icon(Icons.remove))
-//                         ]),
-//                       ))
-//                   .toList()));
-// }
-
 class SelectedEntitiesList extends ConsumerWidget {
   final String setId = 'BUVlUXhvauQzw384GxE7';
   @override
@@ -47,41 +24,41 @@ class SelectedEntitiesList extends ConsumerWidget {
                       Expanded(
                         child: SelectedListItem(entity.id),
                       ),
-                      buildDeleteEntityButton(context, ref, entity.id),
+                      buildDeleteEntityButton(context, FirebaseFirestore.instance.collection('set').doc(ref.watch(activeBatch)).collection('SelectedEntity').doc(entity.id)),
                   ]),
                 )).toList()));
 }
 
-  buildDeleteEntityButton(BuildContext context, WidgetRef ref, id) {
-    return IconButton(
-      onPressed: () {
-        showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text('Deleting entity'),
-            content: const Text('Are you sure you want to delete this entity?'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'Cancel'),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, 'OK');
-                  FirebaseFirestore.instance
-                      .runTransaction((Transaction myTransaction) async {
-                      myTransaction.delete(
-                        FirebaseFirestore.instance.collection('set').doc(ref.watch(activeBatch)).collection('SelectedEntity').doc(id));
-                  });
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      },
-      icon: Icon(Icons.remove),
-      padding: EdgeInsets.zero,
-      constraints: BoxConstraints(),
-    );
-  }
+  // buildDeleteEntityButton(BuildContext context, doc) {
+  //   return IconButton(
+  //     onPressed: () {
+  //       showDialog<String>(
+  //         context: context,
+  //         builder: (BuildContext context) => AlertDialog(
+  //           title: const Text('Deleting entity'),
+  //           content: const Text('Are you sure you want to delete this entity?'),
+  //           actions: <Widget>[
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(context, 'Cancel'),
+  //               child: const Text('Cancel'),
+  //             ),
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context, 'OK');
+  //                 FirebaseFirestore.instance
+  //                     .runTransaction((Transaction myTransaction) async {
+  //                     myTransaction.delete(
+  //                       doc);
+  //                 });
+  //               },
+  //               child: const Text('OK'),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //     icon: Icon(Icons.remove),
+  //     padding: EdgeInsets.zero,
+  //     constraints: BoxConstraints(),
+  //   );
+  // }

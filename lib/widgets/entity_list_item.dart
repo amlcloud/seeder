@@ -27,7 +27,7 @@ class EntityListItem extends ConsumerWidget {
                 trailing: 
                   Column(
                     children: <Widget>[
-                    Text(entityDoc.data()!['id'] ?? 'id'),buildDeleteEntityButton(context, ref, entityId)]),
+                    Text(entityDoc.data()!['id'] ?? 'id'),buildDeleteEntityButton(context, FirebaseFirestore.instance.collection('entity').doc(entityId))]),
                 subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
                 onTap: () {
                   ref.read(activeEntity.notifier).value = entityId;
@@ -35,37 +35,38 @@ class EntityListItem extends ConsumerWidget {
               ),
     );
   }
+}
 
-  buildDeleteEntityButton(BuildContext context, WidgetRef ref, id) {
+  buildDeleteEntityButton(BuildContext context, doc) {
     return IconButton(
-        onPressed: () {
-          showDialog<String>(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: const Text('Deleting entity'),
-              content:
-                  const Text('Are you sure you want to delete this entity?'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, 'OK');
-                    FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
-                      myTransaction.delete(FirebaseFirestore.instance.collection('entity').doc(id));
-                    });
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            ),
-          );
-        },
-        icon: Icon(Icons.delete),
-        padding: EdgeInsets.zero,
-        constraints: BoxConstraints(),
+      onPressed: () {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Deleting entity'),
+            content: const Text('Are you sure you want to delete this entity?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'Cancel'),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                  FirebaseFirestore.instance
+                      .runTransaction((Transaction myTransaction) async {
+                      myTransaction.delete(
+                        doc);
+                  });
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
         );
-  }
+      },
+      icon: Icon(Icons.remove),
+      padding: EdgeInsets.zero,
+      constraints: BoxConstraints(),
+    );
 }
