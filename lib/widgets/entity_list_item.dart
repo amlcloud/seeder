@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/entities_page.dart';
@@ -13,7 +15,8 @@ class EntityListItem extends ConsumerWidget {
     return ref.watch(docSP('entity/' + entityId)).when(
         loading: () => Container(),
         error: (e, s) => ErrorWidget(e),
-        data: (entityDoc) => entityDoc.exists == false
+        data: (entityDoc) => 
+            entityDoc.exists == false
             ? Center(child: Text('No entity data exists'))
             : ListTile(
               tileColor: Color.fromARGB(255, 44, 44, 44),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/entities_page.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:seeder/batches_page/batch_page.dart';
 
 class SelectedListItem extends ConsumerWidget {
   final String entityId;
@@ -10,7 +11,7 @@ class SelectedListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(docSP('set/' + entityId+'/SelectedEntity')).when(
+    return ref.watch(docSP('set/${ref.watch(activeBatch)}/SelectedEntity/${entityId}')).when(
         loading: () => Container(),
         error: (e, s) => ErrorWidget(e),
         data: (entityDoc) => entityDoc.exists == false
@@ -27,7 +28,8 @@ class SelectedListItem extends ConsumerWidget {
                     Text(entityDoc.data()!['id'] ?? 'id'),buildDeleteEntityButton(context, ref, entityId)]),
                 subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
                 onTap: () {
-                  ref.read(activeEntity.notifier).value = entityId;
+                  // ref.read(activeEntity.notifier).value = entityId;
+                  print(entityDoc.data()!['name']);
                 },
               ),
     );

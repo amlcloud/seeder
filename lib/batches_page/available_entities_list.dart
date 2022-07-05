@@ -40,7 +40,10 @@ class AvailableEntitiesList extends ConsumerWidget {
               .collection("SelectedEntity")
               .add({
             'id': value.data()!['id']?.toString(),
-            'author': value.data()!['author']?.toString()
+            'author': value.data()!['author']?.toString(),
+            'desc': value.data()!['desc']?.toString(),
+            'name': value.data()!['name']?.toString(),
+            'time Created': value.data()!['time Created']?.toString(),
           }).then((value) => print("after add: $value"))
         });
   }

@@ -9,25 +9,48 @@ import 'package:seeder/widgets/entity_list_item.dart';
 
 import 'batch_page.dart';
 
+// class SelectedEntitiesList extends ConsumerWidget {
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) => ListView(
+//       padding: EdgeInsets.zero,
+//       shrinkWrap: true,
+//       children: ref
+//           .watch(
+//               colSP('set/AJTOzkGsch2sO9tviKQF/SelectedEntity'))
+//           .when(
+//               loading: () => [Container()],
+//               error: (e, s) => [ErrorWidget(e)],
+//               data: (entities) => entities.docs
+//                   .map((entity) => Card(
+//                         child: Row(children: [
+//                           Expanded(
+//                             child: SelectedListItem(entity.id),
+//                           ),
+//                           IconButton(onPressed: () {}, icon: Icon(Icons.remove))
+//                         ]),
+//                       ))
+//                   .toList()));
+// }
+
 class SelectedEntitiesList extends ConsumerWidget {
+  final String setId = 'BUVlUXhvauQzw384GxE7';
   @override
   Widget build(BuildContext context, WidgetRef ref) => ListView(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
-      children: ref
-          .watch(
-              colSP('set/${ref.read(activeBatch).toString()}/SelectedEntity'))
-          .when(
-              loading: () => [Container()],
-              error: (e, s) => [ErrorWidget(e)],
-              data: (entities) => entities.docs
-                  .map((entity) => Card(
-                        child: Row(children: [
-                          Expanded(
-                            child: SelectedListItem(entity.id),
-                          ),
-                          IconButton(onPressed: () {}, icon: Icon(Icons.remove))
-                        ]),
-                      ))
-                  .toList()));
+      children: ref.watch(colSP('set/${ref.watch(activeBatch)}/SelectedEntity')).when(
+          loading: () => [Container()],
+          error: (e, s) => [ErrorWidget(e)],
+          data: (entities) => entities.docs
+              .map((entity) => Card(
+                    child: Row(children: [
+                      Expanded(
+                        child: SelectedListItem(entity.id),
+                      ),
+                      IconButton(onPressed: () {
+                        print(entity.id);
+                      }, icon: Icon(Icons.remove))
+                    ]),
+                  ))
+              .toList()));
 }
