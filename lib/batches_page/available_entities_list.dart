@@ -8,6 +8,32 @@ import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/widgets/entity_list_item.dart';
 
 class AvailableEntitiesList extends ConsumerWidget {
+  Future<bool> compareEntity(BuildContext context, WidgetRef ref, d) async {
+    bool tempreturn = true;
+    await FirebaseFirestore.instance
+        .collection('set')
+        .doc(ref.watch(activeBatch))
+        .collection('SelectedEntity')
+        .get()
+        .then((value) async => {
+              for (var snapshot in value.docs)
+                {
+                  await FirebaseFirestore.instance
+                      .collection('set')
+                      .doc(ref.watch(activeBatch))
+                      .collection('SelectedEntity')
+                      .doc(snapshot.id)
+                      .get()
+                      .then((value) => {
+                            if (value.data()!['entityId'].toString() ==
+                                d.toString())
+                              {tempreturn = false}
+                          })
+                }
+            });
+    return tempreturn;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) => ListView(
       padding: EdgeInsets.zero,
@@ -15,36 +41,35 @@ class AvailableEntitiesList extends ConsumerWidget {
       children: ref.watch(colSP('entity')).when(
           loading: () => [Container()],
           error: (e, s) => [ErrorWidget(e)],
-          data: (entities) => entities.docs
+          data: (entities) => (entities.docs
               .map((entity) => Card(
                     child: Row(children: [
                       Expanded(
                         child: EntityListItem(entity.id),
                       ),
                       IconButton(
-                          onPressed: () => fetchEntity(ref, entity.id),
-                          icon: Icon(Icons.add))
+                          onPressed: () => fetchEntity(context, ref, entity.id),
+                          icon: Icon(Icons.add)),
                     ]),
                   ))
-              .toList()));
+              .toList())));
 
-  fetchEntity(WidgetRef ref, d) async {
-    ref.watch(docSP('entity/' + d)).whenData((value) => {
-          print("sample add : ${value.data()}"),
-          print(
-              "sample add : ${value.data()!['id']?.toString()} ${value.data()!['author']?.toString()}"),
-          print("Active batch : ${ref.read(activeBatch).toString()}"),
-          FirebaseFirestore.instance
-              .collection('set')
-              .doc(ref.read(activeBatch).toString())
-              .collection("SelectedEntity")
-              .add({
-            'id': value.data()!['id']?.toString(),
-            'author': value.data()!['author']?.toString(),
-            'desc': value.data()!['desc']?.toString(),
-            'name': value.data()!['name']?.toString(),
-            'time Created': value.data()!['time Created']?.toString(),
-          }).then((value) => print("after add: $value"))
-        });
+  fetchEntity(BuildContext context, WidgetRef ref, d) async {
+    if (await compareEntity(context, ref, d)) {
+      ref.watch(docSP('entity/' + d)).whenData((value) => {
+            FirebaseFirestore.instance
+                .collection('set')
+                .doc(ref.read(activeBatch).toString())
+                .collection("SelectedEntity")
+                .add({
+              'id': value.data()!['id']?.toString(),
+              'author': value.data()!['author']?.toString(),
+              'desc': value.data()!['desc']?.toString(),
+              'name': value.data()!['name']?.toString(),
+              'time Created': value.data()!['time Created']?.toString(),
+              'entityId': d.toString()
+            }),
+          });
+    }
   }
 }

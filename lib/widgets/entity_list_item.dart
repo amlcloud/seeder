@@ -65,7 +65,7 @@ class EntityListItem extends ConsumerWidget {
           ),
         );
       },
-      icon: Icon(Icons.remove),
+      icon: Icon(Icons.delete),
       padding: EdgeInsets.zero,
       constraints: BoxConstraints(),
     );
