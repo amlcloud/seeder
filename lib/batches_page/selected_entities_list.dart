@@ -24,7 +24,7 @@ class SelectedEntitiesList extends ConsumerWidget {
                       Expanded(
                         child: SelectedListItem(entity.id),
                       ),
-                      buildDeleteEntityButton(context, FirebaseFirestore.instance.collection('set').doc(ref.watch(activeBatch)).collection('SelectedEntity').doc(entity.id)),
+                      buildDeleteEntityButton(context, FirebaseFirestore.instance.collection('set').doc(ref.watch(activeBatch)).collection('SelectedEntity').doc(entity.id), Icon(Icons.remove),)
                   ]),
                 )).toList()));
 }

@@ -27,7 +27,7 @@ class EntityListItem extends ConsumerWidget {
                 trailing: 
                   Column(
                     children: <Widget>[
-                    Text(entityDoc.data()!['id'] ?? 'id'),buildDeleteEntityButton(context, FirebaseFirestore.instance.collection('entity').doc(entityId))]),
+                    Text(entityDoc.data()!['id'] ?? 'id'),buildDeleteEntityButton(context, FirebaseFirestore.instance.collection('entity').doc(entityId), Icon(Icons.delete))]),
                 subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
                 onTap: () {
                   ref.read(activeEntity.notifier).value = entityId;
@@ -37,7 +37,7 @@ class EntityListItem extends ConsumerWidget {
   }
 }
 
-  buildDeleteEntityButton(BuildContext context, doc) {
+  buildDeleteEntityButton(BuildContext context, doc, button) {
     return IconButton(
       onPressed: () {
         showDialog<String>(
@@ -65,7 +65,7 @@ class EntityListItem extends ConsumerWidget {
           ),
         );
       },
-      icon: Icon(Icons.remove),
+      icon: button,
       padding: EdgeInsets.zero,
       constraints: BoxConstraints(),
     );
