@@ -52,13 +52,11 @@ class TheAppState extends ConsumerState<TheApp> {
     ref.read(isLoading.notifier).value = true;
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
-        print('User is currently signed out!');
         ref.read(isLoggedIn.notifier).value = false;
         ref.read(isLoading.notifier).value = false;
       } else {
         ref.read(isLoggedIn.notifier).value = true;
         ref.read(isLoading.notifier).value = false;
-        print('User is signed in!');
       }
     });
   }

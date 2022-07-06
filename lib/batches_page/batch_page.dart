@@ -85,7 +85,6 @@ class BatchesPage extends ConsumerWidget {
                         }).then((value) => {
                               if (value != null)
                                 {
-                                  print('sample value: ${value.id}'),
                                   FirebaseFirestore.instance
                                       .collection('set')
                                   //     .doc(value.id)

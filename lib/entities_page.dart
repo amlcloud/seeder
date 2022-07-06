@@ -14,8 +14,6 @@ final activeEntity =
 class EntitiesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print(
-        'entity page rebuild with user: ${FirebaseAuth.instance.currentUser}');
     return Scaffold(
         appBar: MyAppBar.getBar(context, ref),
         body:
