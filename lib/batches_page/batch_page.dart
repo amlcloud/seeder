@@ -23,9 +23,11 @@ class BatchesPage extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Flexible(
-                      child: Column(
-                    children: [BatchList(), buildAddSetButton(context, ref)],
-                  )),
+                      child: SingleChildScrollView(child: Column(
+                    children: [BatchList(), 
+                    buildAddSetButton(context, ref)
+                    ],
+                  ))),
                   Expanded(
                     child: BatchDetails(ref.watch(activeBatch)),
                   )

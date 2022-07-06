@@ -29,7 +29,7 @@ class BatchDetails extends ConsumerWidget {
               border: Border.all(
                 color: Colors.grey,
               )),
-          child: Column(
+          child: SingleChildScrollView(child: Column(
             children: [
               Text(entityId!),
               DocFieldTextEditDelayed(
@@ -56,5 +56,5 @@ class BatchDetails extends ConsumerWidget {
                   },
                   child: Text('Copy To Clipboard'))
             ],
-          ));
+          )));
 }

@@ -38,12 +38,12 @@ class EntitiesPage extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Flexible(
-                          child: Column(
+                          child: SingleChildScrollView(child: Column(
                         children: [
                           EntitiesList(),
                           buildAddEntityButton(context, ref),
                         ],
-                      )),
+                      ))),
                       Expanded(
                         child: EntityDetails(ref.watch(activeEntity)),
                       )
