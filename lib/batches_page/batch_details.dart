@@ -6,6 +6,8 @@ import 'package:seeder/batches_page/entities_selector.dart';
 import 'package:seeder/controls/doc_field_text_edit_delayed.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 final activeEntity =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
@@ -52,7 +54,13 @@ class BatchDetails extends ConsumerWidget {
               ),
               ElevatedButton(
                   onPressed: () {
-//copy CSV to clipboard
+                    //copy CSV to clipboard
+                    FirebaseFirestore.instance
+                        .doc('set/${entityId}')
+                        .get()
+                        .then((value) => Clipboard.setData(
+                            ClipboardData(text: value.data().toString())));
+                    Fluttertoast.showToast(msg: 'Copy to clipboard');
                   },
                   child: Text('Copy To Clipboard'))
             ],
