@@ -15,26 +15,18 @@ class SelectedEntitiesList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => ListView(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
-      children:
-          ref.watch(colSP('set/${ref.watch(activeBatch)}/SelectedEntity')).when(
-              loading: () => [Container()],
-              error: (e, s) => [ErrorWidget(e)],
-              data: (entities) => entities.docs
-                  .map((entity) => Card(
-                        child: Row(children: [
-                          Expanded(
-                            child: SelectedListItem(entity.id),
-                          ),
-                          DeleteSelectedEntityButton(
-                              context,
-                              FirebaseFirestore.instance
-                                  .collection('set')
-                                  .doc(ref.watch(activeBatch))
-                                  .collection('SelectedEntity')
-                                  .doc(entity.id)),
-                        ]),
-                      ))
-                  .toList()));
+      children: ref.watch(colSP('set/${ref.watch(activeBatch)}/SelectedEntity')).when(
+          loading: () => [Container()],
+          error: (e, s) => [ErrorWidget(e)],
+          data: (entities) => entities.docs
+              .map((entity) => Card(
+                    child: Row(children: [
+                      Expanded(
+                        child: SelectedListItem(entity.id),
+                      ),
+                      buildDeleteEntityButton(context, FirebaseFirestore.instance.collection('set').doc(ref.watch(activeBatch)).collection('SelectedEntity').doc(entity.id), Icon(Icons.remove),)
+                  ]),
+                )).toList()));
 }
 
 DeleteSelectedEntityButton(BuildContext context, doc) {
