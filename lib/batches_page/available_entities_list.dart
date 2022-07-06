@@ -3,9 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/batches_page/batch_page.dart';
+import 'package:seeder/batches_page/batch_entity_list_item.dart';
 import 'package:seeder/controls/doc_field_text_edit_delayed.dart';
 import 'package:seeder/providers/firestore.dart';
-import 'package:seeder/widgets/entity_list_item.dart';
 
 class AvailableEntitiesList extends ConsumerWidget {
   Future<bool> compareEntity(BuildContext context, WidgetRef ref, d) async {
@@ -45,7 +45,7 @@ class AvailableEntitiesList extends ConsumerWidget {
               .map((entity) => Card(
                     child: Row(children: [
                       Expanded(
-                        child: EntityListItem(entity.id),
+                        child: BatchEntityListItem('entity/${entity.id}'),
                       ),
                       IconButton(
                           onPressed: () => fetchEntity(context, ref, entity.id),
