@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/batches_page/batch_list_item.dart';
@@ -51,7 +52,9 @@ class BatchList extends ConsumerWidget {
                         ref.watch(isMineBatchNotifierProvider) ?? false;
                     var all_batches = data.docs;
                     var authors_only_batch = data.docs
-                        .where((doc) => doc['author'] == currentAuthorId)
+                        .where(
+                            (QueryDocumentSnapshot<Map<String, dynamic>> doc) =>
+                                doc.data()['author'] == currentAuthorId)
                         .toList();
                     var author_filtered_batches = (onlyMineSwitchStatus == true
                         ? authors_only_batch
@@ -66,7 +69,6 @@ class BatchList extends ConsumerWidget {
                     return sorted_batches
                         .map((e) => BatchListItem(e.id))
                         .toList();
-                        
                   }))
         ],
       );
