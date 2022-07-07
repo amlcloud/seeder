@@ -87,15 +87,6 @@ class BatchesPage extends ConsumerWidget {
                                 {
                                   FirebaseFirestore.instance
                                       .collection('batch')
-                                  //     .doc(value.id)
-                                  //     .collection("SelectedEntity")
-                                  //     .add({
-                                  //   'id': id_inp.text.toString(),
-                                  //   'time Created':
-                                  //       FieldValue.serverTimestamp(),
-                                  //   'author':
-                                  //       FirebaseAuth.instance.currentUser!.uid,
-                                  // })
                                 }
                             });
 
