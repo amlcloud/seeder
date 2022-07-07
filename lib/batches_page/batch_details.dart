@@ -55,12 +55,37 @@ class BatchDetails extends ConsumerWidget {
               ElevatedButton(
                   onPressed: () {
                     //copy CSV to clipboard
-                    FirebaseFirestore.instance
-                        .doc('set/${entityId}')
-                        .get()
-                        .then((value) => Clipboard.setData(
-                            ClipboardData(text: value.data().toString())));
-                    Fluttertoast.showToast(msg: 'Copy to clipboard');
+                    List<String> clipboard = [];
+                    ref.watch(colSP('entity')).when(
+                          loading: () => [Container()],
+                          error: (e, s) => [ErrorWidget(e)],
+                          data: (entities) => entities.docs
+                              .map(
+                                (entity) => {
+                                  print('data is:' + entity.data().toString()),
+                                  clipboard.add(entity.data().toString())
+                                },
+                              )
+                              .toList(),
+                        );
+                    // final docRef = FirebaseFirestore.instance
+                    //     .collection('set/BUVlUXhvauQzw384GxE7/entity')
+                    //     .get();
+                    // docRef.then(
+                    //   (doc) {
+                    //     final data = doc.docs.asMap();
+                    //     data.forEach((key, value) {
+                    //       clipboard.add(value[key].toString());
+                    //       print("What is this: " + value[key]);
+                    //     });
+                    //     //clipboard.add(data.toString());
+                    //     print('data is: ' + data.toString());
+                    //   },
+                    // );
+                    Clipboard.setData(
+                        ClipboardData(text: clipboard.toString()));
+
+                    Fluttertoast.showToast(msg: 'Copied to clipboard');
                   },
                   child: Text('Copy To Clipboard'))
             ],
