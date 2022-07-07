@@ -73,23 +73,6 @@ class TheAppState extends ConsumerState<TheApp> {
     } else {
       return Scaffold(
           body: ref.watch(isLoggedIn) == false
-              // ? Column(
-              //     children: [
-              //       Text('please log in'),
-              //       ElevatedButton(
-              //           onPressed: () async {
-              //             ref.read(isLoading.notifier).value = true;
-              //             await FirebaseAuth.instance
-              //                 .signInAnonymously()
-              //                 .then((a) => {
-              //                       print(' samplue signin $a'),
-              //                       ref.read(isLogedIn.notifier).value = true,
-              //                       ref.read(isLoading.notifier).value = false,
-              //                     });
-              //           },
-              //           child: Text('log-in')),
-              //     ],
-              //   )
               ? LoginPage()
               : DefaultTabController(
                   initialIndex: 0,
