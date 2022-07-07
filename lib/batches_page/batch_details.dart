@@ -8,6 +8,9 @@ import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:seeder/providers/firestore.dart';
+import 'package:csv/csv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 final activeEntity =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
@@ -54,7 +57,9 @@ class BatchDetails extends ConsumerWidget {
               ),
               ElevatedButton(
                   onPressed: () {
-                    //copy CSV to clipboard
+                    final List<List<String>> exportList = [
+                      <String>["id", "name", "desc", "author", "timestamp"]
+                    ];
                     List<String> clipboard = [];
                     ref.watch(colSP('entity')).when(
                           loading: () => [Container()],
@@ -62,7 +67,14 @@ class BatchDetails extends ConsumerWidget {
                           data: (entities) => entities.docs
                               .map(
                                 (entity) => {
-                                  print('data is:' + entity.data().toString()),
+                                  print('data is:' + entity['name'].toString()),
+                                  exportList.add(<String>[
+                                    entity["id"].toString(),
+                                    entity["name"].toString(),
+                                    entity["desc"].toString(),
+                                    entity["author"].toString(),
+                                    entity["time Created"].toString()
+                                  ]),
                                   clipboard.add(entity.data().toString())
                                 },
                               )
@@ -82,8 +94,8 @@ class BatchDetails extends ConsumerWidget {
                     //     print('data is: ' + data.toString());
                     //   },
                     // );
-                    Clipboard.setData(
-                        ClipboardData(text: clipboard.toString()));
+                    String csv = ListToCsvConverter().convert(exportList).toString();
+                    Clipboard.setData(ClipboardData(text: csv));
 
                     Fluttertoast.showToast(msg: 'Copied to clipboard');
                   },
