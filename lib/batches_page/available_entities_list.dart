@@ -10,7 +10,6 @@ class AvailableEntitiesList extends ConsumerWidget {
     bool temp = true;
     for (var i = 0; i < v.length; i++) {
       if (v[i].id.toString() == d) {
-        print("foreach 111 id ${v[i].id.toString()} d: ${d}");
         temp = false;
         break;
       }
@@ -62,7 +61,6 @@ class AvailableEntitiesList extends ConsumerWidget {
                             ]),
                           );
                         } else {
-                          print("its me");
                           return Container();
                         }
                       }).toList()))))));
