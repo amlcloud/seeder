@@ -25,7 +25,7 @@ class BatchesPage extends ConsumerWidget {
                   Flexible(
                       child: SingleChildScrollView(child: Column(
                     children: [BatchList(), 
-                    buildAddSetButton(context, ref)
+                    buildAddBatchButton(context, ref)
                     ],
                   ))),
                   Expanded(
@@ -34,7 +34,7 @@ class BatchesPage extends ConsumerWidget {
                 ])));
   }
 
-  buildAddSetButton(BuildContext context, WidgetRef ref) {
+  buildAddBatchButton(BuildContext context, WidgetRef ref) {
     TextEditingController id_inp = TextEditingController();
     TextEditingController name_inp = TextEditingController();
     TextEditingController desc_inp = TextEditingController();
@@ -76,7 +76,7 @@ class BatchesPage extends ConsumerWidget {
                   TextButton(
                       child: Text("Submit"),
                       onPressed: () {
-                        FirebaseFirestore.instance.collection('set').add({
+                        FirebaseFirestore.instance.collection('batch').add({
                           'id': id_inp.text.toString(),
                           'name': name_inp.text.toString(),
                           'desc': desc_inp.text.toString(),
@@ -86,7 +86,7 @@ class BatchesPage extends ConsumerWidget {
                               if (value != null)
                                 {
                                   FirebaseFirestore.instance
-                                      .collection('set')
+                                      .collection('batch')
                                   //     .doc(value.id)
                                   //     .collection("SelectedEntity")
                                   //     .add({
