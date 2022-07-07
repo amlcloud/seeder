@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 
-final isMineBatchNotifierProvider = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
-    (ref) => GenericStateNotifier<bool>(false));
+final isMineBatchNotifierProvider =
+    StateNotifierProvider<GenericStateNotifier<bool>, bool>(
+        (ref) => GenericStateNotifier<bool>(false));
 
-class BatchFilter extends ConsumerWidget {
+class OnlyMineBatchFilter extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => Row(children: [
         Text('Mine Only'),

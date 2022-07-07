@@ -4,7 +4,7 @@ import 'package:seeder/batches_page/batch_list_item.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import '../widgets/entities_list.dart';
-import 'filter_my_batches.dart';
+import 'only_mine_batch_filter.dart';
 
 final sortStateNotifierProvider =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
@@ -37,7 +37,7 @@ class BatchList extends ConsumerWidget {
                   );
                 }).toList(),
               ),
-              BatchFilter()
+              OnlyMineBatchFilter()
             ],
           ),
           ListView(
@@ -46,23 +46,28 @@ class BatchList extends ConsumerWidget {
               children: ref.watch(colSP('set')).when(
                   loading: () => [Container()],
                   error: (e, s) => [ErrorWidget(e)],
-                  data: (data){
-                    bool onlyMineSwitchStatus =ref.watch(isMineBatchNotifierProvider)??false;
+                  data: (data) {
+                    bool onlyMineSwitchStatus =
+                        ref.watch(isMineBatchNotifierProvider) ?? false;
                     var all_batches = data.docs;
-                    var authors_only_batch = data.docs.where((doc) => doc['author']==currentAuthorId).toList();
-                    var author_filtered_batches = (onlyMineSwitchStatus==true?authors_only_batch : all_batches);
-                    var sorted_batches = author_filtered_batches..sort(
-                        (a,b) {
-                          var sortedBy = ref.watch(sortStateNotifierProvider) ?? 'id';
-                          // print(sortedBy);
-                          return a[sortedBy]
-                            .compareTo(b[sortedBy]);
-                        }
-                    );
+                    var authors_only_batch = data.docs
+                        .where((doc) => doc['author'] == currentAuthorId)
+                        .toList();
+                    var author_filtered_batches = (onlyMineSwitchStatus == true
+                        ? authors_only_batch
+                        : all_batches);
+                    var sorted_batches = author_filtered_batches
+                      ..sort((a, b) {
+                        var sortedBy =
+                            ref.watch(sortStateNotifierProvider) ?? 'id';
+                        // print(sortedBy);
+                        return a[sortedBy].compareTo(b[sortedBy]);
+                      });
                     return sorted_batches
-                        .map((e) => BatchListItem(e.id)).toList();
-                  }
-  ))
+                        .map((e) => BatchListItem(e.id))
+                        .toList();
+                        
+                  }))
         ],
       );
 }
