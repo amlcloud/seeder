@@ -22,6 +22,7 @@ void main() async {
       child: MaterialApp(
     title: 'Data Generator',
     themeMode: ThemeMode.dark,
+    theme: lightTheme,
     darkTheme: darkTheme,
     // home: SandboxLauncher(
     //     // sandbox for texting individual widgets
