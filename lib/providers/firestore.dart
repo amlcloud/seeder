@@ -10,7 +10,7 @@ import 'package:quiver/core.dart';
 ///
 /// ref.watch(filteredColSP(WhereFilter(
 ///     limit: 5,
-///     path: opvPathByWatch(ref, 'case'),
+///     path: 'path to collection',
 ///     queries: [
 ///   QueryParam(
 ///       'entity',
@@ -52,7 +52,7 @@ class QueryParam extends Equatable {
 ///
 /// ref.watch(filteredColSP(WhereFilter(
 ///     limit: 5,
-///     path: opvPathByWatch(ref, 'case'),
+///     path: 'path to collection',
 ///     queries: [
 ///   QueryParam(
 ///       'entity',
