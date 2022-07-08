@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/entities_page.dart';
@@ -23,13 +24,30 @@ class EntityListItem extends ConsumerWidget {
                   ),
                   trailing: Column(children: <Widget>[
                     Text(entityDoc.data()!['id'] ?? 'id'),
+
                     buildDeleteEntityButton(context, ref, entityId)
+
+                    IconButton(
+                      onPressed: () => {
+                        DeleteEntity(
+                            context,
+                            ref,
+                            FirebaseFirestore.instance
+                                .collection('entity')
+                                .doc(entityId)),
+                      },
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      icon: Icon(Icons.delete),
+                    )
+
                   ]),
                   subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
                   onTap: () {
                     ref.read(activeEntity.notifier).value = entityId;
                   },
                 ),
+
         );
   }
 
@@ -61,6 +79,7 @@ class EntityListItem extends ConsumerWidget {
               ),
             ],
           ),
+
         );
       },
       icon: Icon(Icons.delete),
@@ -68,4 +87,94 @@ class EntityListItem extends ConsumerWidget {
       constraints: BoxConstraints(),
     );
   }
+
+  Future<bool> CheckSelected() async {
+    var batchRef = await FirebaseFirestore.instance.collection('batch').get();
+    for (var element in batchRef.docs) {
+      var selectList = await FirebaseFirestore.instance
+          .collection('batch')
+          .doc(element.id)
+          .collection('SelectedEntity')
+          .doc(entityId)
+          .get();
+      if (selectList.exists) {
+        print("sample data temp1: ${selectList.exists}");
+        //temp = false;
+        return selectList.exists;
+      }
+    }
+    return false;
+  }
+
+  DeleteEntity(BuildContext context, WidgetRef ref, doc) async {
+    bool temp = await CheckSelected();
+    return showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => !temp
+            ? AlertDialog(
+                title: const Text('Deleting entity'),
+                content:
+                    const Text('Are you sure you want to delete this entity?'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, 'OK');
+                      FirebaseFirestore.instance
+                          .runTransaction((Transaction myTransaction) async {
+                        myTransaction.delete(doc);
+                      });
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              )
+            : AlertDialog(
+                title: const Text('Warning!'),
+                content: const Text(
+                    'The action cannot be completed because this entity selected in the Batch list'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  ),
+                ],
+              ));
+  }
+}
+
+buildDeleteEntityButton(BuildContext context, doc, button) {
+  return IconButton(
+    onPressed: () {
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Deleting entity'),
+          content: const Text('Are you sure you want to delete this entity?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'Cancel'),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, 'OK');
+                FirebaseFirestore.instance
+                    .runTransaction((Transaction myTransaction) async {
+                  myTransaction.delete(doc);
+                });
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    },
+    icon: button,
+    padding: EdgeInsets.zero,
+    constraints: BoxConstraints(),
+  );
 }

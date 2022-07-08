@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/providers/firestore.dart';
@@ -8,13 +9,16 @@ import 'package:seeder/widgets/filter_my_entities.dart';
 final activeSort =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
         (ref) => GenericStateNotifier<String?>(null));
+
+final currentAuthorId = FirebaseAuth.instance.currentUser!.uid;
+
 class EntitiesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => Column(
         children: [
           Row(
             children: [
-              Text('sort by:'),
+              Text('sort by: '),
               DropdownButton<String>(
                 value: ref.watch(activeSort) ?? 'id',
                 icon: const Icon(Icons.arrow_downward),
@@ -27,24 +31,28 @@ class EntitiesList extends ConsumerWidget {
                 onChanged: (String? newValue) {
                   ref.read(activeSort.notifier).value = newValue;
                 },
-                items: <String>['name', 'id']
+                items: <String>['name', 'id', 'time Created']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(value.toUpperCase()),
                   );
                 }).toList(),
               ),
-              FilterMyEntities()
+              FilterMyEntities(),
             ],
           ),
           ListView(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
-              children: ref.watch(colSP('entity')).when(
+              children:ref.watch(colSP('entity')).when(
                   loading: () => [Container()],
                   error: (e, s) => [ErrorWidget(e)],
-                  data: (entities) => (entities.docs
+                  data: (entities) => (((ref.watch(filterMine) ?? false)
+                          ? entities.docs
+                              .where((d) => d['author'] == currentAuthorId)
+                              .toList()
+                          : entities.docs)
                         ..sort((a, b) => a[ref.watch(activeSort) ?? 'id']
                             .compareTo(b[ref.watch(activeSort) ?? 'id'])))
                       .map((entity) => EntityListItem(entity.id))

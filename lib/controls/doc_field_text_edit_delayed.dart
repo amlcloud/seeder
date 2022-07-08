@@ -9,6 +9,7 @@ class DocFieldTextEditDelayed extends ConsumerStatefulWidget {
   final String field;
   final String placeholder;
   final TextEditingController ctrl = TextEditingController();
+  
 
   DocFieldTextEditDelayed(this.docRef, this.field, {this.placeholder = "field_name", Key? key})
       : super(key: key);
@@ -56,7 +57,6 @@ class DocFieldTextEditDelayedState
                     descSaveTimer!.cancel();
                   }
                   descSaveTimer = Timer(Duration(milliseconds: 200), () {
-                    print('saving...');
                     if (docSnapshot.data() == null ||
                         v != docSnapshot.data()![widget.field]) {
                       Map<String, dynamic> map = {};

@@ -24,12 +24,14 @@ class TransactionList extends ConsumerWidget {
                             .entries
                             .map((e) => Text(e.key.toString()))
                             .toList()),
-                    ListView(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        children: trnCol.docs
-                            .map((trnDoc) => Transaction(trnDoc))
-                            .toList())
+                    Expanded(
+                      child: ListView(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          children: trnCol.docs
+                              .map((trnDoc) => Transaction(trnDoc))
+                              .toList()),
+                    )
                   ],
                 ));
 }

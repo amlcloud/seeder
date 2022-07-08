@@ -1,16 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/batches_page/batch_page.dart';
-import 'package:seeder/entities_page.dart';
+import 'package:seeder/widgets/entity_list_item.dart';
 import 'package:seeder/providers/firestore.dart';
 
 class BatchListItem extends ConsumerWidget {
-  final String setId;
-  const BatchListItem(this.setId);
+  final String batchId;
+  const BatchListItem(this.batchId);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(docSP('set/' + setId)).when(
+    return ref.watch(docSP('batch/' + batchId)).when(
         loading: () => Container(),
         error: (e, s) => ErrorWidget(e),
         data: (entityDoc) => entityDoc.exists == false
@@ -22,10 +23,14 @@ class BatchListItem extends ConsumerWidget {
                     title: Text(
                       'batch ' + (entityDoc.data()!['name'] ?? 'name'),
                     ),
-                    trailing: Text(entityDoc.data()!['id'] ?? 'id'),
+                    //trailing: Text(entityDoc.data()!['id'] ?? 'id'),
                     subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
+                    trailing: Column(children: <Widget>[
+                      Text(entityDoc.data()!['id'] ?? 'id'),
+                      buildDeleteEntityButton(context,FirebaseFirestore.instance.collection('batch').doc(batchId), Icon(Icons.delete))
+                    ]),
                     onTap: () {
-                      ref.read(activeBatch.notifier).value = setId;
+                      ref.read(activeBatch.notifier).value = batchId;
                     },
                   )
                 ],
