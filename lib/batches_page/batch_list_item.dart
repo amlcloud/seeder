@@ -27,7 +27,12 @@ class BatchListItem extends ConsumerWidget {
                     subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
                     trailing: Column(children: <Widget>[
                       Text(entityDoc.data()!['id'] ?? 'id'),
-                      buildDeleteEntityButton(context,FirebaseFirestore.instance.collection('batch').doc(batchId), Icon(Icons.delete))
+                      buildDeleteEntityButton(
+                          context,
+                          FirebaseFirestore.instance
+                              .collection('batch')
+                              .doc(batchId),
+                          Icon(Icons.delete))
                     ]),
                     onTap: () {
                       ref.read(activeBatch.notifier).value = batchId;
