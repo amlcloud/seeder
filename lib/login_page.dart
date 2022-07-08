@@ -45,8 +45,6 @@ class LoginPageState extends ConsumerState<LoginPage> {
             ElevatedButton(
                 onPressed: () {
                   signInWithGoogle().whenComplete(() {
-                    print(
-                        'google user ${FirebaseAuth.instance.currentUser!.uid}');
                     //ref.read(isLogedIn.notifier).value = true;
                   });
                 },
@@ -66,7 +64,6 @@ class LoginPageState extends ConsumerState<LoginPage> {
                     await FirebaseAuth.instance
                         .signInAnonymously()
                         .then((a) => {
-                              print(' samplue signin $a'),
                               ref.read(isLoggedIn.notifier).value = true,
                               ref.read(isLoading.notifier).value = false,
                             });

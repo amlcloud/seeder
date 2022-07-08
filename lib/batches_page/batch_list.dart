@@ -44,7 +44,7 @@ class BatchList extends ConsumerWidget {
           ListView(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
-              children: ref.watch(colSP('set')).when(
+              children: ref.watch(colSP('batch')).when(
                   loading: () => [Container()],
                   error: (e, s) => [ErrorWidget(e)],
                   data: (data) {

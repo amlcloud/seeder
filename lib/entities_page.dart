@@ -14,23 +14,9 @@ final activeEntity =
 class EntitiesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print(
-        'entity page rebuild with user: ${FirebaseAuth.instance.currentUser}');
     return Scaffold(
         appBar: MyAppBar.getBar(context, ref),
         body:
-            //  FirebaseAuth.instance.currentUser == null
-            //     ? Column(
-            //         children: [
-            //           Text('please log in'),
-            //           ElevatedButton(
-            //               onPressed: () {
-            //                 FirebaseAuth.instance.signInAnonymously();
-            //               },
-            //               child: Text('log-in'))
-            //         ],
-            //       )
-            //     :
             Container(
                 alignment: Alignment.topLeft,
                 child: Row(
@@ -38,26 +24,18 @@ class EntitiesPage extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Flexible(
-                          child: Column(
+                          child: SingleChildScrollView(child: Column(
                         children: [
                           EntitiesList(),
                           buildAddEntityButton(context, ref),
                         ],
-                      )),
+                      ))),
                       Expanded(
                         child: EntityDetails(ref.watch(activeEntity)),
                       )
                     ])));
   }
-  // Code written by Joanne
-  // buildAddEntityButton(WidgetRef ref) {
-  //   return ElevatedButton(onPressed: () {
-  //     FirebaseFirestore.instance.collection('entity').add({'id':'', 'name':'', 'desc':''});
-  //   },
-  //   child: Text('Add Entity'));
-  // }
 
-  // Edited version: vnguyen
   buildAddEntityButton(BuildContext context, WidgetRef ref) {
     TextEditingController id_inp = TextEditingController();
     TextEditingController name_inp = TextEditingController();

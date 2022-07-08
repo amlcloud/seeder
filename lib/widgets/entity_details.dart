@@ -33,7 +33,7 @@ class EntityDetails extends ConsumerWidget {
               child: Column(
                 children: [
                   Flexible(
-                      child: Column(children: [
+                      child:Column(children: [
                     Text(entityId!),
                     DocFieldTextEditDelayed(
                         FirebaseFirestore.instance.doc('entity/${entityId}'),

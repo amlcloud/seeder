@@ -45,7 +45,7 @@ class EntitiesList extends ConsumerWidget {
           ListView(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
-              children: ref.watch(colSP('entity')).when(
+              children:ref.watch(colSP('entity')).when(
                   loading: () => [Container()],
                   error: (e, s) => [ErrorWidget(e)],
                   data: (entities) => (((ref.watch(filterMine) ?? false)

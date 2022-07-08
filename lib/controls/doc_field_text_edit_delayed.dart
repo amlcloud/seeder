@@ -57,7 +57,6 @@ class DocFieldTextEditDelayedState
                     descSaveTimer!.cancel();
                   }
                   descSaveTimer = Timer(Duration(milliseconds: 200), () {
-                    print('saving...');
                     if (docSnapshot.data() == null ||
                         v != docSnapshot.data()![widget.field]) {
                       Map<String, dynamic> map = {};

@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/controls/doc_field_text_edit_delayed.dart';
+import 'package:seeder/batches_page/batch_page.dart';
+import 'package:seeder/batches_page/batch_entity_list_item.dart';
 import 'package:seeder/providers/firestore.dart';
-import 'package:seeder/widgets/entity_list_item.dart';
 
 class AvailableEntitiesList extends ConsumerWidget {
   @override
@@ -14,14 +13,25 @@ class AvailableEntitiesList extends ConsumerWidget {
       children: ref.watch(colSP('entity')).when(
           loading: () => [Container()],
           error: (e, s) => [ErrorWidget(e)],
-          data: (entities) => entities.docs
-              .map((entity) => Card(
-                    child: Row(children: [
-                      Expanded(
-                        child: EntityListItem(entity.id),
-                      ),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.add))
-                    ]),
-                  ))
-              .toList()));
+          data: (entities) => ((ref
+              .watch(colSP('batch/${ref.watch(activeBatch)}/SelectedEntity/'))
+              .when(
+                  loading: () => [Container()],
+                  error: (e, s) => [ErrorWidget(e)],
+                  data: (value) => (entities.docs
+                      .map(
+                        (entity) => ref
+                            .watch(docSP(
+                                'batch/${ref.watch(activeBatch)!}/SelectedEntity/${entity.id}'))
+                            .when(
+                                loading: () => Container(),
+                                error: (e, s) => ErrorWidget(e),
+                                data: (selectedEntityDoc) =>
+                                    selectedEntityDoc.exists
+                                        ? Container()
+                                        : BatchEntityListItem(
+                                            'entity/${entity.id}',
+                                            ref.watch(activeBatch)!)),
+                      )
+                      .toList()))))));
 }
