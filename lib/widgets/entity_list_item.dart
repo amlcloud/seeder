@@ -24,6 +24,9 @@ class EntityListItem extends ConsumerWidget {
                   ),
                   trailing: Column(children: <Widget>[
                     Text(entityDoc.data()!['id'] ?? 'id'),
+
+                    buildDeleteEntityButton(context, ref, entityId)
+
                     IconButton(
                       onPressed: () => {
                         DeleteEntity(
@@ -37,13 +40,52 @@ class EntityListItem extends ConsumerWidget {
                       constraints: BoxConstraints(),
                       icon: Icon(Icons.delete),
                     )
+
                   ]),
                   subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
                   onTap: () {
                     ref.read(activeEntity.notifier).value = entityId;
                   },
                 ),
+
         );
+  }
+
+  buildDeleteEntityButton(BuildContext context, WidgetRef ref, id) {
+    return IconButton(
+      onPressed: () {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Deleting entity'),
+            content: const Text('Are you sure you want to delete this entity?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'Cancel'),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                  FirebaseFirestore.instance
+                      .runTransaction((Transaction myTransaction) async {
+                    myTransaction.delete(FirebaseFirestore.instance
+                        .collection('entity')
+                        .doc(id));
+                  });
+                  ref.read(activeEntity.notifier).value = null;
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+
+        );
+      },
+      icon: Icon(Icons.delete),
+      padding: EdgeInsets.zero,
+      constraints: BoxConstraints(),
+    );
   }
 
   Future<bool> CheckSelected() async {
