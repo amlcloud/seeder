@@ -4,7 +4,10 @@ import 'package:jiffy/jiffy.dart';
 
 class Day extends ConsumerWidget {
   final Jiffy day;
-  Day(this.day);
+  const Day(this.day);
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Text(day.toString());
+  Widget build(BuildContext context, WidgetRef ref) => Text(
+        day.format('dd'),
+        style: TextStyle(fontSize: 8),
+      );
 }
