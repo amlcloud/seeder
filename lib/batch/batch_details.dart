@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/batch/entities_selector.dart';
-import 'package:seeder/controls/doc_field_text_edit_delayed.dart';
+import 'package:seeder/controls/doc_field_text_edit.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -36,13 +36,13 @@ class BatchDetails extends ConsumerWidget {
               child: Column(
             children: [
               Text(entityId!),
-              DocFieldTextEditDelayed(
+              DocFieldTextEdit(
                   FirebaseFirestore.instance.doc('batch/${entityId}'), 'id'),
-              DocFieldTextEditDelayed(
+              DocFieldTextEdit(
                 FirebaseFirestore.instance.doc('batch/${entityId}'),
                 'name',
               ),
-              DocFieldTextEditDelayed(
+              DocFieldTextEdit(
                 FirebaseFirestore.instance.doc('batch/${entityId}'),
                 'desc',
               ),
