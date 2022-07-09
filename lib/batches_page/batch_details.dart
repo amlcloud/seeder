@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/batches_page/batch_view_csv.dart';
 import 'package:seeder/batches_page/entities_selector.dart';
 import 'package:seeder/controls/doc_field_text_edit_delayed.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
@@ -27,7 +28,8 @@ class BatchDetails extends ConsumerWidget {
               border: Border.all(
                 color: Colors.grey,
               )),
-          child: SingleChildScrollView(child: Column(
+          child: SingleChildScrollView(
+              child: Column(
             children: [
               Text(entityId!),
               DocFieldTextEditDelayed(
@@ -43,16 +45,17 @@ class BatchDetails extends ConsumerWidget {
               Divider(),
               EntitiesSelector(),
               Divider(),
-              ElevatedButton(onPressed: () {}, child: Text('Generate')),
-              Text("Output:"),
-              Card(
-                child: Text('CSV output goes here...'),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-//copy CSV to clipboard
-                  },
-                  child: Text('Copy To Clipboard'))
+//               ElevatedButton(onPressed: () {}, child: Text('Generate')),
+//               Text("Output:"),
+//               Card(
+//                 child: Text('CSV output goes here...'),
+//               ),
+//               ElevatedButton(
+//                   onPressed: () {
+// //copy CSV to clipboard
+//                   },
+//                   child: Text('Copy To Clipboard'))
+              BatchViewCsv(entityId!),
             ],
           )));
 }

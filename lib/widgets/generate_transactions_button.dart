@@ -5,7 +5,7 @@ import 'dart:math' as math;
 
 class GenerateTransactionsButton extends ConsumerWidget {
   final String entityId;
-  GenerateTransactionsButton(this.entityId);
+  const GenerateTransactionsButton(this.entityId);
   @override
   Widget build(BuildContext context, WidgetRef ref) => ElevatedButton(
       onPressed: () {
