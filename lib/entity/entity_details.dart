@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:seeder/common.dart';
 import 'package:seeder/controls/doc_field_text_edit_delayed.dart';
+import 'package:seeder/entity/entity_info.dart';
+import 'package:seeder/entity/entity_params.dart';
 import 'package:seeder/entity/generate_transactions_button.dart';
 import 'package:seeder/entity/transaction_list.dart';
 import 'package:seeder/providers/firestore.dart';
@@ -32,33 +34,8 @@ class EntityDetails extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            Flexible(
-                flex: 1,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Flexible(
-                        child: DocFieldTextEditDelayed(
-                            FirebaseFirestore.instance
-                                .doc('entity/${entityId}'),
-                            'id',
-                            placeholder: "ID")),
-                    Flexible(
-                        child: DocFieldTextEditDelayed(
-                      FirebaseFirestore.instance.doc('entity/${entityId}'),
-                      'name',
-                      placeholder: "Name",
-                    )),
-                    Flexible(
-                        child: DocFieldTextEditDelayed(
-                      FirebaseFirestore.instance.doc('entity/${entityId}'),
-                      'desc',
-                      placeholder: "Description",
-                    ))
-                  ],
-                )),
+            Flexible(flex: 1, child: EntityInfo(entityId)),
+            Flexible(flex: 1, child: EntityParams()),
             Flexible(
                 child: Row(
               children: [GenerateTransactionsButton(entityId)],

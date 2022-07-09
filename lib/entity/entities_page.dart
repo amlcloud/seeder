@@ -31,6 +31,7 @@ class EntitiesPage extends ConsumerWidget {
                     ],
                   ))),
                   Expanded(
+                    flex: 2,
                     child: ref.watch(activeEntity) == null
                         ? Container()
                         : EntityDetails(ref.watch(activeEntity)!),

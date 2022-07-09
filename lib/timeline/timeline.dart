@@ -9,8 +9,8 @@ import 'package:seeder/timeline/day.dart';
 class Timeline extends ConsumerWidget {
   static Jiffy startDate = Jiffy().add(days: -25);
   static Jiffy endDate = Jiffy();
-  List<Jiffy> days = generateDays(startDate, endDate);
-  String entityId;
+  final List<Jiffy> days = generateDays(startDate, endDate);
+  final String entityId;
   Timeline(this.entityId);
   @override
   Widget build(BuildContext context, WidgetRef ref) => SizedBox(
