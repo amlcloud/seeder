@@ -1,16 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/entity/entity_list_item.dart';
+import 'package:seeder/entity/filter_my_entities.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
-import 'package:seeder/widgets/entity_list_item.dart';
-import 'package:seeder/widgets/filter_my_entities.dart';
 
 final activeSort =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
         (ref) => GenericStateNotifier<String?>(null));
-
-final currentAuthorId = FirebaseAuth.instance.currentUser!.uid;
 
 class EntitiesList extends ConsumerWidget {
   @override
@@ -45,12 +43,14 @@ class EntitiesList extends ConsumerWidget {
           ListView(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
-              children:ref.watch(colSP('entity')).when(
+              children: ref.watch(colSP('entity')).when(
                   loading: () => [Container()],
                   error: (e, s) => [ErrorWidget(e)],
                   data: (entities) => (((ref.watch(filterMine) ?? false)
                           ? entities.docs
-                              .where((d) => d['author'] == currentAuthorId)
+                              .where((d) =>
+                                  d['author'] ==
+                                  FirebaseAuth.instance.currentUser!.uid)
                               .toList()
                           : entities.docs)
                         ..sort((a, b) => a[ref.watch(activeSort) ?? 'id']

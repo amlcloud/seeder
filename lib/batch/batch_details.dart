@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/batches_page/entities_selector.dart';
+import 'package:seeder/batch/entities_selector.dart';
 import 'package:seeder/controls/doc_field_text_edit_delayed.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:flutter/services.dart';
@@ -32,7 +32,8 @@ class BatchDetails extends ConsumerWidget {
               border: Border.all(
                 color: Colors.grey,
               )),
-          child: SingleChildScrollView(child: Column(
+          child: SingleChildScrollView(
+              child: Column(
             children: [
               Text(entityId!),
               DocFieldTextEditDelayed(
@@ -92,7 +93,8 @@ class BatchDetails extends ConsumerWidget {
                     //     print('data is: ' + data.toString());
                     //   },
                     // );
-                    String csv = ListToCsvConverter().convert(exportList).toString();
+                    String csv =
+                        ListToCsvConverter().convert(exportList).toString();
                     Clipboard.setData(ClipboardData(text: csv));
 
                     Fluttertoast.showToast(msg: 'Copied to clipboard');

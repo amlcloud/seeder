@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/batches_page/batch_page.dart';
+import 'package:seeder/batch/batch_page.dart';
 import 'package:seeder/entities_page.dart';
 import 'package:seeder/login_page.dart';
 import 'package:seeder/sandbox/sandbox.dart';

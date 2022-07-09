@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/batches_page/batch_page.dart';
-import 'package:seeder/batches_page/batch_entity_list_item.dart';
+import 'package:seeder/batch/batch_entity_list_item.dart';
+import 'package:seeder/batch/batch_page.dart';
 import 'package:seeder/providers/firestore.dart';
 
 class AvailableEntitiesList extends ConsumerWidget {

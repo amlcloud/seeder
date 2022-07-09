@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/app_bar.dart';
+import 'package:seeder/entity/entities_list.dart';
+import 'package:seeder/entity/entity_details.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
-import 'package:seeder/widgets/entities_list.dart';
-import 'package:seeder/widgets/entity_details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 final activeEntity =
@@ -16,24 +16,24 @@ class EntitiesPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         appBar: MyAppBar.getBar(context, ref),
-        body:
-            Container(
-                alignment: Alignment.topLeft,
-                child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
+        body: Container(
+            alignment: Alignment.topLeft,
+            child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Flexible(
+                      child: SingleChildScrollView(
+                          child: Column(
                     children: [
-                      Flexible(
-                          child: SingleChildScrollView(child: Column(
-                        children: [
-                          EntitiesList(),
-                          buildAddEntityButton(context, ref),
-                        ],
-                      ))),
-                      Expanded(
-                        child: EntityDetails(ref.watch(activeEntity)),
-                      )
-                    ])));
+                      EntitiesList(),
+                      buildAddEntityButton(context, ref),
+                    ],
+                  ))),
+                  Expanded(
+                    child: EntityDetails(ref.watch(activeEntity)),
+                  )
+                ])));
   }
 
   buildAddEntityButton(BuildContext context, WidgetRef ref) {

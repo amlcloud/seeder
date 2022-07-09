@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/app_bar.dart';
-import 'package:seeder/batches_page/batch_details.dart';
-import 'package:seeder/batches_page/batch_list.dart';
+import 'package:seeder/batch/batch_details.dart';
+import 'package:seeder/batch/batch_list.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 
 final activeBatch =
@@ -23,10 +23,9 @@ class BatchesPage extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Flexible(
-                      child: SingleChildScrollView(child: Column(
-                    children: [BatchList(), 
-                    buildAddBatchButton(context, ref)
-                    ],
+                      child: SingleChildScrollView(
+                          child: Column(
+                    children: [BatchList(), buildAddBatchButton(context, ref)],
                   ))),
                   Expanded(
                     child: BatchDetails(ref.watch(activeBatch)),
@@ -84,10 +83,7 @@ class BatchesPage extends ConsumerWidget {
                           'author': FirebaseAuth.instance.currentUser!.uid,
                         }).then((value) => {
                               if (value != null)
-                                {
-                                  FirebaseFirestore.instance
-                                      .collection('batch')
-                                }
+                                {FirebaseFirestore.instance.collection('batch')}
                             });
 
                         Navigator.of(context).pop();
