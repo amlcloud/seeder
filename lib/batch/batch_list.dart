@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/batches_page/batch_list_item.dart';
+import 'package:seeder/batch/batch_list_item.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
-import '../widgets/entities_list.dart';
 import 'only_mine_batch_filter.dart';
 
 final sortStateNotifierProvider =
@@ -54,7 +54,8 @@ class BatchList extends ConsumerWidget {
                     var authors_only_batch = data.docs
                         .where(
                             (QueryDocumentSnapshot<Map<String, dynamic>> doc) =>
-                                doc.data()['author'] == currentAuthorId)
+                                doc.data()['author'] ==
+                                FirebaseAuth.instance.currentUser!.uid)
                         .toList();
                     var author_filtered_batches = (onlyMineSwitchStatus == true
                         ? authors_only_batch
