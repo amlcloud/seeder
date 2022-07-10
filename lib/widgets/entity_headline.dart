@@ -12,15 +12,18 @@ class EntityHeadline extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(entityDoc.data()!['name'] ?? "name",
-            style: TextStyle(fontSize: 18, color: Colors.white)),
-        Text(entityDoc.data()!['desc'] ?? "desc"),
-        Text(entityDoc.data()!['id'] ?? "id"),
-        Text(DateTime.fromMillisecondsSinceEpoch(
-                entityDoc.data()!['time Created'].seconds * 1000)
-            .toString()
-            .substring(0, 19)
-            .toString()),
+        Text(entityDoc.data()!['name'] ?? "name"),
+        Text(entityDoc.data()!['desc'] ?? "desc",
+            style: TextStyle(fontSize: 14, color: Colors.grey)),
+        Text(entityDoc.data()!['id'] ?? "id",
+            style: TextStyle(fontSize: 14, color: Colors.grey)),
+        Text(
+            DateTime.fromMillisecondsSinceEpoch(
+                    entityDoc.data()!['time Created'].seconds * 1000)
+                .toString()
+                .substring(0, 19)
+                .toString(),
+            style: TextStyle(fontSize: 14, color: Colors.grey)),
       ],
     );
   }

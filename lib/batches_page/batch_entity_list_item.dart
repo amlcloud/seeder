@@ -23,7 +23,7 @@ class BatchEntityListItem extends ConsumerWidget {
                   child: ListTile(
                       tileColor: Color.fromARGB(255, 44, 44, 44),
                       focusColor: Color.fromARGB(255, 133, 116, 116),
-                      subtitle: EntityHeadline(entityDoc)),
+                      title: EntityHeadline(entityDoc)),
                 ),
                 IconButton(
                     onPressed: () => fetchEntity(context, ref, entityDoc),

@@ -35,7 +35,7 @@ class EntityListItem extends ConsumerWidget {
                       icon: Icon(Icons.delete),
                     )
                   ]),
-                  subtitle: EntityHeadline(entityDoc),
+                  title: EntityHeadline(entityDoc),
                   onTap: () {
                     ref.read(activeEntity.notifier).value = entityId;
                   },
