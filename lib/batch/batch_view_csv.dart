@@ -108,7 +108,9 @@ class BatchViewCsvState extends ConsumerState<BatchViewCsv> {
                           loading: () => Text("Loading...."),
                           error: (e, s) => Container(),
                           data: (selectEntities) => selectEntities.size == 0
-                              ? Text("No Data Found")
+                              ? headerOnce
+                                  ? Text("No Data Found")
+                                  : Container()
                               : Column(
                                   children: selectEntities.docs.map((select) {
                                   return ref.watch(colSP('${select.data()['ref'].path}/transaction')).when(
