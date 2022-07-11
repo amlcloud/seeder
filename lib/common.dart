@@ -40,3 +40,5 @@ List<Jiffy> generateDays(Jiffy start, Jiffy end) {
   }
   return list;
 }
+
+final DAYS_IN_MONTH = [for (var i = 1; i < 29; i++) i];
