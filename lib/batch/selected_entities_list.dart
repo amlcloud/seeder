@@ -26,6 +26,7 @@ class SelectedEntitiesList extends ConsumerWidget {
                           ),
                           buildDeleteEntityButton(
                             context,
+                            ref,
                             FirebaseFirestore.instance
                                 .collection('batch')
                                 .doc(ref.watch(activeBatch))

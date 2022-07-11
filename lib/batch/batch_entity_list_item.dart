@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/batch/batch_view_csv.dart';
 import 'package:seeder/providers/firestore.dart';
 
 class BatchEntityListItem extends ConsumerWidget {
@@ -24,32 +25,20 @@ class BatchEntityListItem extends ConsumerWidget {
                       title: Text(
                         entityDoc.data()!['name'] ?? 'name',
                       ),
-                      trailing: Column(children: <Widget>[
-                        Text(entityDoc.data()!['id'] ?? 'id')
-                      ]),
+                      trailing: Column(children: <Widget>[Text(entityDoc.data()!['id'] ?? 'id')]),
                       subtitle: Text(entityDoc.data()!['desc'] ?? 'desc')),
                 ),
-                IconButton(
-                    onPressed: () => fetchEntity(context, ref, entityDoc),
-                    icon: Icon(Icons.add)),
+                IconButton(onPressed: () => fetchEntity(context, ref, entityDoc), icon: Icon(Icons.add)),
               ])));
   }
 
   fetchEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {
-    var docRef = FirebaseFirestore.instance
-        .collection('batch')
-        .doc(batchId)
-        .collection('SelectedEntity')
-        .doc(d.id);
+    ref.read(toggleGenerate.notifier).value = false;
+    var docRef = FirebaseFirestore.instance.collection('batch').doc(batchId).collection('SelectedEntity').doc(d.id);
     var doc = await docRef.get();
     if (!doc.exists) {
       ref.watch(docSP('entity/' + d.id)).whenData((value) => {
-            FirebaseFirestore.instance
-                .collection('batch')
-                .doc(batchId)
-                .collection("SelectedEntity")
-                .doc(d.id)
-                .set({'ref': d.reference}, SetOptions(merge: true)),
+            FirebaseFirestore.instance.collection('batch').doc(batchId).collection("SelectedEntity").doc(d.id).set({'ref': d.reference}, SetOptions(merge: true)),
           });
     }
   }

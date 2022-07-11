@@ -11,9 +11,7 @@ import 'data_export_csv.dart';
 class EntityDetails extends ConsumerWidget {
   final String entityId;
 
-  final TextEditingController idCtrl = TextEditingController(),
-      nameCtrl = TextEditingController(),
-      descCtrl = TextEditingController();
+  final TextEditingController idCtrl = TextEditingController(), nameCtrl = TextEditingController(), descCtrl = TextEditingController();
 
   EntityDetails(this.entityId);
 
@@ -24,22 +22,26 @@ class EntityDetails extends ConsumerWidget {
           border: Border.all(
             color: Colors.grey,
           )),
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+      child: Column(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.max, children: [
+        EntityInfo(entityId),
+        EntityParams(entityId),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.max,
-          children: [
-            Flexible(flex: 1, child: EntityInfo(entityId)),
-            Flexible(flex: 1, child: EntityParams(entityId)),
-            Flexible(
-                child: Row(
-              children: [GenerateTransactionsButton(entityId)],
-            )),
-            Divider(),
-            Timeline(entityId),
-            Expanded(
-              flex: 10,
-              child: TransactionList(entityId),
-            ),
-            DataExportButton(entityId),
-          ]));
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.fromLTRB(0.00, 0.0, 30.0, 0),
+              child: GenerateTransactionsButton(entityId),
+            )
+          ],
+        ),
+        Divider(),
+        Timeline(entityId),
+        Expanded(
+          flex: 10,
+          child: TransactionList(entityId),
+        ),
+        DataExportButton(entityId),
+      ]));
 }

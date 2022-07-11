@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/batch/batch_view_csv.dart';
 import 'package:seeder/entity/entities_page.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,12 +27,7 @@ class EntityListItem extends ConsumerWidget {
                     Text(entityDoc.data()!['id'] ?? 'id'),
                     IconButton(
                       onPressed: () => {
-                        DeleteEntity(
-                            context,
-                            ref,
-                            FirebaseFirestore.instance
-                                .collection('entity')
-                                .doc(entityId)),
+                        DeleteEntity(context, ref, FirebaseFirestore.instance.collection('entity').doc(entityId)),
                       },
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
@@ -49,12 +45,7 @@ class EntityListItem extends ConsumerWidget {
   Future<bool> CheckSelected() async {
     var batchRef = await FirebaseFirestore.instance.collection('batch').get();
     for (var element in batchRef.docs) {
-      var selectList = await FirebaseFirestore.instance
-          .collection('batch')
-          .doc(element.id)
-          .collection('SelectedEntity')
-          .doc(entityId)
-          .get();
+      var selectList = await FirebaseFirestore.instance.collection('batch').doc(element.id).collection('SelectedEntity').doc(entityId).get();
       if (selectList.exists) {
         print("sample data temp1: ${selectList.exists}");
         //temp = false;
@@ -71,8 +62,7 @@ class EntityListItem extends ConsumerWidget {
         builder: (BuildContext context) => !temp
             ? AlertDialog(
                 title: const Text('Deleting entity'),
-                content:
-                    const Text('Are you sure you want to delete this entity?'),
+                content: const Text('Are you sure you want to delete this entity?'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'Cancel'),
@@ -81,8 +71,7 @@ class EntityListItem extends ConsumerWidget {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context, 'OK');
-                      FirebaseFirestore.instance
-                          .runTransaction((Transaction myTransaction) async {
+                      FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
                         myTransaction.delete(doc);
                       });
                     },
@@ -92,8 +81,7 @@ class EntityListItem extends ConsumerWidget {
               )
             : AlertDialog(
                 title: const Text('Warning!'),
-                content: const Text(
-                    'The action cannot be completed because this entity selected in the Batch list'),
+                content: const Text('The action cannot be completed because this entity selected in the Batch list'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'OK'),
@@ -104,7 +92,7 @@ class EntityListItem extends ConsumerWidget {
   }
 }
 
-buildDeleteEntityButton(BuildContext context, doc, button) {
+buildDeleteEntityButton(BuildContext context, WidgetRef ref, doc, button) {
   return IconButton(
     onPressed: () {
       showDialog<String>(
@@ -119,9 +107,10 @@ buildDeleteEntityButton(BuildContext context, doc, button) {
             ),
             TextButton(
               onPressed: () {
+                ref.read(toggleGenerate.notifier).value = false;
+
                 Navigator.pop(context, 'OK');
-                FirebaseFirestore.instance
-                    .runTransaction((Transaction myTransaction) async {
+                FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
                   myTransaction.delete(doc);
                 });
               },
