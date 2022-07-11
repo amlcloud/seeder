@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/batch/batch_page.dart';
 import 'package:seeder/entity/entity_list_item.dart';
-import 'package:seeder/widgets/entity_headline.dart';
+import 'package:seeder/entity/entity_headline.dart';
 import 'package:seeder/providers/firestore.dart';
 
 class BatchListItem extends ConsumerWidget {

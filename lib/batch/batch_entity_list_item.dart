@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/providers/firestore.dart';
-
-import '../widgets/entity_headline.dart';
+import 'package:seeder/entity/entity_headline.dart';
 
 class BatchEntityListItem extends ConsumerWidget {
   final String path;

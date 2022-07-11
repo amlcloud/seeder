@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jiffy/jiffy.dart';
 
 class EntityHeadline extends ConsumerWidget {
   final DocumentSnapshot<Map<String, dynamic>> entityDoc;
@@ -17,11 +18,9 @@ class EntityHeadline extends ConsumerWidget {
         Text(entityDoc.data()!['id'] ?? "id",
             style: TextStyle(fontSize: 14, color: Colors.grey)),
         Text(
-            DateTime.fromMillisecondsSinceEpoch(
-                    entityDoc.data()!['time Created'].seconds * 1000)
-                .toString()
-                .substring(0, 19)
-                .toString(),
+            Jiffy.unixFromSecondsSinceEpoch(
+                    entityDoc.data()!['time Created'].seconds)
+                .yMMMdjm,
             style: TextStyle(fontSize: 14, color: Colors.grey)),
       ],
     );

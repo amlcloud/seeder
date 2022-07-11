@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/entity/entities_page.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'entity_headline.dart';
+import 'package:seeder/entity/entity_headline.dart';
 
 class EntityListItem extends ConsumerWidget {
   final String entityId;
