@@ -17,10 +17,7 @@ class EntityHeadline extends ConsumerWidget {
             style: TextStyle(fontSize: 14, color: Colors.grey)),
         Text(entityDoc.data()!['id'] ?? "id",
             style: TextStyle(fontSize: 14, color: Colors.grey)),
-        Text(
-            Jiffy.unixFromSecondsSinceEpoch(
-                    entityDoc.data()!['time Created'].seconds)
-                .yMMMdjm,
+        Text(Jiffy(entityDoc.data()!['time Created'].toDate()).yMMMdjm,
             style: TextStyle(fontSize: 14, color: Colors.grey)),
       ],
     );
