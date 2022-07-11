@@ -25,20 +25,33 @@ class BatchEntityListItem extends ConsumerWidget {
                       title: Text(
                         entityDoc.data()!['name'] ?? 'name',
                       ),
-                      trailing: Column(children: <Widget>[Text(entityDoc.data()!['id'] ?? 'id')]),
+                      trailing: Column(children: <Widget>[
+                        Text(entityDoc.data()!['id'] ?? 'id')
+                      ]),
                       subtitle: Text(entityDoc.data()!['desc'] ?? 'desc')),
                 ),
-                IconButton(onPressed: () => fetchEntity(context, ref, entityDoc), icon: Icon(Icons.add)),
+                IconButton(
+                    onPressed: () => fetchEntity(context, ref, entityDoc),
+                    icon: Icon(Icons.add)),
               ])));
   }
 
   fetchEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {
     ref.read(toggleGenerate.notifier).value = false;
-    var docRef = FirebaseFirestore.instance.collection('batch').doc(batchId).collection('SelectedEntity').doc(d.id);
+    var docRef = FirebaseFirestore.instance
+        .collection('batch')
+        .doc(batchId)
+        .collection('SelectedEntity')
+        .doc(d.id);
     var doc = await docRef.get();
     if (!doc.exists) {
       ref.watch(docSP('entity/' + d.id)).whenData((value) => {
-            FirebaseFirestore.instance.collection('batch').doc(batchId).collection("SelectedEntity").doc(d.id).set({'ref': d.reference}, SetOptions(merge: true)),
+            FirebaseFirestore.instance
+                .collection('batch')
+                .doc(batchId)
+                .collection("SelectedEntity")
+                .doc(d.id)
+                .set({'ref': d.reference}, SetOptions(merge: true)),
           });
     }
   }

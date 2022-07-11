@@ -10,5 +10,9 @@ class EntityParams extends ConsumerWidget {
   EntityParams(this.entityId);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Column(children: [Income(entityId), Text('random spending goes here'), Text('random income goes here')]);
+  Widget build(BuildContext context, WidgetRef ref) => Column(children: [
+        Income(entityId),
+        Text('random spending goes here'),
+        Text('random income goes here')
+      ]);
 }
