@@ -44,10 +44,17 @@ child: Row(mainAxisAlignment: MainAxisAlignment.end, mainAxisSize: MainAxisSize.
 
                 Fluttertoast.showToast(msg: 'Copied to clipboard');
               },
-              child: Text(
-                "Copy To Clipboard",
-                style: TextStyle(fontSize: 12.0, color: const Color(0xFF000000), fontWeight: FontWeight.w200, fontFamily: "Roboto"),
-              )),
+              child: Row(
+                  children: [
+                    Text(
+                      "Copy To Clipboard  ",
+                      style: TextStyle(fontSize: 12.0, color: const Color(0xFF000000), fontWeight: FontWeight.w200, fontFamily: "Roboto"),
+                    ),
+                    Icon(Icons.content_copy_outlined,
+                      color: Colors.black, size: 18.0,
+                    )
+                  ],
+                )),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
@@ -57,10 +64,12 @@ child: Row(mainAxisAlignment: MainAxisAlignment.end, mainAxisSize: MainAxisSize.
               child: Row(
                 children: [
                   Text(
-                    "Download CSV",
+                    "Download CSV  ",
                     style: TextStyle(fontSize: 12.0, color: const Color(0xFF000000), fontWeight: FontWeight.w200, fontFamily: "Roboto"),
                   ),
-                  Icon(Icons.download)
+                  Icon(Icons.download,color: Colors.black,
+                      size: 18.0,
+                    )
                 ],
               )),
         ),
