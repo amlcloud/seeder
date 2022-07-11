@@ -20,13 +20,6 @@ class BatchList extends ConsumerWidget {
               Text('sort by:'),
               DropdownButton<String>(
                 value: ref.watch(sortStateNotifierProvider) ?? 'id',
-                icon: const Icon(Icons.arrow_downward),
-                elevation: 16,
-                // style: const TextStyle(color: Colors.deepPurple),
-                underline: Container(
-                  height: 2,
-                  // color: Colors.deepPurpleAccent,
-                ),
                 onChanged: (String? newValue) {
                   ref.read(sortStateNotifierProvider.notifier).value = newValue;
                 },

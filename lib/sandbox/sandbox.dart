@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:seeder/controls/doc_field_text_edit.dart';
-import 'package:seeder/controls/doc_field_text_edit_delayed.dart';
 
 class Sandbox extends StatelessWidget {
   const Sandbox({Key? key}) : super(key: key);
@@ -19,7 +18,7 @@ class Sandbox extends StatelessWidget {
           shrinkWrap: true,
           children: [
             ListTile(
-              title: DocFieldTextEditDelayed(
+              title: DocFieldTextEdit(
                   FirebaseFirestore.instance.doc('/dev/serge/text_edit/1'),
                   'the_field'),
             ),
