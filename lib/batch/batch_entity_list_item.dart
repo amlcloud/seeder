@@ -31,13 +31,12 @@ class BatchEntityListItem extends ConsumerWidget {
                       subtitle: Text(entityDoc.data()!['desc'] ?? 'desc')),
                 ),
                 IconButton(
-                    onPressed: () => fetchEntity(context, ref, entityDoc),
+                    onPressed: () => addEntity(context, ref, entityDoc),
                     icon: Icon(Icons.add)),
               ])));
   }
 
-  fetchEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {
-    ref.read(toggleGenerate.notifier).value = false;
+  addEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {
     var docRef = FirebaseFirestore.instance
         .collection('batch')
         .doc(batchId)

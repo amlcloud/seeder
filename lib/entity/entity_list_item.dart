@@ -120,8 +120,6 @@ buildDeleteEntityButton(BuildContext context, WidgetRef ref, doc, button) {
             ),
             TextButton(
               onPressed: () {
-                ref.read(toggleGenerate.notifier).value = false;
-
                 Navigator.pop(context, 'OK');
                 FirebaseFirestore.instance
                     .runTransaction((Transaction myTransaction) async {
