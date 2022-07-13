@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiver/core.dart';
 
 /// Query parameter for [WhereFilter] used in [filteredColSP]
@@ -185,3 +185,17 @@ final AutoDisposeStreamProviderFamily<QuerySnapshot<Map<String, dynamic>>,
         .family<QuerySnapshot<Map<String, dynamic>>, String>((ref, path) {
   return FirebaseFirestore.instance.collection(path).snapshots();
 });
+
+AutoDisposeStreamProvider<QuerySnapshot<Map<String, dynamic>>>
+    colSPWithFilter(path, conditions) {
+  var dbInstance = FirebaseFirestore.instance;
+  var queryResult = dbInstance.collection(path).where(conditions);
+  var snapshots = queryResult.snapshots();
+  return
+    StreamProvider
+        .autoDispose<QuerySnapshot<Map<String, dynamic>>>(
+        (ref){
+          return snapshots;
+        }
+    );
+}
