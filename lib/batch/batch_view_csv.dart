@@ -66,80 +66,69 @@ class BatchViewCsv extends ConsumerWidget {
       ),
       Container(
         margin: EdgeInsets.all(20.0),
-        child: Column(
-          children: <Widget>[
-            ref
-                .watch(
-                    selectedTransactionList(ref.watch(activeBatch).toString()))
-                .when(
-                    loading: () => Text("loading"),
-                    error: (e, s) => Text("No data found"),
-                    data: (entities) => Table(
-                            border: TableBorder.all(
-                                color: Colors.grey,
-                                style: BorderStyle.solid,
-                                width: 0.5),
-                            children: [
-                              TableRow(
-                                  children: ((entities.first.entries
-                                          .toList()
-                                          .where((element) =>
-                                              element.key.toString() !=
-                                                  'time Created' &&
-                                              element.key.toString() !=
-                                                  'author' &&
-                                              element.key.toString() != 'desc')
-                                          .toList())
-                                        ..sort(
-                                            (a, b) => a.key.compareTo(b.key)))
-                                      .map((values) => Column(children: [
-                                            Text(
-                                              values.key.toString(),
-                                            )
-                                          ]))
-                                      .toList())
-                            ])),
-            ref
-                .watch(
-                    selectedTransactionList(ref.watch(activeBatch).toString()))
-                .when(
-                    loading: () => Text("loading"),
-                    error: (e, s) => Text("No data found"),
-                    data: (entities) {
-                      return Container(
-                          height: 400,
-                          child: SingleChildScrollView(
-                              child: Table(
-                                  border: TableBorder.all(
-                                      color: Colors.grey,
-                                      style: BorderStyle.solid,
-                                      width: 0.5),
-                                  children: entities.map((e) {
-                                    return TableRow(
-                                        children: ((e.entries
-                                                .toList()
-                                                .where((element) =>
-                                                    element.key.toString() !=
-                                                        'time Created' &&
-                                                    element.key.toString() !=
-                                                        'author' &&
-                                                    element.key.toString() !=
-                                                        'desc')
-                                                .toList())
-                                              ..sort((a, b) =>
-                                                  a.key.compareTo(b.key)))
-                                            .map((values) => Column(children: [
-                                                  Text(
-                                                    values.value.toString(),
-                                                  )
-                                                ]))
-                                            .toList());
+        child: ref.watch(selectedTransactionList(ref.watch(activeBatch)!)).when(
+            loading: () => Text("loading"),
+            error: (e, s) => Text("No data found"),
+            data: (entities) {
+              return Column(
+                children: <Widget>[
+                  Table(
+                      border: TableBorder.all(
+                          color: Colors.grey,
+                          style: BorderStyle.solid,
+                          width: 0.5),
+                      children: [
+                        TableRow(
+                            children: ((entities.first.entries
+                                    .toList()
+                                    .where((element) =>
+                                        element.key.toString() !=
+                                            'time Created' &&
+                                        element.key.toString() != 'author' &&
+                                        element.key.toString() != 'desc')
+                                    .toList())
+                                  ..sort((a, b) => a.key.compareTo(b.key)))
+                                .map((values) => Column(children: [
+                                      Text(
+                                        values.key.toString(),
+                                      )
+                                    ]))
+                                .toList())
+                      ]),
+                  Container(
+                      height: 400,
+                      child: SingleChildScrollView(
+                          child: Table(
+                              border: TableBorder.all(
+                                  color: Colors.grey,
+                                  style: BorderStyle.solid,
+                                  width: 0.5),
+                              children: entities.map((e) {
+                                return TableRow(
+                                    children: ((e.entries
+                                            .toList()
+                                            .where((element) =>
+                                                element.key.toString() !=
+                                                    'time Created' &&
+                                                element.key.toString() !=
+                                                    'author' &&
+                                                element.key.toString() !=
+                                                    'desc')
+                                            .toList())
+                                          ..sort(
+                                              (a, b) => a.key.compareTo(b.key)))
+                                        .map((values) => Column(children: [
+                                              Text(
+                                                values.value.toString(),
+                                              )
+                                            ]))
+                                        .toList());
 
-                                    //return Container();
-                                  }).toList())));
-                    }),
-          ],
-        ),
+                                //return Container();
+                              }).toList()))),
+                ],
+              );
+            }),
       )
     ]);
   }
@@ -148,32 +137,36 @@ class BatchViewCsv extends ConsumerWidget {
     final List<List> exportList = [];
     List temp = [];
     bool headerOnce = true;
-    ref.watch(selectedTransactionList(ref.watch(activeBatch).toString())).when(
-        loading: () => print('Loading transaction...'),
-        error: (e, s) => print('Error'),
-        data: (entities) {
-          entities.forEach((tranData) {
-            if (headerOnce) {
-              (tranData.entries.toList()
-                    ..sort((a, b) => a.key.compareTo(b.key)))
-                  .forEach((element) {
-                temp.add(element.key);
-              });
-              exportList.add(temp);
-              temp = [];
-              headerOnce = false;
-            }
-            (tranData.entries.toList()..sort((a, b) => a.key.compareTo(b.key)))
-                .forEach((element) {
-              // element.key == 't'
-              //     ? temp.add(DateTime.parse(element.value.toDate().toString()))
-              //     : temp.add(element.value);
-              temp.add(element.value);
-            });
-            exportList.add(temp);
-            temp = [];
+    var colRef = await FirebaseFirestore.instance
+        .collection('batch')
+        .doc(ref.watch(activeBatch)!)
+        .collection('SelectedEntity')
+        .get();
+    for (var element in colRef.docs) {
+      var dataRef = await FirebaseFirestore.instance
+          .collection("${element.data()['ref'].path}/transaction")
+          .get();
+      dataRef.docs.forEach((tranData) {
+        print("I am working${tranData.data()}");
+        if (headerOnce) {
+          (tranData.data().entries.toList()
+                ..sort((a, b) => a.key.compareTo(b.key)))
+              .forEach((element) {
+            temp.add(element.key);
           });
+          exportList.add(temp);
+          temp = [];
+          headerOnce = false;
+        }
+        (tranData.data().entries.toList()
+              ..sort((a, b) => a.key.compareTo(b.key)))
+            .forEach((element) {
+          temp.add(element.value);
         });
+        exportList.add(temp);
+        temp = [];
+      });
+    }
     return exportList;
   }
 
