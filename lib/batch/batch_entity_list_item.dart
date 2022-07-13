@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/batch/batch_view_csv.dart';
 import 'package:seeder/providers/firestore.dart';
 
 class BatchEntityListItem extends ConsumerWidget {
@@ -30,12 +31,12 @@ class BatchEntityListItem extends ConsumerWidget {
                       subtitle: Text(entityDoc.data()!['desc'] ?? 'desc')),
                 ),
                 IconButton(
-                    onPressed: () => fetchEntity(context, ref, entityDoc),
+                    onPressed: () => addEntity(context, ref, entityDoc),
                     icon: Icon(Icons.add)),
               ])));
   }
 
-  fetchEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {
+  addEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {
     var docRef = FirebaseFirestore.instance
         .collection('batch')
         .doc(batchId)

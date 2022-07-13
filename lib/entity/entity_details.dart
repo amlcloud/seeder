@@ -28,12 +28,19 @@ class EntityDetails extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            Flexible(flex: 1, child: EntityInfo(entityId)),
-            Flexible(flex: 1, child: EntityParams(entityId)),
-            Flexible(
-                child: Row(
-              children: [GenerateTransactionsButton(entityId)],
-            )),
+            EntityInfo(entityId),
+            EntityParams(entityId),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.fromLTRB(0.00, 0.0, 30.0, 0),
+                  child: GenerateTransactionsButton(entityId),
+                )
+              ],
+            ),
             Divider(),
             Timeline(entityId),
             Expanded(

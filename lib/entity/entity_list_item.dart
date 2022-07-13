@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/batch/batch_view_csv.dart';
 import 'package:seeder/entity/entities_page.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -104,7 +105,7 @@ class EntityListItem extends ConsumerWidget {
   }
 }
 
-buildDeleteEntityButton(BuildContext context, doc, button) {
+buildDeleteEntityButton(BuildContext context, WidgetRef ref, doc, button) {
   return IconButton(
     onPressed: () {
       showDialog<String>(
