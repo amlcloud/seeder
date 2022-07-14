@@ -11,8 +11,37 @@ class EntityParams extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Column(children: [
-        Income(entityId),
-        Text('random spending goes here'),
-        Text('random income goes here')
+        Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                border: Border.all(
+                  color: Colors.grey,
+                )),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Income(entityId),
+                )
+              ],
+            )),
+        Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                border: Border.all(
+                  color: Colors.grey,
+                )),
+            child: Row(mainAxisSize: MainAxisSize.max, children: [
+              Expanded(child: Text('random spending goes here'))
+            ])),
+        Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                border: Border.all(
+                  color: Colors.grey,
+                )),
+            child: Row(mainAxisSize: MainAxisSize.max, children: [
+              Expanded(child: Text('random incoming transaction'))
+            ]))
       ]);
 }

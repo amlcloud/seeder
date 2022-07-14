@@ -47,35 +47,34 @@ class EntitiesList extends ConsumerWidget {
         ],
       );
 
-  List<Widget> sortAndFilterOnServer(WidgetRef ref) => 
-    ref
-      .watch(filteredColSP(
-          QueryParams(path: 'entity', orderBy: 'time Created', queries: [
-        QueryParam(
-            'author',
-            Map<Symbol, dynamic>.from({
-              ...ref.watch(filterMine) == true
-                  ? {
-                      Symbol('isEqualTo'):
-                          FirebaseAuth.instance.currentUser!.uid
-                    }
-                  : {},
-            }))
-      ])))
+  List<Widget> sortAndFilterOnServer(WidgetRef ref) => ref
+      .watch(filteredColSP(QueryParams(
+          path: 'entity',
+          orderBy: 'time Created',
+          distinct: (a, b) {
+            print('distinct ${a}==${b}');
+            return true;
+            // a.size = b.size;
+          },
+          queries: [
+            QueryParam(
+                'author',
+                Map<Symbol, dynamic>.from({
+                  ...ref.watch(filterMine) == true
+                      ? {
+                          Symbol('isEqualTo'):
+                              FirebaseAuth.instance.currentUser!.uid
+                        }
+                      : {},
+                }))
+          ])))
       .when(
           loading: () => [Container()],
           error: (e, s) {
             print(e);
             return [ErrorWidget(e)];
           },
-          data: (entities) => (((ref.watch(filterMine) ?? false)
-                  ? entities.docs
-                      .where((d) =>
-                          d['author'] == FirebaseAuth.instance.currentUser!.uid)
-                      .toList()
-                  : entities.docs)
-                ..sort((a, b) => a[ref.watch(activeSort) ?? 'id']
-                    .compareTo(b[ref.watch(activeSort) ?? 'id'])))
+          data: (entities) => entities.docs
               .map((entity) => EntityListItem(entity.id))
               .toList());
 
