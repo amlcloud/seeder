@@ -28,6 +28,7 @@ class BatchesPage extends ConsumerWidget {
                     children: [BatchList(), buildAddBatchButton(context, ref)],
                   ))),
                   Expanded(
+                    flex: 3,
                     child: BatchDetails(ref.watch(activeBatch)),
                   )
                 ])));

@@ -36,7 +36,7 @@ class BatchDetails extends ConsumerWidget {
           child: SingleChildScrollView(
               child: Column(
             children: [
-              Text(entityId!),
+              // Text(entityId!),
               DocFieldTextEdit(
                   FirebaseFirestore.instance.doc('batch/${entityId}'), 'id'),
               DocFieldTextEdit(

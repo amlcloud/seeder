@@ -15,21 +15,26 @@ class BatchList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => Column(
         children: [
-          Row(
+          Column(
             children: [
-              Text('sort by:'),
-              DropdownButton<String>(
-                value: ref.watch(sortStateNotifierProvider) ?? 'id',
-                onChanged: (String? newValue) {
-                  ref.read(sortStateNotifierProvider.notifier).value = newValue;
-                },
-                items: <String>['time Created', 'name', 'id']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value.toUpperCase()),
-                  );
-                }).toList(),
+              Row(
+                children: [
+                  Text('sort by:'),
+                  DropdownButton<String>(
+                    value: ref.watch(sortStateNotifierProvider) ?? 'id',
+                    onChanged: (String? newValue) {
+                      ref.read(sortStateNotifierProvider.notifier).value =
+                          newValue;
+                    },
+                    items: <String>['time Created', 'name', 'id']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value.toUpperCase()),
+                      );
+                    }).toList(),
+                  ),
+                ],
               ),
               OnlyMineBatchFilter()
             ],
