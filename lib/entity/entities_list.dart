@@ -47,7 +47,8 @@ class EntitiesList extends ConsumerWidget {
         ],
       );
 
-  List<Widget> sortAndFilterOnServer(WidgetRef ref) => ref
+  List<Widget> sortAndFilterOnServer(WidgetRef ref) => 
+    ref
       .watch(filteredColSP(
           QueryParams(path: 'entity', orderBy: 'time Created', queries: [
         QueryParam(

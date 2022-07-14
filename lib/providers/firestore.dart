@@ -87,6 +87,19 @@ class QueryParams extends Equatable {
 /// Riverpod Stream Provider that listens to a collection with specific query criteria
 /// (see [QueryParams]) and [equals] function that is used by [Stream.distinct] to
 /// filter out events with unrelated changes.
+///
+/// ref
+///   .watch(filteredColSP(
+///     QueryParams(path: 'entity', orderBy: 'time Created', queries: [
+///       QueryParam(
+///         'author',
+///         Map<Symbol, dynamic>.from({
+///           Symbol('isEqualTo'):
+///             FirebaseAuth.instance.currentUser!.uid
+///         }))
+///      ])))
+///      .when(...
+///
 final AutoDisposeStreamProviderFamily<QuerySnapshot<Map<String, dynamic>>,
         QueryParams> filteredColSP =
     StreamProvider.autoDispose
