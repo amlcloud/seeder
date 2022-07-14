@@ -15,7 +15,7 @@ import 'package:quiver/core.dart';
 ///   QueryParam(
 ///       'entity',
 ///       Map<Symbol, dynamic>.from(
-///           {Symbol('isEqualTo'): caseDoc.get('entity')}))
+///           {Symbol('isEqualTo'): 'test'}))
 ///
 /// Available values:
 /// final dynamic isEqualTo;

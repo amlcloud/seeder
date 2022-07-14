@@ -43,20 +43,53 @@ class EntitiesList extends ConsumerWidget {
           ListView(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
-              children: ref.watch(colSP('entity')).when(
-                  loading: () => [Container()],
-                  error: (e, s) => [ErrorWidget(e)],
-                  data: (entities) => (((ref.watch(filterMine) ?? false)
-                          ? entities.docs
-                              .where((d) =>
-                                  d['author'] ==
-                                  FirebaseAuth.instance.currentUser!.uid)
-                              .toList()
-                          : entities.docs)
-                        ..sort((a, b) => a[ref.watch(activeSort) ?? 'id']
-                            .compareTo(b[ref.watch(activeSort) ?? 'id'])))
-                      .map((entity) => EntityListItem(entity.id))
-                      .toList()))
+              children: sortAndFilterOnServer(ref))
         ],
       );
+
+  List<Widget> sortAndFilterOnServer(WidgetRef ref) => ref
+      .watch(filteredColSP(
+          QueryParams(path: 'entity', orderBy: 'time Created', queries: [
+        QueryParam(
+            'author',
+            Map<Symbol, dynamic>.from({
+              ...ref.watch(filterMine) == true
+                  ? {
+                      Symbol('isEqualTo'):
+                          FirebaseAuth.instance.currentUser!.uid
+                    }
+                  : {},
+            }))
+      ])))
+      .when(
+          loading: () => [Container()],
+          error: (e, s) {
+            print(e);
+            return [ErrorWidget(e)];
+          },
+          data: (entities) => (((ref.watch(filterMine) ?? false)
+                  ? entities.docs
+                      .where((d) =>
+                          d['author'] == FirebaseAuth.instance.currentUser!.uid)
+                      .toList()
+                  : entities.docs)
+                ..sort((a, b) => a[ref.watch(activeSort) ?? 'id']
+                    .compareTo(b[ref.watch(activeSort) ?? 'id'])))
+              .map((entity) => EntityListItem(entity.id))
+              .toList());
+
+  List<Widget> sortAndFilterOnClient(WidgetRef ref) =>
+      ref.watch(colSP('entity')).when(
+          loading: () => [Container()],
+          error: (e, s) => [ErrorWidget(e)],
+          data: (entities) => (((ref.watch(filterMine) ?? false)
+                  ? entities.docs
+                      .where((d) =>
+                          d['author'] == FirebaseAuth.instance.currentUser!.uid)
+                      .toList()
+                  : entities.docs)
+                ..sort((a, b) => a[ref.watch(activeSort) ?? 'id']
+                    .compareTo(b[ref.watch(activeSort) ?? 'id'])))
+              .map((entity) => EntityListItem(entity.id))
+              .toList());
 }
