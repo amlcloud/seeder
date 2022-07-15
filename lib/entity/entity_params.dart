@@ -21,7 +21,7 @@ class EntityParams extends ConsumerWidget {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
-                  child: Income(entityId),
+                  child: RecurrentIncome(entityId),
                 )
               ],
             )),

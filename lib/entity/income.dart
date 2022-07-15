@@ -3,34 +3,67 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/controls/doc_field_drop_down.dart';
 import 'package:seeder/controls/doc_field_text_edit.dart';
+import 'package:seeder/entity/create_recurrent_payment_dialog.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 
 import '../common.dart';
 
-class Income extends ConsumerWidget {
+class RecurrentIncome extends ConsumerWidget {
   final String entityId;
   final StateNotifierProvider<GenericStateNotifier<int?>, int?> dayDraftNP =
       StateNotifierProvider<GenericStateNotifier<int?>, int?>(
           (ref) => GenericStateNotifier<int?>(1));
-  Income(this.entityId);
+  RecurrentIncome(this.entityId);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) =>
-      Row(mainAxisSize: MainAxisSize.max, children: [
-        Expanded(
-            child: DocFieldDropDown(
-          FirebaseFirestore.instance.doc('entity/${entityId}'),
-          'incomeType',
-          ['salary', 'centrelink'],
-        )),
-        Expanded(
-            child: DocFieldTextEdit(
-                FirebaseFirestore.instance.doc('entity/${entityId}'),
-                'incomeAmount',
-                decoration: InputDecoration(hintText: "Income Amount"))),
-        Expanded(child: buildAddDay(ref))
-      ]);
+      Column(children: [buildPayments(ref), addPaymentButton(context, ref)]);
+
+  Widget buildPayments(WidgetRef ref) {
+    return Column(
+        children: ref.watch(colSP('entity/$entityId/config')).when(
+            loading: () => [],
+            error: (e, s) => [ErrorWidget(e)],
+            data: (configs) => configs.docs
+                .map((config) => ListTile(
+                      leading: Text(config.data()['type']),
+                      title: Text(config.data()['name']),
+                      subtitle: Text(
+                          '\$${config.data()['amount'].toString()} on ${config.data()['days'].toString()}'),
+                    ))
+                .toList()));
+  }
+
+  // Row(mainAxisSize: MainAxisSize.max, children: [
+  //   Expanded(
+  //       child: DocFieldDropDown(
+  //     FirebaseFirestore.instance.doc('entity/${entityId}'),
+  //     'incomeType',
+  //     ['salary', 'centrelink'],
+  //   )),
+  //   Expanded(
+  //       child: DocFieldTextEdit(
+  //           FirebaseFirestore.instance.doc('entity/${entityId}'),
+  //           'incomeAmount',
+  //           decoration: InputDecoration(hintText: "Income Amount"))),
+  //   Expanded(child: buildAddDay(ref))
+  // ]);
+
+  Widget addPaymentButton(BuildContext context, WidgetRef ref) {
+    return IconButton(
+      onPressed: () {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) =>
+              AddRecurrentPaymentDialog(entityId),
+        );
+      },
+      icon: Icon(Icons.add),
+      padding: EdgeInsets.zero,
+      constraints: BoxConstraints(),
+    );
+  }
 
   Widget buildAddDay(WidgetRef ref) {
     return Row(
