@@ -5,6 +5,7 @@ import 'package:seeder/batch/batch_view_csv.dart';
 import 'package:seeder/entity/entities_page.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:seeder/entity/entity_headline.dart';
 
 class EntityListItem extends ConsumerWidget {
   final String entityId;
@@ -20,11 +21,7 @@ class EntityListItem extends ConsumerWidget {
               : ListTile(
                   tileColor: Color.fromARGB(255, 44, 44, 44),
                   focusColor: Color.fromARGB(255, 133, 116, 116),
-                  title: Text(
-                    entityDoc.data()!['name'] ?? 'name',
-                  ),
                   trailing: Column(children: <Widget>[
-                    Text(entityDoc.data()!['id'] ?? 'id'),
                     IconButton(
                       onPressed: () => {
                         DeleteEntity(
@@ -39,7 +36,7 @@ class EntityListItem extends ConsumerWidget {
                       icon: Icon(Icons.delete),
                     )
                   ]),
-                  subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
+                  title: EntityHeadline(entityDoc),
                   onTap: () {
                     ref.read(activeEntity.notifier).value = entityId;
                   },
