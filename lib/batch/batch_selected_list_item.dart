@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/providers/firestore.dart';
 
+import 'package:seeder/entity/entity_headline.dart';
+
 class BatchSelectedListItem extends ConsumerWidget {
   final String path;
   final String batchId;
@@ -21,15 +23,8 @@ class BatchSelectedListItem extends ConsumerWidget {
                   child: ListTile(
                       tileColor: Color.fromARGB(255, 44, 44, 44),
                       focusColor: Color.fromARGB(255, 133, 116, 116),
-                      title: Text(
-                        entityDoc.data()!['name'] ?? 'name',
-                      ),
-                      trailing: Column(children: <Widget>[
-                        Text(entityDoc.data()!['id'] ?? 'id')
-                      ]),
-                      subtitle: Text(entityDoc.data()!['desc'] ?? 'desc')),
+                      title: EntityHeadline(entityDoc)),
                 ),
               ])));
   }
-
 }
