@@ -28,27 +28,6 @@ void main() async {
   )));
 }
 
-void test() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  runApp(ProviderScope(
-      child: MaterialApp(
-          title: 'Data Generator',
-          themeMode: ThemeMode.dark,
-          theme: lightTheme,
-          darkTheme: darkTheme,
-          // home: SandboxLauncher(
-          //     // sandbox for texting individual widgets
-          //     sandbox: Material(child: Sandbox()),
-          // the main app
-          // app: TheApp()),
-          home: RecurrentIncome('111'))));
-}
-
 final isLoggedIn = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
     (ref) => GenericStateNotifier<bool>(false));
 

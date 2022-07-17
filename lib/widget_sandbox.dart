@@ -6,6 +6,12 @@ import 'package:seeder/theme.dart';
 import 'entity/create_recurrent_payment_dialog.dart';
 import 'firebase_options.dart';
 
+/// This function is for testing individual Widgets
+///
+/// To configure which widget you'd like to test
+/// include it as a body in the [Scaffold].
+///
+/// Run it by clicking on the Run.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

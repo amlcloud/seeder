@@ -42,33 +42,36 @@ class BatchList extends ConsumerWidget {
           ListView(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
-              children: ref.watch(colSP('batch')).when(
-                  loading: () => [Container()],
-                  error: (e, s) => [ErrorWidget(e)],
-                  data: (data) {
-                    bool onlyMineSwitchStatus =
-                        ref.watch(isMineBatchNotifierProvider) ?? false;
-                    var all_batches = data.docs;
-                    var authors_only_batch = data.docs
-                        .where(
-                            (QueryDocumentSnapshot<Map<String, dynamic>> doc) =>
-                                doc.data()['author'] ==
-                                FirebaseAuth.instance.currentUser!.uid)
-                        .toList();
-                    var author_filtered_batches = (onlyMineSwitchStatus == true
-                        ? authors_only_batch
-                        : all_batches);
-                    var sorted_batches = author_filtered_batches
-                      ..sort((a, b) {
-                        var sortedBy =
-                            ref.watch(sortStateNotifierProvider) ?? 'id';
-                        // print(sortedBy);
-                        return a[sortedBy].compareTo(b[sortedBy]);
-                      });
-                    return sorted_batches
-                        .map((e) => BatchListItem(e.id))
-                        .toList();
-                  }))
+              children: sortAndFilterOnServer(ref))
         ],
       );
+  List<Widget> sortAndFilterOnServer(WidgetRef ref) => ref
+      .watch(filteredColSP(QueryParams(
+          path: 'batch',
+          orderBy: ref.watch(sortStateNotifierProvider) ?? 'id',
+          distinct: (a, b) {
+            print('distinct ${a}==${b}');
+            return true;
+            // a.size = b.size;
+          },
+          queries: [
+            QueryParam(
+                'author',
+                Map<Symbol, dynamic>.from({
+                  ...ref.watch(isMineBatchNotifierProvider) == true
+                      ? {
+                          Symbol('isEqualTo'):
+                              FirebaseAuth.instance.currentUser!.uid
+                        }
+                      : {},
+                }))
+          ])))
+      .when(
+          loading: () => [Container()],
+          error: (e, s) {
+            print(e);
+            return [ErrorWidget(e)];
+          },
+          data: (batches) =>
+              batches.docs.map((b) => BatchListItem(b.id)).toList());
 }
