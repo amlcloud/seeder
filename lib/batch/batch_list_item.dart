@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/batch/batch_page.dart';
 import 'package:seeder/entity/entity_list_item.dart';
+import 'package:seeder/entity/entity_headline.dart';
 import 'package:seeder/providers/firestore.dart';
 
 class BatchListItem extends ConsumerWidget {
@@ -20,12 +21,17 @@ class BatchListItem extends ConsumerWidget {
                 child: Column(
                 children: [
                   ListTile(
-                    title: Text(
-                      'batch ' + (entityDoc.data()!['name'] ?? 'name'),
-                    ),
-                    //trailing: Text(entityDoc.data()!['id'] ?? 'id'),
-                    subtitle: Text(entityDoc.data()!['desc'] ?? 'desc'),
-                    trailing: Column(children: <Widget>[Text(entityDoc.data()!['id'] ?? 'id'), buildDeleteEntityButton(context, ref, FirebaseFirestore.instance.collection('batch').doc(batchId), Icon(Icons.delete))]),
+                    title: EntityHeadline(entityDoc),
+                    trailing: Column(children: <Widget>[
+                      Text(entityDoc.data()!['id'] ?? 'id'),
+                      buildDeleteEntityButton(
+                          context,
+                          ref,
+                          FirebaseFirestore.instance
+                              .collection('batch')
+                              .doc(batchId),
+                          Icon(Icons.delete))
+                    ]),
                     onTap: () {
                       ref.read(activeBatch.notifier).value = batchId;
                     },
