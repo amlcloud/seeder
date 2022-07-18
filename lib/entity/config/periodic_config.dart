@@ -3,15 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final creditNotifierProvider =
+final frequencyNotifierProvider =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
         (ref) => GenericStateNotifier<String?>(null));
+final creditDebit = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
+    (ref) => GenericStateNotifier<bool>(false));
 
-class RandomConfig extends ConsumerWidget {
-
-  const RandomConfig({
-    Key? key,
-  }) : super(key: key);
+class PeriodicConfig extends ConsumerWidget {
+  const PeriodicConfig({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,8 +34,7 @@ class RandomConfig extends ConsumerWidget {
                           child: ListTile(
                         title: Text('monthly salary'),
                         subtitle: Text('\$2000-\$10000'),
-                        trailing:
-                            IconButton(icon: Icon(Icons.add), onPressed: () {}),
+                        //trailing: addPeriodicConfigButton(context, ref),
                       )),
                       Card(
                           child: ListTile(
@@ -45,62 +43,7 @@ class RandomConfig extends ConsumerWidget {
                         trailing:
                             IconButton(icon: Icon(Icons.add), onPressed: () {}),
                       )),
-                      IconButton(icon: Icon(Icons.add), onPressed: () {
-                        showDialog(
-                          context: context,
-                            builder: (BuildContext context) {
-                            return AlertDialog(
-                              scrollable: true,
-                              title: Text('Adding Config'),
-                              content: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Form(
-                                  child: Column(
-                                    children: <Widget>[
-                                      // TextFormField(
-                                      //   controller: id_inp,
-                                      //   decoration: InputDecoration(labelText: 'CREDIT'),
-                                      // ),
-                                       Text('CREDIT:'),
-                                       DropdownButton<String>(
-                                        value: '',
-                                        onChanged: (String? newValue) {
-                                          ref.read(creditNotifierProvider.notifier).value =newValue;
-                                        },
-                                        items: <String>['True', 'False']
-                                          .map<DropdownMenuItem<String>>((String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value.toUpperCase()),
-                                            );
-                                          }).toList(),
-                                      ),
-                
-                                    ],
-                                  ),
-                                ),
-                              ),
-                          actions: [
-                            TextButton(
-                              child: Text("Submit"),
-                              onPressed: () {
-                                FirebaseFirestore.instance.collection('batch').add({
-                                  // 'id': id_inp.text.toString(),
-                                  // 'name': name_inp.text.toString(),
-                                  // 'desc': desc_inp.text.toString(),
-                                  // 'time Created': FieldValue.serverTimestamp(),
-                                  // 'author': FirebaseAuth.instance.currentUser!.uid,
-                                }).then((value) => {
-                                  if (value != null)
-                                    {FirebaseFirestore.instance.collection('batch')}
-                                });
-
-                                Navigator.of(context).pop();
-                              })
-                          ],
-                            );
-                          });
-      }),
+                      addPeriodicConfigButton(context, ref),
                     ],
                   )
                 ],
@@ -140,4 +83,101 @@ class RandomConfig extends ConsumerWidget {
           ],
         ));
   }
+}
+
+addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
+  TextEditingController maxAmount_inp = TextEditingController();
+  TextEditingController minAmount_inp = TextEditingController();
+  return IconButton(
+    icon: Icon(Icons.add),
+    onPressed: () {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              scrollable: true,
+              title: Text('Adding Config...'),
+              content: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Form(
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        controller: minAmount_inp,
+                        decoration: InputDecoration(labelText: 'Min Amount'),
+                      ),
+                      TextFormField(
+                        controller: maxAmount_inp,
+                        decoration: InputDecoration(
+                          labelText: 'Max Amount',
+                        ),
+                      ),
+                      //         Row(
+                      //   children: [
+                      //     Text('Frequency:'),
+                      //     DropdownButton<String>(
+                      //       value: ref.watch(sortStateNotifierProvider) ?? 'id',
+                      //       onChanged: (String? newValue) {
+                      //         ref.read(sortStateNotifierProvider.notifier).value =
+                      //             newValue;
+                      //       },
+                      //       items: <String>['time Created', 'name', 'id']
+                      //           .map<DropdownMenuItem<String>>((String value) {
+                      //         return DropdownMenuItem<String>(
+                      //           value: value,
+                      //           child: Text(value.toUpperCase()),
+                      //         );
+                      //       }).toList(),
+                      //     ),
+                      //   ],
+                      // ),
+                      Card(
+                          child: Column(
+                        children: [
+                          Text('Please select type'),
+                          ListTile(
+                            leading: Radio<bool>(
+                              value: true,
+                              groupValue: ref.watch(creditDebit),
+                              onChanged: (values) {
+                                print("I am working: $values");
+                                ref.read(creditDebit.notifier).value = values!;
+                              },
+                            ),
+                            title: const Text('Credit'),
+                          ),
+                          ListTile(
+                            leading: Radio<bool>(
+                              value: false,
+                              groupValue: ref.watch(creditDebit),
+                              onChanged: (values) {
+                                print("I am working: $values");
+                                ref.read(creditDebit.notifier).value = values!;
+                              },
+                            ),
+                            title: const Text('Debit'),
+                          ),
+                        ],
+                      ))
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                    child: Text("Submit"),
+                    onPressed: () {
+                      // FirebaseFirestore.instance.collection('periodicConfig').add({
+                      //   'credit':
+                      //   'maxAmount': double.parse(maxAmount_inp.text),
+                      //   'minAmount': double.parse(minAmount_inp.text),
+                      //   'period':
+                      // });
+                      Navigator.of(context).pop();
+                    })
+              ],
+            );
+          });
+    },
+  );
 }

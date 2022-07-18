@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class PeriodicConfig extends StatelessWidget {
-  const PeriodicConfig({
+class RandomConfig extends StatelessWidget {
+  const RandomConfig({
     Key? key,
   }) : super(key: key);
 
