@@ -1,12 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/entity/config/available_config_list.dart';
+import 'package:seeder/entity/config/periodic_config.dart';
+import 'package:seeder/entity/config/selected_config_list.dart';
 
-class RandomConfig extends StatelessWidget {
-  const RandomConfig({
-    Key? key,
-  }) : super(key: key);
+class RandomConfig extends ConsumerWidget {
+  final String entityId;
+  const RandomConfig(this.entityId);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -15,61 +19,36 @@ class RandomConfig extends StatelessWidget {
             )),
         child: Column(
           children: [
-            Expanded(child: Text('random trn')),
+            Expanded(child: Text('periodic trn')),
             Row(mainAxisSize: MainAxisSize.max, children: [
               Expanded(
                   child: Column(
                 children: [
                   Text('available periodic templates'),
-                  Column(
-                    children: [
-                      Card(
-                          child: ListTile(
-                        title: Text('monthly salary'),
-                        subtitle: Text('\$2000-\$10000'),
-                        trailing:
-                            IconButton(icon: Icon(Icons.add), onPressed: () {}),
-                      )),
-                      Card(
-                          child: ListTile(
-                        title: Text('weekly salary'),
-                        subtitle: Text('\$500-\$1000'),
-                        trailing:
-                            IconButton(icon: Icon(Icons.add), onPressed: () {}),
-                      )),
-                      IconButton(icon: Icon(Icons.add), onPressed: () {}),
+                  Container(
+                    height: 250,
+                    child: SingleChildScrollView(
+                        child: AvailableConfigList(entityId, "randomConfig")),
+                  ),
+                  Card(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text('Add templates'),
+                      addPeriodicConfigButton(context, ref),
                     ],
-                  )
+                  ))
                 ],
               )),
               Expanded(
                   child: Column(
                 children: [
                   Text('selected periodic templates'),
-                  Column(
-                    children: [
-                      Card(
-                          child: ListTile(
-                        title: Text('Spotify subscription'),
-                        subtitle: Text('\$12.95, monthly on 15th'),
-                        trailing: IconButton(
-                            icon: Icon(Icons.close), onPressed: () {}),
-                      )),
-                      Card(
-                          child: ListTile(
-                        title: Text('gas bill'),
-                        subtitle: Text('~\$434, quarterly on 1st'),
-                        trailing: IconButton(
-                            icon: Icon(Icons.close), onPressed: () {}),
-                      )),
-                      Card(
-                          child: ListTile(
-                        title: Text('fortnightly salary'),
-                        subtitle: Text('~\$434, fortnightly on 11th'),
-                        trailing: IconButton(
-                            icon: Icon(Icons.close), onPressed: () {}),
-                      ))
-                    ],
+                  Container(
+                    height: 280,
+                    child: SingleChildScrollView(
+                      child: SelectedConfigList(entityId, "randomConfig"),
+                    ),
                   )
                 ],
               )),
@@ -77,4 +56,64 @@ class RandomConfig extends StatelessWidget {
           ],
         ));
   }
+}
+
+addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
+  TextEditingController maxAmount_inp = TextEditingController();
+  TextEditingController minAmount_inp = TextEditingController();
+  TextEditingController title_inp = TextEditingController();
+
+  return IconButton(
+    icon: Icon(Icons.add),
+    onPressed: () {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              scrollable: true,
+              title: Text('Adding Config...'),
+              content: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Form(
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        controller: title_inp,
+                        decoration: InputDecoration(labelText: 'Title'),
+                      ),
+                      TextFormField(
+                        controller: minAmount_inp,
+                        decoration: InputDecoration(labelText: 'Min Amount'),
+                      ),
+                      TextFormField(
+                        controller: maxAmount_inp,
+                        decoration: InputDecoration(
+                          labelText: 'Max Amount',
+                        ),
+                      ),
+                      RadioDropButton(),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                    child: Text("Submit"),
+                    onPressed: () {
+                      FirebaseFirestore.instance
+                          .collection('randomConfig')
+                          .doc(title_inp.text)
+                          .set({
+                        'credit': ref.watch(creditDebit),
+                        'maxAmount': double.parse(maxAmount_inp.text),
+                        'minAmount': double.parse(minAmount_inp.text),
+                        'period': ref.watch(frequencySelector),
+                      });
+                      Navigator.of(context).pop();
+                    })
+              ],
+            );
+          });
+    },
+  );
 }

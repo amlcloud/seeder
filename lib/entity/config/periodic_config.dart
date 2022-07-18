@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:seeder/entity/available_config_list.dart';
+import 'package:seeder/entity/config/available_config_list.dart';
+import 'package:seeder/entity/config/selected_config_list.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final frequencyNotifierProvider =
+final frequencySelector =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
         (ref) => GenericStateNotifier<String?>(null));
+
 final creditDebit = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
-    (ref) => GenericStateNotifier<bool>(false));
+    (ref) => GenericStateNotifier<bool>(true));
 
 class PeriodicConfig extends ConsumerWidget {
-  const PeriodicConfig({Key? key}) : super(key: key);
+  final String entityId;
+
+  const PeriodicConfig(this.entityId);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,54 +34,30 @@ class PeriodicConfig extends ConsumerWidget {
                   child: Column(
                 children: [
                   Text('available periodic templates'),
-                  Column(
-                    children: [
-                      Card(
-                          child: ListTile(
-                        title: Text('monthly salary'),
-                        subtitle: Text('\$2000-\$10000'),
-                        //trailing: addPeriodicConfigButton(context, ref),
-                      )),
-                      Card(
-                          child: ListTile(
-                        title: Text('weekly salary'),
-                        subtitle: Text('\$500-\$1000'),
-                        trailing:
-                            IconButton(icon: Icon(Icons.add), onPressed: () {}),
-                      )),
+                  Container(
+                    height: 250,
+                    child: SingleChildScrollView(
+                        child: AvailableConfigList(entityId, "periodicConfig")),
+                  ),
+                  Card(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text('Add templates '),
                       addPeriodicConfigButton(context, ref),
                     ],
-                  )
+                  ))
                 ],
               )),
               Expanded(
                   child: Column(
                 children: [
                   Text('selected periodic templates'),
-                  Column(
-                    children: [
-                      Card(
-                          child: ListTile(
-                        title: Text('Spotify subscription'),
-                        subtitle: Text('\$12.95, monthly on 15th'),
-                        trailing: IconButton(
-                            icon: Icon(Icons.close), onPressed: () {}),
-                      )),
-                      Card(
-                          child: ListTile(
-                        title: Text('gas bill'),
-                        subtitle: Text('~\$434, quarterly on 1st'),
-                        trailing: IconButton(
-                            icon: Icon(Icons.close), onPressed: () {}),
-                      )),
-                      Card(
-                          child: ListTile(
-                        title: Text('fortnightly salary'),
-                        subtitle: Text('~\$434, fortnightly on 11th'),
-                        trailing: IconButton(
-                            icon: Icon(Icons.close), onPressed: () {}),
-                      ))
-                    ],
+                  Container(
+                    height: 280,
+                    child: SingleChildScrollView(
+                      child: SelectedConfigList(entityId, "periodicConfig"),
+                    ),
                   )
                 ],
               )),
@@ -88,6 +70,8 @@ class PeriodicConfig extends ConsumerWidget {
 addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
   TextEditingController maxAmount_inp = TextEditingController();
   TextEditingController minAmount_inp = TextEditingController();
+  TextEditingController title_inp = TextEditingController();
+
   return IconButton(
     icon: Icon(Icons.add),
     onPressed: () {
@@ -103,6 +87,10 @@ addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
                   child: Column(
                     children: <Widget>[
                       TextFormField(
+                        controller: title_inp,
+                        decoration: InputDecoration(labelText: 'Title'),
+                      ),
+                      TextFormField(
                         controller: minAmount_inp,
                         decoration: InputDecoration(labelText: 'Min Amount'),
                       ),
@@ -112,53 +100,7 @@ addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
                           labelText: 'Max Amount',
                         ),
                       ),
-                      //         Row(
-                      //   children: [
-                      //     Text('Frequency:'),
-                      //     DropdownButton<String>(
-                      //       value: ref.watch(sortStateNotifierProvider) ?? 'id',
-                      //       onChanged: (String? newValue) {
-                      //         ref.read(sortStateNotifierProvider.notifier).value =
-                      //             newValue;
-                      //       },
-                      //       items: <String>['time Created', 'name', 'id']
-                      //           .map<DropdownMenuItem<String>>((String value) {
-                      //         return DropdownMenuItem<String>(
-                      //           value: value,
-                      //           child: Text(value.toUpperCase()),
-                      //         );
-                      //       }).toList(),
-                      //     ),
-                      //   ],
-                      // ),
-                      Card(
-                          child: Column(
-                        children: [
-                          Text('Please select type'),
-                          ListTile(
-                            leading: Radio<bool>(
-                              value: true,
-                              groupValue: ref.watch(creditDebit),
-                              onChanged: (values) {
-                                print("I am working: $values");
-                                ref.read(creditDebit.notifier).value = values!;
-                              },
-                            ),
-                            title: const Text('Credit'),
-                          ),
-                          ListTile(
-                            leading: Radio<bool>(
-                              value: false,
-                              groupValue: ref.watch(creditDebit),
-                              onChanged: (values) {
-                                print("I am working: $values");
-                                ref.read(creditDebit.notifier).value = values!;
-                              },
-                            ),
-                            title: const Text('Debit'),
-                          ),
-                        ],
-                      ))
+                      RadioDropButton(),
                     ],
                   ),
                 ),
@@ -167,12 +109,15 @@ addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
                 TextButton(
                     child: Text("Submit"),
                     onPressed: () {
-                      // FirebaseFirestore.instance.collection('periodicConfig').add({
-                      //   'credit':
-                      //   'maxAmount': double.parse(maxAmount_inp.text),
-                      //   'minAmount': double.parse(minAmount_inp.text),
-                      //   'period':
-                      // });
+                      FirebaseFirestore.instance
+                          .collection('periodicConfig')
+                          .doc(title_inp.text)
+                          .set({
+                        'credit': ref.watch(creditDebit),
+                        'maxAmount': double.parse(maxAmount_inp.text),
+                        'minAmount': double.parse(minAmount_inp.text),
+                        'period': ref.watch(frequencySelector),
+                      });
                       Navigator.of(context).pop();
                     })
               ],
@@ -180,4 +125,74 @@ addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
           });
     },
   );
+}
+
+class RadioDropButton extends ConsumerWidget {
+  const RadioDropButton({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        Card(
+          child: Row(children: [
+            Text('Period : '),
+            DropdownButton<String>(
+              value: ref.watch(frequencySelector) ?? 'Daily',
+              icon: const Icon(Icons.arrow_downward),
+              elevation: 16,
+              // style: const TextStyle(color: Colors.deepPurple),
+              underline: Container(
+                height: 2,
+                // color: Colors.deepPurpleAccent,
+              ),
+              onChanged: (String? newValue) {
+                ref.read(frequencySelector.notifier).value = newValue;
+              },
+              items: <String>[
+                'Daily',
+                'Weekly',
+                'Monthly',
+                'Quarterly',
+                'Yearly'
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value.toUpperCase()),
+                );
+              }).toList(),
+            ),
+          ]),
+        ),
+        Card(
+          child: Column(
+            children: <Widget>[
+              Text('Transaction type'),
+              ListTile(
+                leading: Radio<bool>(
+                  value: true,
+                  groupValue: ref.watch(creditDebit),
+                  onChanged: (value) {
+                    print("I am working: $value");
+                    ref.read(creditDebit.notifier).value = value!;
+                  },
+                ),
+                title: const Text('Credit'),
+              ),
+              ListTile(
+                leading: Radio<bool>(
+                  value: false,
+                  groupValue: ref.watch(creditDebit),
+                  onChanged: (value) {
+                    print("I am working: $value");
+                    ref.read(creditDebit.notifier).value = value!;
+                  },
+                ),
+                title: const Text('Debit'),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
 }
