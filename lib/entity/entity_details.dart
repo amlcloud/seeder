@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/entity/employer_widget.dart';
 import 'package:seeder/entity/entity_info.dart';
-import 'package:seeder/entity/entity_params.dart';
+import 'package:seeder/entity/config/entity_config.dart';
 import 'package:seeder/entity/generate_transactions_button.dart';
 import 'package:seeder/entity/transaction_list.dart';
 import 'package:seeder/timeline/timeline.dart';
@@ -34,8 +34,7 @@ class EntityDetails extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     EntityInfo(entityId),
-                    EntityParams(entityId),
-                    EmployerDetails(),
+                    EntityConfig(entityId),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       mainAxisSize: MainAxisSize.max,
