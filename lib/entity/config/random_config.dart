@@ -30,6 +30,7 @@ class RandomConfig extends ConsumerWidget {
                     child: SingleChildScrollView(
                         child: AvailableConfigList(entityId, "randomConfig")),
                   ),
+                  Divider(),
                   Card(
                       child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -41,6 +42,7 @@ class RandomConfig extends ConsumerWidget {
                 ],
               )),
               Expanded(
+                
                   child: Column(
                 children: [
                   Text('selected periodic templates'),

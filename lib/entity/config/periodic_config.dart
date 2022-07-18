@@ -39,6 +39,7 @@ class PeriodicConfig extends ConsumerWidget {
                     child: SingleChildScrollView(
                         child: AvailableConfigList(entityId, "periodicConfig")),
                   ),
+                  Divider(),
                   Card(
                       child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -77,6 +78,7 @@ addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
     onPressed: () {
       showDialog(
           context: context,
+          
           builder: (BuildContext context) {
             return AlertDialog(
               scrollable: true,
