@@ -54,7 +54,6 @@ class EntityListItem extends ConsumerWidget {
           .doc(entityId)
           .get();
       if (selectList.exists) {
-        print("sample data temp1: ${selectList.exists}");
         //temp = false;
         return selectList.exists;
       }

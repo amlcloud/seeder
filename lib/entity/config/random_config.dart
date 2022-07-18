@@ -64,6 +64,7 @@ addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
   TextEditingController maxAmount_inp = TextEditingController();
   TextEditingController minAmount_inp = TextEditingController();
   TextEditingController title_inp = TextEditingController();
+  TextEditingController frequency_inp = TextEditingController();
 
   return IconButton(
     icon: Icon(Icons.add),
@@ -93,6 +94,7 @@ addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
                           labelText: 'Max Amount',
                         ),
                       ),
+                      TextFormField(controller: frequency_inp, decoration: InputDecoration(labelText:'Times per selected period')),
                       RadioDropButton(),
                     ],
                   ),
@@ -110,6 +112,7 @@ addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
                         'maxAmount': double.parse(maxAmount_inp.text),
                         'minAmount': double.parse(minAmount_inp.text),
                         'period': ref.watch(frequencySelector),
+                        'frequency': int.parse(frequency_inp.text),
                       });
                       Navigator.of(context).pop();
                     })

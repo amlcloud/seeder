@@ -54,7 +54,6 @@ class EntitiesList extends ConsumerWidget {
           path: 'entity',
           orderBy: ref.watch(activeSort)??'id',
           distinct: (a, b) {
-            print('distinct ${a}==${b}');
             return true;
             // a.size = b.size;
           },
@@ -73,7 +72,6 @@ class EntitiesList extends ConsumerWidget {
       .when(
           loading: () => [Container()],
           error: (e, s) {
-            print(e);
             return [ErrorWidget(e)];
           },
           data: (entities) => entities.docs
