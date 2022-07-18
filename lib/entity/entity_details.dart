@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/entity/employer_widget.dart';
 import 'package:seeder/entity/entity_info.dart';
 import 'package:seeder/entity/config/entity_config.dart';
 import 'package:seeder/entity/generate_transactions_button.dart';

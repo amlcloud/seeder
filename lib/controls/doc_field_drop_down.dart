@@ -12,7 +12,6 @@ class DocFieldDropDown extends ConsumerWidget {
   final List<String> items;
 
   const DocFieldDropDown(this.docRef, this.field, this.items, {this.onChanged});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) =>
       ref.watch(docSP(docRef.path)).when(

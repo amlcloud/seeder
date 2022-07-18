@@ -7,7 +7,8 @@ import 'package:seeder/providers/firestore.dart';
 class ConfigListItem extends ConsumerWidget {
   final String path;
   final String batchId;
-  const ConfigListItem(this.path, this.batchId);
+  final String configType;
+  const ConfigListItem(this.path, this.batchId, this.configType);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,13 +23,10 @@ class ConfigListItem extends ConsumerWidget {
                   child: ListTile(
                       tileColor: Color.fromARGB(255, 44, 44, 44),
                       focusColor: Color.fromARGB(255, 133, 116, 116),
-                      title: Text(
-                        entityDoc.data()!['name'] ?? 'name',
-                      ),
-                      trailing: Column(children: <Widget>[
-                        Text(entityDoc.data()!['id'] ?? 'id')
-                      ]),
-                      subtitle: Text(entityDoc.data()!['desc'] ?? 'desc')),
+                      title: Text(entityDoc.id.toString()),
+                      subtitle: Text((entityDoc.data()!['credit'] == true
+                          ? 'Credit'
+                          : 'Debit'))),
                 ),
                 IconButton(
                     onPressed: () => addEntity(context, ref, entityDoc),
@@ -37,18 +35,19 @@ class ConfigListItem extends ConsumerWidget {
   }
 
   addEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {
-    // var docRef = FirebaseFirestore.instance
-    //     .collection('entity')
-    //     .doc(batchId)
-    //     .collection('periodicConfig')
-    //     .doc(d.id);
-    // var doc = await docRef.get();
-    // if (!doc.exists) {
-    FirebaseFirestore.instance
+    var docRef = await FirebaseFirestore.instance
         .collection('entity')
         .doc(batchId)
-        .collection('periodicConfig')
-        .add((await FirebaseFirestore.instance.doc(path).get()).data()!);
-    //}
+        .collection(configType)
+        .doc(d.id)
+        .get();
+    if (!docRef.exists) {
+      FirebaseFirestore.instance
+          .collection('entity')
+          .doc(batchId)
+          .collection(configType)
+          .doc(d.id)
+          .set((await FirebaseFirestore.instance.doc(path).get()).data()!);
+    }
   }
 }
