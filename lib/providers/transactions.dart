@@ -49,8 +49,8 @@ final AutoDisposeStreamProviderFamily<List<Map<String, dynamic>>, EntityFilter>
       loading: () => Stream.empty(),
       error: (e, s) => Stream.empty(),
       data: (d) {
-        print(
-            'day: ${d.map((day) => day.map((trn) => trn.data()!['amount']))}');
+        // print(
+        //     'day: ${d.map((day) => day.map((trn) => trn.data()!['amount']))}');
         return //d.map((da) => {'count': da.length}).toList();
             Stream.value(d.map((day) {
           var fold = day.fold<Map<String, dynamic>>(
@@ -59,7 +59,7 @@ final AutoDisposeStreamProviderFamily<List<Map<String, dynamic>>, EntityFilter>
                     'count': previousValue['count'] + 1,
                     'amount': previousValue['amount'] + element.get('amount'),
                   });
-          print('day: ${fold}');
+          // print('day: ${fold}');
           return fold;
         }).toList());
       });

@@ -172,7 +172,6 @@ class RadioDropButton extends ConsumerWidget {
                   value: true,
                   groupValue: ref.watch(creditDebit),
                   onChanged: (value) {
-                    print("I am working: $value");
                     ref.read(creditDebit.notifier).value = value!;
                   },
                 ),
@@ -183,7 +182,6 @@ class RadioDropButton extends ConsumerWidget {
                   value: false,
                   groupValue: ref.watch(creditDebit),
                   onChanged: (value) {
-                    print("I am working: $value");
                     ref.read(creditDebit.notifier).value = value!;
                   },
                 ),
