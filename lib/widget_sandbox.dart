@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/theme.dart';
 
 import 'entity/create_recurrent_payment_dialog.dart';
-import 'entity/entity_params.dart';
+import 'entity/config/entity_config.dart';
 import 'firebase_options.dart';
 
 /// This function is for testing individual Widgets
@@ -26,7 +26,7 @@ void main() async {
           themeMode: ThemeMode.dark,
           theme: lightTheme,
           darkTheme: darkTheme,
-          home: Scaffold(body: EntityParams('DcyMKCGiQ1ENnWaq7VVU')
+          home: Scaffold(body: EntityConfig('DcyMKCGiQ1ENnWaq7VVU')
 
               /// Insert your widget here for testing:
               //AddRecurrentPaymentDialog('DcyMKCGiQ1ENnWaq7VVU')
