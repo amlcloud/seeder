@@ -9,6 +9,7 @@ import 'package:seeder/state/generic_state_notifier.dart';
 
 import '../common.dart';
 
+
 class RecurrentIncome extends ConsumerWidget {
   final String entityId;
   final StateNotifierProvider<GenericStateNotifier<int?>, int?> dayDraftNP =

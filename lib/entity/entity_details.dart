@@ -18,8 +18,7 @@ class EntityDetails extends ConsumerWidget {
   EntityDetails(this.entityId);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => 
-  Container(
+  Widget build(BuildContext context, WidgetRef ref) => Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           border: Border.all(
