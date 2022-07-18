@@ -5,10 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/batch/batch_page.dart';
 import 'package:seeder/entity/entities_page.dart';
 import 'package:seeder/login_page.dart';
-import 'package:seeder/sandbox/sandbox.dart';
-import 'package:seeder/sandbox/sandbox_launcher.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:seeder/theme.dart';
+
 import 'firebase_options.dart';
 
 void main() async {
@@ -24,11 +23,6 @@ void main() async {
     themeMode: ThemeMode.dark,
     theme: lightTheme,
     darkTheme: darkTheme,
-    // home: SandboxLauncher(
-    //     // sandbox for texting individual widgets
-    //     sandbox: Material(child: Sandbox()),
-    // the main app
-    // app: TheApp()),
     home: TheApp(),
   )));
 }
