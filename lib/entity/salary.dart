@@ -6,31 +6,37 @@ import 'package:seeder/common.dart';
 // TODO: where should i put this function...
 
 void generateSalary(entityId) async{
-  final doc = await FirebaseFirestore.instance.doc('entity/${entityId}')
+
+  double currentBalance = await FirebaseFirestore.instance
+            .collection('entity/${entityId}/transaction')
+            .orderBy('t', descending: true)
+            .limit(1)
             .get()
-            .then((documentSnapshot)=> documentSnapshot.data()!);
-
-  final payDays =doc['days'];
-
-  if(doc['incomeType'] == 'salary'&& payDays.contains(Jiffy().date)){
-    double salaryAmount =  double.parse(doc['incomeAmount']);
-    double currentBalance = await FirebaseFirestore.instance
-              .collection('entity/${entityId}/transaction')
-              .orderBy('t', descending: true)
-              .limit(1)
-              .get()
-              .then((QuerySnapshot querySnapshot)=> double.parse(querySnapshot.docs.first['balance']));
-
-    FirebaseFirestore.instance
-                .collection('entity/${entityId}/transaction')
-                .add({
-              'amount': salaryAmount,
-              'balance':(currentBalance + salaryAmount).toString(),
-              'ben_name': "Beneficiary",
-              'reference': "Example Salary Reference",
-              'rem_name': "Company",
-              't': Jiffy().dateTime,
-              'day': Jiffy().format(DATE_FORMAT),
+            .then((QuerySnapshot querySnapshot)=> double.parse(querySnapshot.docs.first['balance']));
+            
+  FirebaseFirestore.instance.collection('entity/${entityId}/config')
+            .get()
+            .then((value){
+              value.docs.forEach((element) {
+                if(element.data()['type']=="CREDIT"){
+                  final payDays = element.data()['days'];
+                  payDays.forEach((day){if(day == Jiffy().date){print(day);}});
+                }
+              });
             });
-  }
+
+            
+
+  //   FirebaseFirestore.instance
+  //               .collection('entity/${entityId}/transaction')
+  //               .add({
+  //             'amount': salaryAmount,
+  //             'balance':(currentBalance + salaryAmount).toString(),
+  //             'ben_name': "Beneficiary",
+  //             'reference': "Example Salary Reference",
+  //             'rem_name': "Company",
+  //             't': Jiffy().dateTime,
+  //             'day': Jiffy().format(DATE_FORMAT),
+  //           });
+  // }
 }

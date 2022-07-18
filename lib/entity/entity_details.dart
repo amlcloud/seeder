@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/entity/employer_widget.dart';
 import 'package:seeder/entity/entity_info.dart';
-import 'package:seeder/entity/entity_params.dart';
+import 'package:seeder/entity/config/entity_config.dart';
 import 'package:seeder/entity/generate_transactions_button.dart';
 import 'package:seeder/entity/transaction_list.dart';
 import 'package:seeder/timeline/timeline.dart';
@@ -19,8 +19,7 @@ class EntityDetails extends ConsumerWidget {
   EntityDetails(this.entityId);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => 
-  Container(
+  Widget build(BuildContext context, WidgetRef ref) => Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           border: Border.all(
@@ -35,8 +34,7 @@ class EntityDetails extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     EntityInfo(entityId),
-                    EntityParams(entityId),
-                    EmployerDetails(),
+                    EntityConfig(entityId),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       mainAxisSize: MainAxisSize.max,
