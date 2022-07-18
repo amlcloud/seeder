@@ -14,14 +14,14 @@ class EntityConfig extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => SizedBox(
-      height: 700,
+      height: 1000,
       width: 1000,
       child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Flexible(child: PeriodicConfig()),
-            Flexible(child: RandomConfig()),
+            Flexible(child: PeriodicConfig(entityId)),
+            Flexible(child: RandomConfig(entityId)),
             Flexible(child: SpecificConfig())
           ]));
 }

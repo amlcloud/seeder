@@ -7,12 +7,13 @@ import 'package:seeder/providers/firestore.dart';
 
 class SelectedConfigList extends ConsumerWidget {
   final String entityId;
-  SelectedConfigList(this.entityId);
+  final String configType;
+  const SelectedConfigList(this.entityId, this.configType);
   @override
   Widget build(BuildContext context, WidgetRef ref) => ListView(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
-      children: ref.watch(colSP('entity/${entityId}/periodicConfig')).when(
+      children: ref.watch(colSP('entity/${entityId}/${configType}')).when(
           loading: () => [Container()],
           error: (e, s) => [ErrorWidget(e)],
           data: (selectedConfigs) => selectedConfigs.docs
@@ -25,15 +26,12 @@ class SelectedConfigList extends ConsumerWidget {
                             child: ListTile(
                                 tileColor: Color.fromARGB(255, 44, 44, 44),
                                 focusColor: Color.fromARGB(255, 133, 116, 116),
-                                title: Text(
-                                  configDoc.data()['name'] ?? 'name',
-                                ),
-                                trailing: Column(children: <Widget>[
-                                  Text(configDoc.data()['id'] ?? 'id')
-                                ]),
-                                subtitle:
-                                    Text(configDoc.data()['desc'] ?? 'desc')),
-                          )
+                                title: Text(configDoc.id.toString()),
+                                subtitle: Text(
+                                    (configDoc.data()['credit'] == true
+                                        ? 'Credit'
+                                        : 'Debit'))),
+                          ),
                         ])),
                       ),
                       buildDeleteEntityButton(
@@ -42,7 +40,7 @@ class SelectedConfigList extends ConsumerWidget {
                         FirebaseFirestore.instance
                             .collection('entity')
                             .doc(entityId)
-                            .collection('periodicConfig')
+                            .collection(configType)
                             .doc(configDoc.id),
                         Icon(Icons.remove),
                       )

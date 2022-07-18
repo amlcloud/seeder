@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/entity/config_selector.dart';
+//import 'package:seeder/entity/config_selector.dart';
 
 class AddRecurrentPaymentDialog extends ConsumerWidget {
   final String entityId;
@@ -16,7 +16,7 @@ class AddRecurrentPaymentDialog extends ConsumerWidget {
             height: 500,
             width: 500,
             child: Column(children: [
-              Expanded(child: ConfigSelector(entityId))
+              //Expanded(child: ConfigSelector(entityId))
               // Expanded(
               //     child: TextField(
               //   controller: name,
