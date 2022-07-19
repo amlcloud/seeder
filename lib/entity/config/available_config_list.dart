@@ -23,10 +23,8 @@ class AvailableConfigList extends ConsumerWidget {
                   .when(
                       loading: () => Container(),
                       error: (e, s) => ErrorWidget(e),
-                      data: (selectedEntityDoc) => selectedEntityDoc.exists
-                          ? Container()
-                          : ConfigListItem(
-                              '${configType}/${config.id}', entityId, configType)))
+                      data: (selectedEntityDoc) => ConfigListItem(
+                              '${configType}/${config.id}', entityId, configType, selectedEntityDoc.exists?true : false)))
               .toList()));
 
 

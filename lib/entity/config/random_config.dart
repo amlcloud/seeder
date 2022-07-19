@@ -41,19 +41,6 @@ class RandomConfig extends ConsumerWidget {
                   ))
                 ],
               )),
-              Expanded(
-                
-                  child: Column(
-                children: [
-                  Text('selected periodic templates'),
-                  Container(
-                    height: 280,
-                    child: SingleChildScrollView(
-                      child: SelectedConfigList(entityId, "randomConfig"),
-                    ),
-                  )
-                ],
-              )),
             ])
           ],
         ));
@@ -94,7 +81,10 @@ addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
                           labelText: 'Max Amount',
                         ),
                       ),
-                      TextFormField(controller: frequency_inp, decoration: InputDecoration(labelText:'Times per selected period')),
+                      TextFormField(
+                          controller: frequency_inp,
+                          decoration: InputDecoration(
+                              labelText: 'Times per selected period')),
                       RadioDropButton(),
                     ],
                   ),

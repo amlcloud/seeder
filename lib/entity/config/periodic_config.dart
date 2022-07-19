@@ -50,18 +50,6 @@ class PeriodicConfig extends ConsumerWidget {
                   ))
                 ],
               )),
-              Expanded(
-                  child: Column(
-                children: [
-                  Text('selected periodic templates'),
-                  Container(
-                    height: 280,
-                    child: SingleChildScrollView(
-                      child: SelectedConfigList(entityId, "periodicConfig"),
-                    ),
-                  )
-                ],
-              )),
             ])
           ],
         ));
@@ -78,7 +66,6 @@ addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
     onPressed: () {
       showDialog(
           context: context,
-          
           builder: (BuildContext context) {
             return AlertDialog(
               scrollable: true,
