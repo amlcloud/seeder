@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/providers/firestore.dart';
@@ -50,34 +51,32 @@ class TransactionList extends ConsumerWidget {
                             child: SingleChildScrollView(
                                 child: DataTable(
                                     headingRowHeight: 0,
-                                    columns: (trnCol.docs.first
-                                            .data()
-                                            .entries
-                                            .toList()
-                                          ..sort(
-                                              (a, b) => a.key.compareTo(b.key)))
-                                        .map((value) => DataColumn(
-                                              label: Text(
-                                                value.key,
-                                                style: TextStyle(
-                                                    fontStyle:
-                                                        FontStyle.italic),
-                                              ),
-                                            ))
-                                        .toList(),
-                                    rows: trnCol.docs
-                                        .map((trnDoc) => DataRow(
-                                            cells: (trnDoc
-                                                .data()
-                                                .entries.toList()
-                                                ..sort(
-                                              (a, b) => a.key.compareTo(b.key)))
-                                                .map((cell) => DataCell(Text(
-                                                    cell.value.toString())))
-                                                .toList()))
-                                        .toList())))
+                                    columns: showDataColumn(trnCol),
+                                    rows: showDataRows(trnCol))))
                       ],
                     ))
                   ],
                 ));
+
+  List<DataRow> showDataRows(QuerySnapshot<Map<String, dynamic>> trnCol) {
+    return trnCol.docs
+        .map((trnDoc) => DataRow(
+            cells: (trnDoc.data().entries.toList()
+                  ..sort((a, b) => a.key.compareTo(b.key)))
+                .map((cell) => DataCell(Text(cell.value.toString())))
+                .toList()))
+        .toList();
+  }
+
+  List<DataColumn> showDataColumn(QuerySnapshot<Map<String, dynamic>> trnCol) {
+    return (trnCol.docs.first.data().entries.toList()
+          ..sort((a, b) => a.key.compareTo(b.key)))
+        .map((value) => DataColumn(
+              label: Text(
+                value.key,
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ))
+        .toList();
+  }
 }
