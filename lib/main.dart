@@ -24,7 +24,7 @@ void main() async {
     theme: lightTheme,
     darkTheme: darkTheme,
     home: TheApp(),
-  )));
+  )));//comment here
 }
 
 final isLoggedIn = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
