@@ -27,11 +27,11 @@ class DocFieldRangeSliderState extends ConsumerState<DocFieldRangeSlider> {
   @override
   void initState() {
     super.initState();
-    minvalue = double.parse(widget.mapData['minAmount'].toString());
-    maxvalue = double.parse(widget.mapData['maxAmount'].toString());
+    minvalue = double.parse(widget.mapData['minAmount']!.toString());
+    maxvalue = double.parse(widget.mapData['maxAmount']!.toString());
     RangeValues setrange = RangeValues(
-        double.parse(widget.mapData['minAmount'].toString()),
-        double.parse(widget.mapData['maxAmount'].toString()));
+        double.parse(widget.mapData['minAmount']!.toString()),
+        double.parse(widget.mapData['maxAmount']!.toString()));
     setState(() {
       currentRangeValues = setrange;
     });
