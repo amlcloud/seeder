@@ -17,38 +17,13 @@ class TransactionList extends ConsumerWidget {
               ? Text('no records')
               : Column(
                   children: [
-                    // Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //     children: trnCol.docs.first
-                    //         .data()
-                    //         .entries
-                    //         .map((e) => Text(e.key.toString()))
-                    //         .toList()),
                     Expanded(
-                        child:
-                            //  ListView(
-                            //     padding: EdgeInsets.zero,
-                            //     shrinkWrap: true,
-                            //     children: trnCol.docs
-                            //         .map((trnDoc) => Transaction(trnDoc))
-                            //         .toList()),
-                            Column(
+                        child: Column(
                       children: [
-                        DataTable(
-                            columns: trnCol.docs.first
-                                .data()
-                                .entries
-                                .map((value) => DataColumn(
-                                      label: Text(
-                                        value.key,
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ))
-                                .toList(),
-                            rows: []),
+                        DataTable(columns: showDataColumn(trnCol), rows: []),
                         Expanded(
                             child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
                                 child: DataTable(
                                     headingRowHeight: 0,
                                     columns: showDataColumn(trnCol),
@@ -61,22 +36,37 @@ class TransactionList extends ConsumerWidget {
   List<DataRow> showDataRows(QuerySnapshot<Map<String, dynamic>> trnCol) {
     return trnCol.docs
         .map((trnDoc) => DataRow(
-            cells: (trnDoc.data().entries.toList()
-                  ..sort((a, b) => a.key.compareTo(b.key)))
-                .map((cell) => DataCell(Text(cell.value.toString())))
-                .toList()))
+                cells: (trnDoc.data().entries.toList()
+                      ..sort((a, b) => a.key.compareTo(b.key)))
+                    .map((cell) {
+              // print(cell.value);
+              if (cell.value is Timestamp) {
+                // print(cell.value.runtimeType);
+                DateTime d = cell.value.toDate();
+                // print(d);
+                return DataCell(Text(d.toString()));
+              }
+              return DataCell(Text(cell.value.toString()));
+            }).toList()))
         .toList();
   }
 
   List<DataColumn> showDataColumn(QuerySnapshot<Map<String, dynamic>> trnCol) {
-    return (trnCol.docs.first.data().entries.toList()
-          ..sort((a, b) => a.key.compareTo(b.key)))
-        .map((value) => DataColumn(
-              label: Text(
-                value.key,
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ))
-        .toList();
+    var transactionDataMap = trnCol.docs.first.data();
+    // print(transactionDataMap.keys);
+    var dataColumnNameList = transactionDataMap.keys.toList();
+    dataColumnNameList.sort();
+    // print(dataEntryList);
+    List<DataColumn> dataColumnList = [];
+    dataColumnNameList.forEach((columnName) {
+      DataColumn dataColumn = DataColumn(
+        label: Text(
+          columnName,
+          style: TextStyle(fontStyle: FontStyle.italic),
+        ),
+      );
+      dataColumnList.add(dataColumn);
+    });
+    return dataColumnList;
   }
 }
