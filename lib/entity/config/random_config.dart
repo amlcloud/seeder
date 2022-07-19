@@ -17,33 +17,28 @@ class RandomConfig extends ConsumerWidget {
             border: Border.all(
               color: Colors.grey,
             )),
-        child: Column(
-          children: [
-            Expanded(child: Text('periodic trn')),
-            Row(mainAxisSize: MainAxisSize.max, children: [
-              Expanded(
-                  child: Column(
-                children: [
-                  Text('available periodic templates'),
-                  Container(
-                    height: 250,
-                    child: SingleChildScrollView(
-                        child: AvailableConfigList(entityId, "randomConfig")),
-                  ),
-                  Divider(),
-                  Card(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text('Add templates'),
-                      addPeriodicConfigButton(context, ref),
-                    ],
-                  ))
+        child: Column(children: [
+          Expanded(
+              child: Column(
+            children: [
+              Text('available periodic templates'),
+              Container(
+                height: 250,
+                child: SingleChildScrollView(
+                    child: AvailableConfigList(entityId, "randomConfig")),
+              ),
+              Divider(),
+              Card(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Add templates'),
+                  addPeriodicConfigButton(context, ref),
                 ],
-              )),
-            ])
-          ],
-        ));
+              ))
+            ],
+          ))
+        ]));
   }
 }
 

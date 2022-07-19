@@ -1,11 +1,8 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/entity/config/periodic_config.dart';
 import 'package:seeder/entity/config/random_config.dart';
 import 'package:seeder/entity/config/specific_config.dart';
-import 'package:seeder/entity/income.dart';
 
 class EntityConfig extends ConsumerWidget {
   final String entityId;
