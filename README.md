@@ -45,3 +45,40 @@ The support for Firestore was added using this guide:
 https://firebase.google.com/docs/flutter/setup?platform=web
 
 
+## Transactions
+
+// This sudo code explains how transactions look for the entity:
+// 
+// name: 'John Smith'
+// account: 1234234
+// bank: 'NAB'
+// bsb: '12342'
+//
+
+// choose describes the probability of a transaction
+// with its first parameter (in this case transaction_type) 
+// being the value of its second parameter 
+// (in this case 'CREDIT' - 10-20% probability,
+//               'DEBIT' - 90-80% probability
+// )                  
+transaction_type: 
+
+category:
+employed professional:
+      cash deposit: 0.1,
+      cash deposit third party: 0.1,
+      interest: 0.00001,
+      cheque deposit: 0.00001,
+      direct credit: 0.6, // salary for stable employer people
+      third party transfer: 0.2 // centerlink falls under this.
+      
+UNEMPLOYED/STUDENT
+cash deposit: 0.2,
+cash deposit third party: 0.2,
+interest: 0.001,
+cheque deposit: 0.001,
+direct credit: 0.1,
+third party transfer: 0.5  //centerlink falls under this.
+  for unemployed could be up to 50% of all income
+  also used for casual or one off jobs
+  this payments mostly go via NPP, but it will not be visible
