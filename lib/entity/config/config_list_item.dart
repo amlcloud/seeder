@@ -59,7 +59,7 @@ class ConfigListItem extends ConsumerWidget {
                                   .doc(entityDoc.id));
                             })
                           : addEntity(context, ref, entityDoc);
-                    })
+                    }),
               ])));
   }
 
