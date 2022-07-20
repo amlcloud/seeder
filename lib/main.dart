@@ -16,6 +16,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  //another new comment
 
   runApp(ProviderScope(
       child: MaterialApp(
