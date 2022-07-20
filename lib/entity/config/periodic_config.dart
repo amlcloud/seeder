@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 //import 'package:seeder/entity/available_config_list.dart';
 import 'package:seeder/entity/config/config_list.dart';
 import 'package:seeder/entity/config/selected_config_list.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 final frequencySelector =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
@@ -81,10 +83,16 @@ addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
                       ),
                       TextFormField(
                         controller: minAmount_inp,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         decoration: InputDecoration(labelText: 'Min Amount'),
                       ),
                       TextFormField(
                         controller: maxAmount_inp,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         decoration: InputDecoration(
                           labelText: 'Max Amount',
                         ),
@@ -98,16 +106,24 @@ addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
                 TextButton(
                     child: Text("Submit"),
                     onPressed: () {
-                      FirebaseFirestore.instance
-                          .collection('periodicConfig')
-                          .doc(title_inp.text)
-                          .set({
-                        'credit': ref.watch(creditDebit),
-                        'maxAmount': double.parse(maxAmount_inp.text),
-                        'minAmount': double.parse(minAmount_inp.text),
-                        'period': ref.watch(frequencySelector),
-                      });
-                      Navigator.of(context).pop();
+                      if (int.parse(minAmount_inp.text) >
+                          int.parse(maxAmount_inp.text)) {
+                        Fluttertoast.showToast(
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 3,
+                            msg: 'Min Amount should be lesser than max Amount');
+                      } else {
+                        FirebaseFirestore.instance
+                            .collection('periodicConfig')
+                            .doc(title_inp.text)
+                            .set({
+                          'credit': ref.watch(creditDebit),
+                          'maxAmount': double.parse(maxAmount_inp.text),
+                          'minAmount': double.parse(minAmount_inp.text),
+                          'period': ref.watch(frequencySelector),
+                        });
+                        Navigator.of(context).pop();
+                      }
                     })
               ],
             );

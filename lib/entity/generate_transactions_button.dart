@@ -9,9 +9,22 @@ class GenerateTransactionsButton extends ConsumerWidget {
   final String entityId;
   const GenerateTransactionsButton(this.entityId);
   @override
-  Widget build(BuildContext context, WidgetRef ref) => ElevatedButton(
+  Widget build(BuildContext context, WidgetRef ref) {
+    {
+      return Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              border: Border.all(
+                color: Colors.grey,
+              )),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child:  Text('Datepicker here'),
+              ),
+              Expanded(
+                child: ElevatedButton(
       onPressed: () {
-        /// Generates multiple transactions of random amount and balance
         for (var i = 0; i < 10; i++) {
           FirebaseFirestore.instance
               .collection('entity/${entityId}/transaction')
@@ -27,5 +40,30 @@ class GenerateTransactionsButton extends ConsumerWidget {
           });
         }
       },
-      child: Text('Generate'));
+      child: Text('Generate')),
+              ),
+            ],
+          ));
+    }
+  }
+
+  // ElevatedButton(
+  //     onPressed: () {
+  //       /// Generates multiple transactions of random amount and balance
+  //       for (var i = 0; i < 10; i++) {
+  //         FirebaseFirestore.instance
+  //             .collection('entity/${entityId}/transaction')
+  //             .add({
+  //           'amount': math.Random().nextDouble() * 999 + 1,
+  //           'balance':
+  //               (math.Random().nextDouble() * 999 + 1).toStringAsFixed(2),
+  //           'ben_name': "Beneficiary",
+  //           'reference': "Example Transaction",
+  //           'rem_name': "Remitter",
+  //           't': Jiffy().add(days: -25).add(days: i).dateTime,
+  //           'day': Jiffy().add(days: -25).add(days: i).format(DATE_FORMAT),
+  //         });
+  //       }
+  //     },
+  //     child: Text('Generate'));
 }

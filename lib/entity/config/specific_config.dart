@@ -14,37 +14,37 @@ class SpecificConfig extends StatelessWidget {
               color: Colors.grey,
             )),
         child: Column(children: [
-          Expanded(child: Text('specific trn')),
-          Expanded(
-              child: Column(children: [
-            Column(
-              children: [
-                Card(
-                    child: ListTile(
-                  leading: Switch(
-                      value:
-                          true, //ref.watch(isMineBatchNotifierProvider) ?? false,
-                      onChanged: (value) {
-                        //ref.read(isMineBatchNotifierProvider.notifier).value = value;
-                      }),
-                  title: Text('cash withdrawal'),
-                  subtitle: Slider(
-                    value: 10, //_currentSliderValue,
-                    max: 100,
-                    divisions: 5,
-                    // label: _currentSliderValue.round().toString(),
-                    onChanged: (double value) {
-                      // setState(() {
-                      //   _currentSliderValue = value;
-                      // });
-                    },
-                  ),
-                  trailing: IconButton(icon: Icon(Icons.add), onPressed: () {}),
-                )),
-                IconButton(icon: Icon(Icons.add), onPressed: () {}),
-              ],
-            )
-          ]))
+          // Expanded(child: Text('specific trn')),
+          // Expanded(
+          //     child: Column(children: [
+          //   Column(
+          //     children: [
+          //       Card(
+          //           child: ListTile(
+          //         leading: Switch(
+          //             value:
+          //                 true, //ref.watch(isMineBatchNotifierProvider) ?? false,
+          //             onChanged: (value) {
+          //               //ref.read(isMineBatchNotifierProvider.notifier).value = value;
+          //             }),
+          //         title: Text('cash withdrawal'),
+          //         subtitle: Slider(
+          //           value: 10, //_currentSliderValue,
+          //           max: 100,
+          //           divisions: 5,
+          //           // label: _currentSliderValue.round().toString(),
+          //           onChanged: (double value) {
+          //             // setState(() {
+          //             //   _currentSliderValue = value;
+          //             // });
+          //           },
+          //         ),
+          //         trailing: IconButton(icon: Icon(Icons.add), onPressed: () {}),
+          //       )),
+          //       IconButton(icon: Icon(Icons.add), onPressed: () {}),
+          //     ],
+          //   )
+          // ]))
         ]));
   }
 }
