@@ -35,9 +35,10 @@ class ConfigListItem extends ConsumerWidget {
                                     .doc(batchId)
                                     .collection(configType)
                                     .doc(entityDoc.id),
-                                    
                                 "minAmount",
-                                "maxAmount",entityDoc.data()!,)
+                                "maxAmount",
+                                entityDoc.data()!,
+                              )
                             : Text(
                                 "Min Amoun: ${entityDoc.data()!['minAmount']} - Max Amoun: ${entityDoc.data()!['maxAmount']}"),
                         trailing: Text((entityDoc.data()!['credit'] == true
@@ -49,41 +50,25 @@ class ConfigListItem extends ConsumerWidget {
                     value: isAdded,
                     onChanged: (value) {
                       isAdded
-                          ? DeleteEntity(
-                              context,
-                              ref,
-                              FirebaseFirestore.instance
+                          ? FirebaseFirestore.instance.runTransaction(
+                              (Transaction myTransaction) async {
+                              myTransaction.delete(FirebaseFirestore.instance
                                   .collection('entity')
                                   .doc(batchId)
                                   .collection(configType)
-                                  .doc(entityDoc.id),
-                            )
+                                  .doc(entityDoc.id));
+                            })
                           : addEntity(context, ref, entityDoc);
                     })
               ])));
   }
 
   addEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {
-    var docRef = await FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('entity')
         .doc(batchId)
         .collection(configType)
         .doc(d.id)
-        .get();
-    if (!docRef.exists) {
-      FirebaseFirestore.instance
-          .collection('entity')
-          .doc(batchId)
-          .collection(configType)
-          .doc(d.id)
-          .set((await FirebaseFirestore.instance.doc(path).get()).data()!);
-    }
-  }
-
-  DeleteEntity(BuildContext context, WidgetRef ref, doc) {
-    FirebaseFirestore.instance
-        .runTransaction((Transaction myTransaction) async {
-      myTransaction.delete(doc);
-    });
+        .set((await FirebaseFirestore.instance.doc(path).get()).data()!);
   }
 }

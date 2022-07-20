@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:seeder/entity/available_config_list.dart';
-import 'package:seeder/entity/config/available_config_list.dart';
+import 'package:seeder/entity/config/config_list.dart';
 import 'package:seeder/entity/config/selected_config_list.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,7 +37,7 @@ class PeriodicConfig extends ConsumerWidget {
                   Container(
                     height: 250,
                     child: SingleChildScrollView(
-                        child: AvailableConfigList(entityId, "periodicConfig")),
+                        child: ConfigList(entityId, "periodicConfig")),
                   ),
                   Divider(),
                   Card(

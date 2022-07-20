@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/entity/config/available_config_list.dart';
+import 'package:seeder/entity/config/config_list.dart';
 import 'package:seeder/entity/config/periodic_config.dart';
 import 'package:seeder/entity/config/selected_config_list.dart';
 
@@ -25,7 +25,7 @@ class RandomConfig extends ConsumerWidget {
               Container(
                 height: 250,
                 child: SingleChildScrollView(
-                    child: AvailableConfigList(entityId, "randomConfig")),
+                    child: ConfigList(entityId, "randomConfig")),
               ),
               Divider(),
               Card(
@@ -33,7 +33,7 @@ class RandomConfig extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text('Add templates'),
-                  addPeriodicConfigButton(context, ref),
+                  addRandomConfigButton(context, ref),
                 ],
               ))
             ],
@@ -42,7 +42,7 @@ class RandomConfig extends ConsumerWidget {
   }
 }
 
-addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
+addRandomConfigButton(BuildContext context, WidgetRef ref) {
   TextEditingController maxAmount_inp = TextEditingController();
   TextEditingController minAmount_inp = TextEditingController();
   TextEditingController title_inp = TextEditingController();
