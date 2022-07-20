@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:group_button/group_button.dart';
 import 'package:seeder/providers/firestore.dart';
 
+/// datatable showing generated transaction records.
+/// where data column will be fixed on the top.
 class TransactionList extends ConsumerWidget {
   final String entityId;
 
@@ -15,69 +19,74 @@ class TransactionList extends ConsumerWidget {
           data: (trnCol) => trnCol.size == 0
               ? Text('no records')
               : Column(
-                  children: [
-                    // Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //     children: trnCol.docs.first
-                    //         .data()
-                    //         .entries
-                    //         .map((e) => Text(e.key.toString()))
-                    //         .toList()),
+            children: [
                     Expanded(
-                        child:
-                            //  ListView(
-                            //     padding: EdgeInsets.zero,
-                            //     shrinkWrap: true,
-                            //     children: trnCol.docs
-                            //         .map((trnDoc) => Transaction(trnDoc))
-                            //         .toList()),
-                            Column(
+                        child: Column(
                       children: [
-                        DataTable(
-                            columns: trnCol.docs.first
-                                .data()
-                                .entries
-                                .map((value) => DataColumn(
-                                      label: Text(
-                                        value.key,
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ))
-                                .toList(),
-                            rows: []),
+                        // stick table col on the top of page
+                        DataTable(columns: showDataColumn(trnCol), rows: []),
                         Expanded(
                             child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
                                 child: DataTable(
                                     headingRowHeight: 0,
-                                    columns: (trnCol.docs.first
-                                            .data()
-                                            .entries
-                                            .toList()
-                                          ..sort(
-                                              (a, b) => a.key.compareTo(b.key)))
-                                        .map((value) => DataColumn(
-                                              label: Text(
-                                                value.key,
-                                                style: TextStyle(
-                                                    fontStyle:
-                                                        FontStyle.italic),
-                                              ),
-                                            ))
-                                        .toList(),
-                                    rows: trnCol.docs
-                                        .map((trnDoc) => DataRow(
-                                            cells: (trnDoc
-                                                .data()
-                                                .entries.toList()
-                                                ..sort(
-                                              (a, b) => a.key.compareTo(b.key)))
-                                                .map((cell) => DataCell(Text(
-                                                    cell.value.toString())))
-                                                .toList()))
-                                        .toList())))
+                                    columns: showDataColumn(trnCol),
+                                    rows: showDataRows(trnCol))))
                       ],
                     ))
                   ],
                 ));
+
+  List<DataRow> showDataRows(QuerySnapshot<Map<String, dynamic>> trnCol) {
+    return trnCol.docs
+        .map((trnDoc) => DataRow(
+                cells: (trnDoc.data().entries.toList()
+                      ..sort((a, b) => a.key.compareTo(b.key)))
+                    .map((cell) {
+              // print(cell.value);
+              if (cell.value is Timestamp) {
+                // print(cell.value.runtimeType);
+                DateTime d = cell.value.toDate();
+                // print(d);
+                return DataCell(Text(d.toString()));
+              }
+              return DataCell(Text(cell.value.toString()));
+            }).toList()))
+        .toList();
+  }
+
+  List<DataColumn> showDataColumn(QuerySnapshot<Map<String, dynamic>> trnCol) {
+    var transactionDataMap = trnCol.docs.first.data();
+    // print(transactionDataMap.keys);
+    var dataColumnNameList = transactionDataMap.keys.toList();
+    dataColumnNameList.sort();
+    // print(dataEntryList);
+    List<DataColumn> dataColumnList = [];
+    dataColumnNameList.forEach((columnName) {
+      DataColumn dataColumn = DataColumn(
+        label: Text(
+          columnName,
+          style: TextStyle(fontStyle: FontStyle.italic),
+        ),
+      );
+      dataColumnList.add(dataColumn);
+    });
+    return dataColumnList;
+  }
+}
+
+class ColumnSelectionButtonGroup extends ConsumerWidget {
+  final String entityId;
+
+  const ColumnSelectionButtonGroup(this.entityId);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GroupButton(
+      isRadio: false,
+      onSelected: (time, index, isSelected) =>
+          print('$index th button $time is selected'),
+      buttons: ["12:00", "13:00", "14:30", "18:00", "19:00", "21:40"],
+    );
+  }
 }

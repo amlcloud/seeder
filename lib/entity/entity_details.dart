@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/entity/employer_widget.dart';
-import 'package:seeder/entity/entity_info.dart';
 import 'package:seeder/entity/config/entity_config.dart';
+import 'package:seeder/entity/entity_info.dart';
 import 'package:seeder/entity/generate_transactions_button.dart';
 import 'package:seeder/entity/transaction_list.dart';
 import 'package:seeder/timeline/timeline.dart';
@@ -53,6 +52,7 @@ class EntityDetails extends ConsumerWidget {
               child: Column(
                 children: [
                   Timeline(entityId),
+                  ColumnSelectionButtonGroup(entityId),
                   Expanded(
                     flex: 10,
                     child: TransactionList(entityId),
