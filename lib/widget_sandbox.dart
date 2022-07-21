@@ -27,12 +27,12 @@ void main() async {
           darkTheme: darkTheme,
           home: Scaffold(body: EntityDetails('DcyMKCGiQ1ENnWaq7VVU')
 
-          /// Insert your widget here for testing:
-          //AddRecurrentPaymentDialog('DcyMKCGiQ1ENnWaq7VVU')
-          //RecurrentIncome('DcyMKCGiQ1ENnWaq7VVU')
-          // Text('another widget')
-          ///
-          ///
-          ///
-          )));
+              /// Insert your widget here for testing:
+              //AddRecurrentPaymentDialog('DcyMKCGiQ1ENnWaq7VVU')
+              //RecurrentIncome('DcyMKCGiQ1ENnWaq7VVU')
+              // Text('another widget')
+              ///
+              ///
+              ///
+              ))));
 }
