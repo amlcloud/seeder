@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Group extends StatelessWidget {
+  final Widget child;
+
+  const Group({required this.child});
   @override
   Widget build(BuildContext context) => Padding(
       padding: EdgeInsets.all(8),
@@ -11,5 +14,5 @@ class Group extends StatelessWidget {
               border: Border.all(
                 color: Colors.grey,
               )),
-          child: Text('hello')));
+          child: Padding(padding: EdgeInsets.all(8), child: child)));
 }

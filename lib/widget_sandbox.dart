@@ -29,9 +29,9 @@ void main() async {
           darkTheme: darkTheme,
           home: Scaffold(
               body: Group(
-                  //       child: Column(
-                  // children: [Text('hi'), Text('hi')],
-                  ))
+                  child: Column(
+            children: [Text('hi'), Text('hi')],
+          )))
 
           //EntityConfig('DcyMKCGiQ1ENnWaq7VVU')
 

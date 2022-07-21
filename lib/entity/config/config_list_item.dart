@@ -15,57 +15,53 @@ class ConfigListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(docSP(path)).when(
-        loading: () => Container(),
+        loading: () => Text('loading...'),
         error: (e, s) => ErrorWidget(e),
-        data: (entityDoc) => entityDoc.exists == false
-            ? Center(child: Text('No entity data exists'))
-            : Card(
+        data: (configDoc) => Card(
                 child: Row(children: [
-                Expanded(
-                    child: Column(
-                  children: [
-                    ListTile(
-                        tileColor: Color.fromARGB(255, 44, 44, 44),
-                        focusColor: Color.fromARGB(255, 133, 116, 116),
-                        title: Text(entityDoc.id.toString()),
-                        subtitle: isAdded
-                            ? DocFieldRangeSlider(
-                                FirebaseFirestore.instance
-                                    .collection('entity')
-                                    .doc(batchId)
-                                    .collection(configType)
-                                    .doc(entityDoc.id),
-                                "minAmount",
-                                "maxAmount",
-                                entityDoc.data()!,
-                              )
-                            : Text(
-                                "Min Amount: ${entityDoc.data()!['minAmount']} - Max Amount: ${entityDoc.data()!['maxAmount']}"),
-                        trailing: Column(
-                          children: [
-                            Text((entityDoc.data()!['credit'] == true
-                                ? 'Credit'
-                                : 'Debit')),
-                            Text(entityDoc.data()!['period'])
-                          ],
-                        )),
-                  ],
-                )),
-                Switch(
-                    value: isAdded,
-                    onChanged: (value) {
-                      isAdded
-                          ? FirebaseFirestore.instance.runTransaction(
-                              (Transaction myTransaction) async {
-                              myTransaction.delete(FirebaseFirestore.instance
+              Expanded(
+                  child: Column(
+                children: [
+                  ListTile(
+                      title: Text(configDoc.id.toString()),
+                      subtitle: isAdded
+                          ? DocFieldRangeSlider(
+                              FirebaseFirestore.instance
                                   .collection('entity')
                                   .doc(batchId)
                                   .collection(configType)
-                                  .doc(entityDoc.id));
-                            })
-                          : addEntity(context, ref, entityDoc);
-                    })
-              ])));
+                                  .doc(configDoc.id),
+                              "minAmount",
+                              "maxAmount",
+                              configDoc.data()!,
+                            )
+                          : Text(
+                              "Min Amount: ${configDoc.data()!['minAmount']} - Max Amount: ${configDoc.data()!['maxAmount']}"),
+                      trailing: Column(
+                        children: [
+                          Text((configDoc.data()!['credit'] == true
+                              ? 'Credit'
+                              : 'Debit')),
+                          Text(configDoc.data()!['period'])
+                        ],
+                      )),
+                ],
+              )),
+              Switch(
+                  value: isAdded,
+                  onChanged: (value) {
+                    isAdded
+                        ? FirebaseFirestore.instance
+                            .runTransaction((Transaction myTransaction) async {
+                            myTransaction.delete(FirebaseFirestore.instance
+                                .collection('entity')
+                                .doc(batchId)
+                                .collection(configType)
+                                .doc(configDoc.id));
+                          })
+                        : addEntity(context, ref, configDoc);
+                  })
+            ])));
   }
 
   addEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {

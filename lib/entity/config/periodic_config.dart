@@ -7,6 +7,8 @@ import 'package:seeder/entity/config/selected_config_list.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../controls/group.dart';
+
 class PeriodicConfig extends ConsumerWidget {
   final String entityId;
 
@@ -14,48 +16,30 @@ class PeriodicConfig extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            border: Border.all(
-              color: Colors.grey,
-            )),
-        child: Column(
-          children: [
-            Expanded(child: Text('periodic trn')),
-            Row(mainAxisSize: MainAxisSize.max, children: [
-              Expanded(
-                  child: Column(
-                children: [
-                  Text('available periodic templates'),
-                  Container(
-                    height: 250,
-                    child: SingleChildScrollView(
-                        child: ConfigList(entityId, "periodicConfig")),
-                  ),
-                  Divider(),
-                  Card(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text('Add templates '),
-                      IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AddPeriodicConfig();
-                              });
-                        },
-                      )
-                    ],
-                  ))
-                ],
-              )),
-            ])
-          ],
-        ));
+    return Group(
+        child: Column(children: [
+      Text('available periodic templates'),
+      Expanded(
+        child: SingleChildScrollView(
+            child: ConfigList(entityId, "periodicConfig")),
+      ),
+      Divider(),
+      Row(
+        children: <Widget>[
+          Text('Add templates '),
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AddPeriodicConfig();
+                  });
+            },
+          )
+        ],
+      )
+    ]));
   }
 }
 

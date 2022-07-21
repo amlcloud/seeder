@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/controls/group.dart';
 import 'package:seeder/entity/config/config_list.dart';
 import 'package:seeder/entity/config/periodic_config.dart';
 import 'package:seeder/entity/config/selected_config_list.dart';
@@ -11,34 +12,24 @@ class RandomConfig extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            border: Border.all(
-              color: Colors.grey,
-            )),
-        child: Column(children: [
-          Expanded(
-              child: Column(
-            children: [
-              Text('available periodic templates'),
-              Container(
-                height: 250,
-                child: SingleChildScrollView(
-                    child: ConfigList(entityId, "randomConfig")),
-              ),
-              Divider(),
-              Card(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('Add templates'),
-                  addRandomConfigButton(context, ref),
-                ],
-              ))
-            ],
-          ))
-        ]));
+    return Group(
+        child: Column(
+      children: [
+        Text('random transactions'),
+        Expanded(
+          child: SingleChildScrollView(
+              child: ConfigList(entityId, "randomConfig")),
+        ),
+        Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Add templates'),
+            addRandomConfigButton(context, ref),
+          ],
+        )
+      ],
+    ));
   }
 }
 
