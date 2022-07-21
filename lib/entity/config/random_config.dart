@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/controls/group.dart';
 import 'package:seeder/entity/config/config_list.dart';
-import 'package:seeder/entity/config/periodic_config.dart';
-import 'package:seeder/entity/config/selected_config_list.dart';
 
 class RandomConfig extends ConsumerWidget {
   final String entityId;
