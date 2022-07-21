@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math' as math;
 import 'package:jiffy/jiffy.dart';
+import 'package:quiver/time.dart';
 import 'package:seeder/common.dart';
 import 'package:intl/intl.dart';
 
@@ -89,46 +90,202 @@ class GenerateTransactionsButtonState
     });
   }
 
-  generate() {
+  generate() async {
     deleteCol();
+    var addonce = true;
+    var weekCounter = 1;
+    var monthCounter = 0;
+    var quaterCounter = 0;
+    double latestbalance = 0.0;
+    var weekList = [];
+    var monthList = [];
+    var quaterList = [];
     List dates = generateDays(
         Jiffy(_selectedDateRange!.start), Jiffy(_selectedDateRange!.end));
 
-    // for (var element in dates) {
-    //   for (var config in allConfigsInRandomOrder) {
-    //     if (config.isRandom()) {
-    //       if (!config
-    //           .isComplete()) // check if grocery is already done this week
-    //       {
-    //         //calculate probability that is growing as there is less time left in the month
-    //         final prob = calcProbability(
-    //             config); // for Monday - 10%, Wed-33%, Friday-99%
+    var random = math.Random();
+    var periodicList = await FirebaseFirestore.instance
+        .collection('entity')
+        .doc(widget.entityId)
+        .collection('periodicConfig')
+        .get();
+    var randomList = await FirebaseFirestore.instance
+        .collection('entity')
+        .doc(widget.entityId)
+        .collection('randomConfig')
+        .get();
 
-    //         createTransaction(config, prob);
-    //       }
-    //     } else {
-    //       if (!config
-    //           .isSupposedToHappenToday()) // check if salary was already paid this month
-    //       {
-    //         createTransaction(config);
-    //       }
-    //     }
-    //   }
-    // }
+    periodicList.docs
+        .where((weekEl) => weekEl['period'] == 'Week')
+        .forEach((element) {
+      var temp = element.data();
+      temp['benName'] = element.id.toString();
+      temp['weekCounter'] = random.nextInt(7);
+      weekList.add(temp);
+    });
 
-    // for (var element in dates) {
-    //   //print("this is sample: ${element.dateTime}");
-    //   FirebaseFirestore.instance
-    //       .collection('entity/${widget.entityId}/transaction')
-    //       .add({
-    //     'amount': math.Random().nextDouble() * 999 + 1,
-    //     'balance': (math.Random().nextDouble() * 999 + 1).toStringAsFixed(2),
-    //     'ben_name': "Beneficiary",
-    //     'reference': "Example Transaction",
-    //     'rem_name': "Remitter",
-    //     't': element.dateTime,
-    //     'day': element.format(DATE_FORMAT),
-    //   });
-    // }
+    periodicList.docs
+        .where((weekEl) => weekEl['period'] == 'Month')
+        .forEach((element) {
+      var temp = element.data();
+      temp['benName'] = element.id.toString();
+      temp['monthCounter'] = random.nextInt(28);
+      monthList.add(temp);
+    });
+
+    periodicList.docs
+        .where((weekEl) => weekEl['period'] == 'Quarter')
+        .forEach((element) {
+      var temp = element.data();
+      temp['benName'] = element.id.toString();
+      temp['quaterCounter'] = random.nextInt(84);
+      quaterList.add(temp);
+    });
+
+    print("random list ${quaterList}");
+
+    for (var dateIterator in dates) {
+      weekList
+          .where((dayele) => dayele['weekCounter'] == weekCounter)
+          .forEach((weekData) {
+        double tempBal = weekData['minAmount'] +
+            random.nextInt(weekData['maxAmount'] - weekData['minAmount']);
+
+        if (addonce) {
+          AddTrnsaction(weekData['benName'], dateIterator, tempBal, tempBal,
+              weekData['credit'] ? "Credit" : "Debit");
+          latestbalance = tempBal;
+          addonce = false;
+        } else {
+          var balance = weekData['credit']!
+              ? latestbalance + tempBal
+              : latestbalance - tempBal;
+          balance = double.parse(balance.toString());
+          //print("is empte ${latestbalance}");
+
+          AddTrnsaction(weekData['benName'], dateIterator, balance, tempBal,
+              weekData['credit'] ? "Credit" : "Debit");
+          latestbalance = balance.toDouble();
+        }
+
+        //print("I am printing ${weekData} counter:${weekCounter}");
+      });
+
+      monthList
+          .where((dayele) => dayele['monthCounter'] == monthCounter)
+          .forEach((weekData) {
+        //print("I am hited by month");
+        double tempBal = weekData['minAmount'] +
+            random.nextInt(weekData['maxAmount'] - weekData['minAmount']);
+        //print("random amount ${tempBal}");
+
+        if (addonce) {
+          AddTrnsaction(weekData['benName'], dateIterator, tempBal, tempBal,
+              weekData['credit'] ? "Credit" : "Debit");
+          latestbalance = tempBal;
+
+          addonce = false;
+        } else {
+          var balance = weekData['credit']!
+              ? latestbalance + tempBal
+              : latestbalance - tempBal;
+          balance = double.parse(balance.toString());
+          //print("is empte ${latestbalance}");
+
+          AddTrnsaction(weekData['benName'], dateIterator, balance, tempBal,
+              weekData['credit'] ? "Credit" : "Debit");
+          latestbalance = balance.toDouble();
+        }
+
+        //print("I am printing ${weekData} counter:${weekCounter}");
+      });
+      print("random data ${quaterCounter}");
+
+      quaterList
+          .where((quaterele) => quaterele['quaterCounter'] == quaterCounter)
+          .forEach((weekData) {
+        print("I am hited by month quater");
+        double tempBal = weekData['minAmount'] +
+            random.nextInt(weekData['maxAmount'] - weekData['minAmount']);
+        //print("random amount ${tempBal}");
+
+        if (addonce) {
+          AddTrnsaction(weekData['benName'], dateIterator, tempBal, tempBal,
+              weekData['credit'] ? "Credit" : "Debit");
+          latestbalance = tempBal;
+
+          addonce = false;
+        } else {
+          var balance = weekData['credit']!
+              ? latestbalance + tempBal
+              : latestbalance - tempBal;
+          balance = double.parse(balance.toString());
+          //print("is empte ${latestbalance}");
+
+          AddTrnsaction(weekData['benName'], dateIterator, balance, tempBal,
+              weekData['credit'] ? "Credit" : "Debit");
+          latestbalance = balance.toDouble();
+        }
+
+        //print("I am printing ${weekData} counter:${weekCounter}");
+      });
+
+      if (weekCounter == 7) {
+        weekCounter = 0;
+      }
+      if (monthCounter == 28) {
+        monthCounter = 0;
+      }
+      if (quaterCounter == 84) {
+        quaterCounter = 0;
+      }
+      quaterCounter++;
+      monthCounter++;
+      weekCounter++;
+    }
+  }
+
+  AddTrnsaction(
+    String remName,
+    Jiffy dx,
+    dynamic balance,
+    dynamic amount,
+    String crdb,
+  ) {
+    FirebaseFirestore.instance
+        .collection('entity/${widget.entityId}/transaction')
+        .add({
+      //'amount': math.Random().nextDouble() * 999 + 1,
+      //'balance': (math.Random().nextDouble() * 999 + 1).toStringAsFixed(2),
+
+      'amount': amount,
+      'balance': balance,
+      'ben_name': "Beneficiary",
+      'reference': "Example Transaction",
+      'rem_name': remName,
+      'Type': crdb,
+      't': dx.dateTime,
+      'day': dx.format(DATE_FORMAT),
+    });
+  }
+
+  Future<Map<String, dynamic>> fetchLastData() async {
+    Map<String, dynamic> collection = {};
+    try {
+      QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore
+          .instance
+          .collection('entity')
+          .doc(widget.entityId)
+          .collection('transaction')
+          .orderBy("day", descending: true)
+          .get();
+
+      collection = data.docs.first.data();
+      //print("sample collection ${collection}");
+      //print("sample collection ${data.docs.first.data()}");
+    } catch (e) {
+      print('error: $e');
+    }
+    return collection;
   }
 }

@@ -34,9 +34,8 @@ class TransactionList extends ConsumerWidget {
                             Column(
                       children: [
                         DataTable(
-                            columns: trnCol.docs.first
-                                .data()
-                                .entries
+                            columns: (trnCol.docs.first.data().entries.toList()
+                                  ..sort((a, b) => a.key.compareTo(b.key)))
                                 .map((value) => DataColumn(
                                       label: Text(
                                         value.key,
@@ -50,7 +49,10 @@ class TransactionList extends ConsumerWidget {
                             child: SingleChildScrollView(
                                 child: DataTable(
                                     headingRowHeight: 0,
-                                    columns: (trnCol.docs.first.data().entries.toList()
+                                    columns: (trnCol.docs.first
+                                            .data()
+                                            .entries
+                                            .toList()
                                           ..sort(
                                               (a, b) => a.key.compareTo(b.key)))
                                         .map((value) => DataColumn(
@@ -70,7 +72,19 @@ class TransactionList extends ConsumerWidget {
                                             cells: (trnDoc.data().entries.toList()
                                                   ..sort((a, b) =>
                                                       a.key.compareTo(b.key)))
-                                                .map((cell) => DataCell(Text(cell.value.toString())))
+                                                //.map((cell) => DataCell(Text(cell.value.toString())))
+
+                                                //// **Please Ignor this styling now. This is for just testing purposes**.
+                                                .map((cell) => DataCell(cell.value
+                                                            .toString() ==
+                                                        'Debit'
+                                                    ? Text(
+                                                        cell.value.toString(),
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.red),
+                                                      )
+                                                    : Text(cell.value.toString())))
                                                 .toList()))
                                         .toList())))
                       ],
