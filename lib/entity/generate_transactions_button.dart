@@ -92,18 +92,22 @@ class GenerateTransactionsButtonState
 
   generate() async {
     deleteCol();
+
     var addonce = true;
     var weekCounter = 1;
     var monthCounter = 0;
     var quaterCounter = 0;
     double latestbalance = 0.0;
+
     var weekList = [];
     var monthList = [];
     var quaterList = [];
+
     List dates = generateDays(
         Jiffy(_selectedDateRange!.start), Jiffy(_selectedDateRange!.end));
 
     var random = math.Random();
+
     var periodicList = await FirebaseFirestore.instance
         .collection('entity')
         .doc(widget.entityId)
@@ -144,7 +148,10 @@ class GenerateTransactionsButtonState
 
     print("random list ${quaterList}");
 
-    for (var dateIterator in dates) {
+    ////* Date loop starts at this point.** /////
+    for (Jiffy dateIterator in dates) {
+      print('day of month: ${dateIterator.day}');
+
       weekList
           .where((dayele) => dayele['weekCounter'] == weekCounter)
           .forEach((weekData) {

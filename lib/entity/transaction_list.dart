@@ -81,8 +81,7 @@ class TransactionList extends ConsumerWidget {
                                                     ? Text(
                                                         cell.value.toString(),
                                                         style: TextStyle(
-                                                            color:
-                                                                Colors.red),
+                                                            color: Colors.red),
                                                       )
                                                     : Text(cell.value.toString())))
                                                 .toList()))
