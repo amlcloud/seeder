@@ -52,7 +52,7 @@ class EntityDetails extends ConsumerWidget {
               child: Column(
                 children: [
                   Timeline(entityId),
-                  ColumnSelectionButtonGroup(entityId),
+                  // ColumnSelectionButtonGroup(entityId),
                   Expanded(
                     flex: 10,
                     child: TransactionList(entityId),

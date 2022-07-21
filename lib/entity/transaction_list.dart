@@ -23,6 +23,7 @@ class TransactionList extends ConsumerWidget {
                     Expanded(
                         child: Column(
                       children: [
+                        ColumnSelectionButtonGroup(trnCol),
                         // stick table col on the top of page
                         DataTable(columns: showDataColumn(trnCol), rows: []),
                         Expanded(
@@ -76,9 +77,9 @@ class TransactionList extends ConsumerWidget {
 }
 
 class ColumnSelectionButtonGroup extends ConsumerWidget {
-  final String entityId;
+  final QuerySnapshot<Map<String, dynamic>> trnCol;
 
-  const ColumnSelectionButtonGroup(this.entityId);
+  const ColumnSelectionButtonGroup(this.trnCol);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -86,7 +87,16 @@ class ColumnSelectionButtonGroup extends ConsumerWidget {
       isRadio: false,
       onSelected: (time, index, isSelected) =>
           print('$index th button $time is selected'),
-      buttons: ["12:00", "13:00", "14:30", "18:00", "19:00", "21:40"],
+      buttons: showDataColumn(trnCol),
     );
+  }
+
+  List<String> showDataColumn(QuerySnapshot<Map<String, dynamic>> trnCol) {
+    var transactionDataMap = trnCol.docs.first.data();
+    // print(transactionDataMap.keys);
+    var dataColumnNameList = transactionDataMap.keys.toList();
+    dataColumnNameList.sort();
+
+    return dataColumnNameList;
   }
 }
