@@ -5,11 +5,6 @@ import 'package:seeder/batch/batch_view_csv.dart';
 import 'package:seeder/batch/entities_selector.dart';
 import 'package:seeder/controls/doc_field_text_edit.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:seeder/providers/firestore.dart';
-import 'package:csv/csv.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 final activeEntity =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(

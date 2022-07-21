@@ -1,17 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:seeder/dialogs/add_periodic_config.dart';
 //import 'package:seeder/entity/available_config_list.dart';
-import 'package:seeder/entity/config/available_config_list.dart';
-import 'package:seeder/entity/config/selected_config_list.dart';
-import 'package:seeder/state/generic_state_notifier.dart';
+import 'package:seeder/entity/config/config_list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final frequencySelector =
-    StateNotifierProvider<GenericStateNotifier<String?>, String?>(
-        (ref) => GenericStateNotifier<String?>(null));
-
-final creditDebit = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
-    (ref) => GenericStateNotifier<bool>(true));
 
 class PeriodicConfig extends ConsumerWidget {
   final String entityId;
@@ -26,166 +17,109 @@ class PeriodicConfig extends ConsumerWidget {
             border: Border.all(
               color: Colors.grey,
             )),
-        child: Column(children: [
-          Expanded(child: Text('random trn')),
-          Expanded(
-              child: Column(children: [
-            Column(
-              children: [
-                Card(
-                    child: ListTile(
-                  leading: Switch(
-                      value:
-                          true, //ref.watch(isMineBatchNotifierProvider) ?? false,
-                      onChanged: (value) {
-                        //ref.read(isMineBatchNotifierProvider.notifier).value = value;
-                      }),
-                  title: Text('grocery'),
-                  subtitle: Slider(
-                    value: 10, //_currentSliderValue,
-                    max: 100,
-                    divisions: 5,
-                    // label: _currentSliderValue.round().toString(),
-                    onChanged: (double value) {
-                      // setState(() {
-                      //   _currentSliderValue = value;
-                      // });
-                    },
-                  ),
-                  trailing: IconButton(icon: Icon(Icons.add), onPressed: () {}),
-                )),
-                IconButton(icon: Icon(Icons.add), onPressed: () {}),
-              ],
-            )
-          ]))
-        ]));
-  }
-}
-
-addPeriodicConfigButton(BuildContext context, WidgetRef ref) {
-  TextEditingController maxAmount_inp = TextEditingController();
-  TextEditingController minAmount_inp = TextEditingController();
-  TextEditingController title_inp = TextEditingController();
-
-  return IconButton(
-    icon: Icon(Icons.add),
-    onPressed: () {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              scrollable: true,
-              title: Text('Adding Config...'),
-              content: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Form(
+        child: Column(
+          children: [
+            Expanded(child: Text('periodic trn')),
+            Row(mainAxisSize: MainAxisSize.max, children: [
+              Expanded(
                   child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                        controller: title_inp,
-                        decoration: InputDecoration(labelText: 'Title'),
-                      ),
-                      TextFormField(
-                        controller: minAmount_inp,
-                        decoration: InputDecoration(labelText: 'Min Amount'),
-                      ),
-                      TextFormField(
-                        controller: maxAmount_inp,
-                        decoration: InputDecoration(
-                          labelText: 'Max Amount',
-                        ),
-                      ),
-                      RadioDropButton(),
-                    ],
+                children: [
+                  Text('available periodic templates'),
+                  Container(
+                    height: 250,
+                    child: SingleChildScrollView(
+                        child: ConfigList(entityId, "periodicConfig")),
                   ),
-                ),
-              ),
-              actions: [
-                TextButton(
-                    child: Text("Submit"),
-                    onPressed: () {
-                      FirebaseFirestore.instance
-                          .collection('periodicConfig')
-                          .doc(title_inp.text)
-                          .set({
-                        'credit': ref.watch(creditDebit),
-                        'maxAmount': double.parse(maxAmount_inp.text),
-                        'minAmount': double.parse(minAmount_inp.text),
-                        'period': ref.watch(frequencySelector),
-                      });
-                      Navigator.of(context).pop();
-                    })
-              ],
-            );
-          });
-    },
-  );
-}
-
-class RadioDropButton extends ConsumerWidget {
-  const RadioDropButton({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        Card(
-          child: Row(children: [
-            Text('Period : '),
-            DropdownButton<String>(
-              value: ref.watch(frequencySelector) ?? 'Daily',
-              icon: const Icon(Icons.arrow_downward),
-              elevation: 16,
-              // style: const TextStyle(color: Colors.deepPurple),
-              underline: Container(
-                height: 2,
-                // color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String? newValue) {
-                ref.read(frequencySelector.notifier).value = newValue;
-              },
-              items: <String>[
-                'Daily',
-                'Weekly',
-                'Monthly',
-                'Quarterly',
-                'Yearly'
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value.toUpperCase()),
-                );
-              }).toList(),
-            ),
-          ]),
-        ),
-        Card(
-          child: Column(
-            children: <Widget>[
-              Text('Transaction type'),
-              ListTile(
-                leading: Radio<bool>(
-                  value: true,
-                  groupValue: ref.watch(creditDebit),
-                  onChanged: (value) {
-                    ref.read(creditDebit.notifier).value = value!;
-                  },
-                ),
-                title: const Text('Credit'),
-              ),
-              ListTile(
-                leading: Radio<bool>(
-                  value: false,
-                  groupValue: ref.watch(creditDebit),
-                  onChanged: (value) {
-                    ref.read(creditDebit.notifier).value = value!;
-                  },
-                ),
-                title: const Text('Debit'),
-              ),
-            ],
-          ),
-        )
-      ],
-    );
+                  Divider(),
+                  Card(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text('Add templates '),
+                      IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AddPeriodicConfig();
+                              });
+                        },
+                      )
+                    ],
+                  ))
+                ],
+              )),
+            ])
+          ],
+        ));
   }
 }
+
+// class RadioDropButton extends ConsumerWidget {
+//   const RadioDropButton({Key? key}) : super(key: key);
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     return Column(
+//       children: [
+//         Card(
+//           child: Row(children: [
+//             Text('Period : '),
+//             DropdownButton<String>(
+//               value: ref.watch(frequencySelector) ?? 'Daily',
+//               icon: const Icon(Icons.arrow_downward),
+//               elevation: 16,
+//               // style: const TextStyle(color: Colors.deepPurple),
+//               underline: Container(
+//                 height: 2,
+//                 // color: Colors.deepPurpleAccent,
+//               ),
+//               onChanged: (String? newValue) {
+//                 ref.read(frequencySelector.notifier).value = newValue;
+//               },
+//               items: <String>[
+//                 'Daily',
+//                 'Weekly',
+//                 'Monthly',
+//                 'Quarterly',
+//                 'Yearly'
+//               ].map<DropdownMenuItem<String>>((String value) {
+//                 return DropdownMenuItem<String>(
+//                   value: value,
+//                   child: Text(value.toUpperCase()),
+//                 );
+//               }).toList(),
+//             ),
+//           ]),
+//         ),
+//         Card(
+//           child: Column(
+//             children: <Widget>[
+//               Text('Transaction type'),
+//               ListTile(
+//                 leading: Radio<bool>(
+//                   value: true,
+//                   groupValue: ref.watch(creditDebit),
+//                   onChanged: (value) {
+//                     ref.read(creditDebit.notifier).value = value!;
+//                   },
+//                 ),
+//                 title: const Text('Credit'),
+//               ),
+//               ListTile(
+//                 leading: Radio<bool>(
+//                   value: false,
+//                   groupValue: ref.watch(creditDebit),
+//                   onChanged: (value) {
+//                     ref.read(creditDebit.notifier).value = value!;
+//                   },
+//                 ),
+//                 title: const Text('Debit'),
+//               ),
+//             ],
+//           ),
+//         )
+//       ],
+//     );
+//   }
+// }
