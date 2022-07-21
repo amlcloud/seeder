@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/entity/config/periodic_config.dart';
+import 'package:seeder/entity/config/random_config.dart';
+import 'package:seeder/entity/config/specific_config.dart';
 import 'package:seeder/entity/employer_widget.dart';
 import 'package:seeder/entity/entity_info.dart';
 import 'package:seeder/entity/config/entity_config.dart';
@@ -34,19 +37,31 @@ class EntityDetails extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     EntityInfo(entityId),
-                    EntityConfig(entityId),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0.00, 0.0, 30.0, 0),
-                          child: GenerateTransactionsButton(entityId),
-                        )
-                      ],
+                    //EntityConfig(entityId),
+                    Expanded(
+                      child: PeriodicConfig(entityId),
                     ),
-                    Divider(),
+                    Expanded(
+                      child: RandomConfig(entityId),
+                    ),
+                    Expanded(
+                      child: SpecificConfig(),
+                    ),
+
+                    GenerateTransactionsButton(entityId),
+
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.end,
+                    //   mainAxisSize: MainAxisSize.max,
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: <Widget>[
+                    //     Container(
+                    //       margin: EdgeInsets.fromLTRB(0.00, 0.0, 30.0, 0),
+                    //       child: GenerateTransactionsButton(entityId),
+                    //     )
+                    //   ],
+                    // ),
+                    // Divider(),
                   ])),
           Flexible(
               flex: 2,

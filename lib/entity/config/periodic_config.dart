@@ -30,29 +30,20 @@ class PeriodicConfig extends ConsumerWidget {
             )),
         child: Column(
           children: [
-            Expanded(child: Text('periodic trn')),
-            Row(mainAxisSize: MainAxisSize.max, children: [
-              Expanded(
-                  child: Column(
-                children: [
-                  Text('available periodic templates'),
-                  Container(
-                    height: 250,
-                    child: SingleChildScrollView(
-                        child: ConfigList(entityId, "periodicConfig")),
-                  ),
-                  Divider(),
-                  Card(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text('Add templates '),
-                      addPeriodicConfigButton(context, ref),
-                    ],
-                  ))
-                ],
-              )),
-            ])
+            Text('available periodic templates'),
+            Expanded(
+              child: SingleChildScrollView(
+                  child: ConfigList(entityId, "periodicConfig")),
+            ),
+            Divider(),
+            Card(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Add templates '),
+                addPeriodicConfigButton(context, ref),
+              ],
+            ))
           ],
         ));
   }

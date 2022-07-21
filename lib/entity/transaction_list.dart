@@ -50,10 +50,7 @@ class TransactionList extends ConsumerWidget {
                             child: SingleChildScrollView(
                                 child: DataTable(
                                     headingRowHeight: 0,
-                                    columns: (trnCol.docs.first
-                                            .data()
-                                            .entries
-                                            .toList()
+                                    columns: (trnCol.docs.first.data().entries.toList()
                                           ..sort(
                                               (a, b) => a.key.compareTo(b.key)))
                                         .map((value) => DataColumn(
@@ -65,15 +62,15 @@ class TransactionList extends ConsumerWidget {
                                               ),
                                             ))
                                         .toList(),
-                                    rows: trnCol.docs
+                                    rows: (trnCol.docs
+                                          ..sort((a, b) => a
+                                              .data()['day']
+                                              .compareTo(b.data()['day'])))
                                         .map((trnDoc) => DataRow(
-                                            cells: (trnDoc
-                                                .data()
-                                                .entries.toList()
-                                                ..sort(
-                                              (a, b) => a.key.compareTo(b.key)))
-                                                .map((cell) => DataCell(Text(
-                                                    cell.value.toString())))
+                                            cells: (trnDoc.data().entries.toList()
+                                                  ..sort((a, b) =>
+                                                      a.key.compareTo(b.key)))
+                                                .map((cell) => DataCell(Text(cell.value.toString())))
                                                 .toList()))
                                         .toList())))
                       ],
