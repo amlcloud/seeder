@@ -80,7 +80,7 @@ addRandomConfigButton(BuildContext context, WidgetRef ref) {
                           controller: frequency_inp,
                           decoration: InputDecoration(
                               labelText: 'Times per selected period')),
-                      RadioDropButton(),
+                      // RadioDropButton(),
                     ],
                   ),
                 ),
@@ -89,16 +89,16 @@ addRandomConfigButton(BuildContext context, WidgetRef ref) {
                 TextButton(
                     child: Text("Submit"),
                     onPressed: () {
-                      FirebaseFirestore.instance
-                          .collection('randomConfig')
-                          .doc(title_inp.text)
-                          .set({
-                        'credit': ref.watch(creditDebit),
-                        'maxAmount': double.parse(maxAmount_inp.text),
-                        'minAmount': double.parse(minAmount_inp.text),
-                        'period': ref.watch(frequencySelector),
-                        'frequency': int.parse(frequency_inp.text),
-                      });
+                      // FirebaseFirestore.instance
+                      //     .collection('randomConfig')
+                      //     .doc(title_inp.text)
+                      //     .set({
+                      //   'credit': ref.watch(creditDebit),
+                      //   'maxAmount': double.parse(maxAmount_inp.text),
+                      //   'minAmount': double.parse(minAmount_inp.text),
+                      //   'period': ref.watch(frequencySelector),
+                      //   'frequency': int.parse(frequency_inp.text),
+                      // });
                       Navigator.of(context).pop();
                     })
               ],

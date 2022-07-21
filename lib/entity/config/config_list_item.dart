@@ -40,10 +40,15 @@ class ConfigListItem extends ConsumerWidget {
                                 entityDoc.data()!,
                               )
                             : Text(
-                                "Min Amoun: ${entityDoc.data()!['minAmount']} - Max Amoun: ${entityDoc.data()!['maxAmount']}"),
-                        trailing: Text((entityDoc.data()!['credit'] == true
-                            ? 'Credit'
-                            : 'Debit'))),
+                                "Min Amount: ${entityDoc.data()!['minAmount']} - Max Amount: ${entityDoc.data()!['maxAmount']}"),
+                        trailing: Column(
+                          children: [
+                            Text((entityDoc.data()!['credit'] == true
+                                ? 'Credit'
+                                : 'Debit')),
+                            Text(entityDoc.data()!['period'])
+                          ],
+                        )),
                   ],
                 )),
                 Switch(
