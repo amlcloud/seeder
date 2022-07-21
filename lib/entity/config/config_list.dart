@@ -6,10 +6,10 @@ import 'package:seeder/batch/batch_page.dart';
 import 'package:seeder/entity/config/config_list_item.dart';
 import 'package:seeder/providers/firestore.dart';
 
-class AvailableConfigList extends ConsumerWidget {
+class ConfigList extends ConsumerWidget {
   final String entityId;
   final String configType;
-  const AvailableConfigList(this.entityId, this.configType);
+  const ConfigList(this.entityId, this.configType);
   @override
   Widget build(BuildContext context, WidgetRef ref) => ListView(
       padding: EdgeInsets.zero,
@@ -23,11 +23,10 @@ class AvailableConfigList extends ConsumerWidget {
                   .when(
                       loading: () => Container(),
                       error: (e, s) => ErrorWidget(e),
-                      data: (selectedEntityDoc) => selectedEntityDoc.exists
-                          ? Container()
-                          : ConfigListItem(
-                              '${configType}/${config.id}', entityId, configType)))
+                      data: (selectedEntityDoc) => ConfigListItem(
+                          '${configType}/${config.id}',
+                          entityId,
+                          configType,
+                          selectedEntityDoc.exists ? true : false)))
               .toList()));
-
-
 }
