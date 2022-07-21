@@ -7,8 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/batch/batch_page.dart';
 import 'package:csv/csv.dart';
 import 'package:seeder/providers/selected_list.dart';
-import 'package:seeder/state/generic_state_notifier.dart';
-import '../providers/firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import "package:universal_html/html.dart" as html;
 

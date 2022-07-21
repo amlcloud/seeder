@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/controls/doc_field_drop_down.dart';
-import 'package:seeder/controls/doc_field_text_edit.dart';
 import 'package:seeder/entity/create_recurrent_payment_dialog.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 
 import '../common.dart';
-
 
 class RecurrentIncome extends ConsumerWidget {
   final String entityId;

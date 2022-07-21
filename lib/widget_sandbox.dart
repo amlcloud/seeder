@@ -4,8 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/controls/group.dart';
 import 'package:seeder/theme.dart';
 
-import 'entity/create_recurrent_payment_dialog.dart';
-import 'entity/config/entity_config.dart';
 import 'firebase_options.dart';
 
 /// This function is for testing individual Widgets
