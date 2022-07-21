@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/controls/group.dart';
+import 'package:seeder/entity/entity_details.dart';
 import 'package:seeder/theme.dart';
 
 import 'firebase_options.dart';
@@ -25,13 +25,7 @@ void main() async {
           themeMode: ThemeMode.dark,
           theme: lightTheme,
           darkTheme: darkTheme,
-          home: Scaffold(
-              body: Group(
-                  child: Column(
-            children: [Text('hi'), Text('hi')],
-          )))
-
-          //EntityConfig('DcyMKCGiQ1ENnWaq7VVU')
+          home: Scaffold(body: EntityDetails('DcyMKCGiQ1ENnWaq7VVU')
 
           /// Insert your widget here for testing:
           //AddRecurrentPaymentDialog('DcyMKCGiQ1ENnWaq7VVU')

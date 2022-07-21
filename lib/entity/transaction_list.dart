@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:group_button/group_button.dart';
 import 'package:seeder/providers/firestore.dart';
 
+/// datatable showing generated transaction records.
+/// where data column will be fixed on the top.
 class TransactionList extends ConsumerWidget {
   final String entityId;
 
@@ -16,10 +19,12 @@ class TransactionList extends ConsumerWidget {
           data: (trnCol) => trnCol.size == 0
               ? Text('no records')
               : Column(
-                  children: [
+            children: [
                     Expanded(
                         child: Column(
                       children: [
+                        ColumnSelectionButtonGroup(trnCol),
+                        // stick table col on the top of page
                         DataTable(columns: showDataColumn(trnCol), rows: []),
                         Expanded(
                             child: SingleChildScrollView(
@@ -68,5 +73,30 @@ class TransactionList extends ConsumerWidget {
       dataColumnList.add(dataColumn);
     });
     return dataColumnList;
+  }
+}
+
+class ColumnSelectionButtonGroup extends ConsumerWidget {
+  final QuerySnapshot<Map<String, dynamic>> trnCol;
+
+  const ColumnSelectionButtonGroup(this.trnCol);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GroupButton(
+      isRadio: false,
+      onSelected: (time, index, isSelected) =>
+          print('$index th button $time is selected'),
+      buttons: showDataColumn(trnCol),
+    );
+  }
+
+  List<String> showDataColumn(QuerySnapshot<Map<String, dynamic>> trnCol) {
+    var transactionDataMap = trnCol.docs.first.data();
+    // print(transactionDataMap.keys);
+    var dataColumnNameList = transactionDataMap.keys.toList();
+    dataColumnNameList.sort();
+
+    return dataColumnNameList;
   }
 }
