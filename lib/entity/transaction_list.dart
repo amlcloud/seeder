@@ -27,25 +27,8 @@ class TransactionList extends ConsumerWidget {
                                   rows: showDataRows(trnCol)),
                             )
                           ]),
-                          // TableRow(children: [
-                          //   DataTable(columns: [], rows: showDataRows(trnCol))
-                          // ])
                         ],
                       ),
-
-                      // Expanded(
-                      //     child: Column(
-                      //   children: [
-                      //     Container(child: []),
-                      //     Expanded(
-                      //         child: SingleChildScrollView(
-                      //             scrollDirection: Axis.horizontal,
-                      //             child: DataTable(
-                      //                 headingRowHeight: 0,
-                      //                 columns: showDataColumn(trnCol),
-                      //                 rows: showDataRows(trnCol))))
-                      //   ],
-                      // ))
                     ],
                   ),
                 ));

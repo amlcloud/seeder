@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/controls/group.dart';
-import 'package:seeder/entity/transaction_list.dart';
 import 'package:seeder/theme.dart';
 
 import 'firebase_options.dart';
@@ -26,7 +25,11 @@ void main() async {
           themeMode: ThemeMode.dark,
           theme: lightTheme,
           darkTheme: darkTheme,
-          home: Scaffold(body: TransactionList("DcyMKCGiQ1ENnWaq7VVU"))
+          home: Scaffold(
+              body: Group(
+                  child: Column(
+            children: [Text('hi'), Text('hi')],
+          )))
 
           //EntityConfig('DcyMKCGiQ1ENnWaq7VVU')
 
