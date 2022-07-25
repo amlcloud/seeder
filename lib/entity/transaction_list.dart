@@ -66,8 +66,8 @@ class TransactionList extends ConsumerWidget {
                                         .toList(),
                                     rows: (trnCol.docs
                                           ..sort((a, b) => a
-                                              .data()['day']
-                                              .compareTo(b.data()['day'])))
+                                              .data()['timestamp']
+                                              .compareTo(b.data()['timestamp'])))
                                         .map((trnDoc) => DataRow(
                                             cells: (trnDoc.data().entries.toList()
                                                   ..sort((a, b) =>
@@ -83,7 +83,16 @@ class TransactionList extends ConsumerWidget {
                                                         style: TextStyle(
                                                             color: Colors.red),
                                                       )
-                                                    : Text(cell.value.toString())))
+                                                    : cell.key == 'timestamp'
+                                                        ? Text(
+                                                            cell.value
+                                                                .toDate()
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .blue),
+                                                          )
+                                                        : Text(cell.value.toString())))
                                                 .toList()))
                                         .toList())))
                       ],
