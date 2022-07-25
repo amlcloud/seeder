@@ -55,7 +55,7 @@ generate(DateTimeRange selectedDateRange, String entityId) async {
       .forEach((element) {
     var temp = element.data();
     temp['benName'] = element.id.toString();
-    temp['quater'] = random.nextInt(28);
+    temp['quater'] = random.nextInt(84);
     quaterList.add(temp);
   });
 
@@ -67,7 +67,7 @@ generate(DateTimeRange selectedDateRange, String entityId) async {
     List<Map<String, dynamic>> periodicMonthData =
         await addDataToList(monthList, "month", dateIterator, monthCounter);
     List<Map<String, dynamic>> periodicQuaterData =
-        await addDataToList(quaterList, "quater", dateIterator, monthCounter);
+        await addDataToList(quaterList, "quater", dateIterator, quaterCounter);
 
     dataList.addAll(periodicWeekData);
     dataList.addAll(periodicMonthData);
@@ -109,32 +109,15 @@ addDataToList(List<Map<String, dynamic>> configList, String period,
 
     double amount = configData['minAmount'] +
         random.nextInt(configData['maxAmount'] - configData['minAmount']);
-    if (period != 'quater') {
-      listData.add({
-        'amount': amount,
-        'ben_name': "Beneficiary",
-        'reference': "Example Transaction",
-        'rem_name': configData['benName'],
-        'Type': configData['credit'] ? "Credit" : "Debit",
-        'timestamp': configDate,
-        'day': dateIterator.format(DATE_FORMAT),
-      });
-    } else {
-      if (dateIterator.month == 3 ||
-          dateIterator.month == 6 ||
-          dateIterator.month == 9 ||
-          dateIterator.month == 12) {
-        listData.add({
-          'amount': amount,
-          'ben_name': "Beneficiary",
-          'reference': "Example Transaction",
-          'rem_name': configData['benName'],
-          'Type': configData['credit'] ? "Credit" : "Debit",
-          'timestamp': configDate,
-          'day': dateIterator.format(DATE_FORMAT),
-        });
-      }
-    }
+    listData.add({
+      'amount': amount,
+      'ben_name': "Beneficiary",
+      'reference': "Example Transaction",
+      'rem_name': configData['benName'],
+      'Type': configData['credit'] ? "Credit" : "Debit",
+      'timestamp': configDate,
+      'day': dateIterator.format(DATE_FORMAT),
+    });
   });
   return listData;
 }

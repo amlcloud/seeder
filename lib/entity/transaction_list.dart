@@ -67,7 +67,8 @@ class TransactionList extends ConsumerWidget {
                                     rows: (trnCol.docs
                                           ..sort((a, b) => a
                                               .data()['timestamp']
-                                              .compareTo(b.data()['timestamp'])))
+                                              .compareTo(
+                                                  b.data()['timestamp'])))
                                         .map((trnDoc) => DataRow(
                                             cells: (trnDoc.data().entries.toList()
                                                   ..sort((a, b) =>
@@ -75,24 +76,25 @@ class TransactionList extends ConsumerWidget {
                                                 //.map((cell) => DataCell(Text(cell.value.toString())))
 
                                                 //// **Please Ignor this styling now. This is for just testing purposes**.
-                                                .map((cell) => DataCell(cell.value
-                                                            .toString() ==
-                                                        'Debit'
-                                                    ? Text(
-                                                        cell.value.toString(),
-                                                        style: TextStyle(
-                                                            color: Colors.red),
-                                                      )
-                                                    : cell.key == 'timestamp'
+                                                .map((cell) =>
+                                                    DataCell(cell.value.toString() == 'Debit'
                                                         ? Text(
                                                             cell.value
-                                                                .toDate()
                                                                 .toString(),
                                                             style: TextStyle(
-                                                                color: Colors
-                                                                    .blue),
+                                                                color:
+                                                                    Colors.red),
                                                           )
-                                                        : Text(cell.value.toString())))
+                                                        : cell.key == 'timestamp'
+                                                            ? Text(
+                                                                cell.value
+                                                                    .toDate()
+                                                                    .toString(),
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .blue),
+                                                              )
+                                                            : Text(cell.value.toString())))
                                                 .toList()))
                                         .toList())))
                       ],
