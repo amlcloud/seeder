@@ -3,6 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:group_button/group_button.dart';
 import 'package:seeder/providers/firestore.dart';
+import 'package:seeder/state/generic_state_notifier.dart';
+
+/// expose [ColumnStateNotifier] from [StateNotifierProvider]
+final columnStateNotifierProvider =
+    StateNotifierProvider<ColumnStateNotifier, List<String>>((ref) {
+  return ColumnStateNotifier([]);
+});
+
+class ColumnStateNotifier extends GenericStateNotifier<List<String>> {
+  ColumnStateNotifier(super.d);
+
+  void addColumn(String columnName) {
+    state.add(columnName);
+  }
+
+  void removeColumn(String columnName) {
+    state.remove(columnName);
+  }
+}
 
 /// datatable showing generated transaction records.
 /// where data column will be fixed on the top.
@@ -19,7 +38,7 @@ class TransactionList extends ConsumerWidget {
           data: (trnCol) => trnCol.size == 0
               ? Text('no records')
               : Column(
-            children: [
+                  children: [
                     Expanded(
                         child: Column(
                       children: [
@@ -85,9 +104,19 @@ class ColumnSelectionButtonGroup extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GroupButton(
       isRadio: false,
-      onSelected: (time, index, isSelected) =>
-          print('$index th button $time is selected'),
+      onSelected: (col, index, isSelected) {
+        print(
+            "$index th button $col is ${isSelected ? 'selected' : 'deselected'}");
+        var notifier = ref.read(columnStateNotifierProvider.notifier);
+        if (isSelected == false) {
+          notifier.removeColumn(col.toString());
+        } else {
+          notifier.addColumn(col.toString());
+        }
+        print("new column selected ${notifier.value}");
+      },
       buttons: showDataColumn(trnCol),
+      enableDeselect: true,
     );
   }
 
