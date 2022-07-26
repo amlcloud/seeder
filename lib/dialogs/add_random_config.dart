@@ -68,6 +68,24 @@ class AddRandomConfig extends ConsumerWidget {
                       )
                     : Container(),
               ),
+              TextFormField(
+                controller: frequency_inp,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                decoration: InputDecoration(
+                  labelText: 'Frequency',
+                ),
+              ),
+              TextFormField(
+                controller: probability_inp,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                decoration: InputDecoration(
+                  labelText: 'Probability %',
+                ),
+              ),
               DropdownButton<String>(
                 value: ref.watch(frequencySelector) ?? 'Day',
                 icon: const Icon(Icons.arrow_downward),
@@ -127,6 +145,7 @@ class AddRandomConfig extends ConsumerWidget {
                   'minAmount': double.parse(minAmount_inp.text),
                   'period': ref.watch(frequencySelector),
                   'frequency': int.parse(frequency_inp.text),
+                  'Probability': int.parse(probability_inp.text),
                 });
                 Navigator.of(context).pop();
               }
