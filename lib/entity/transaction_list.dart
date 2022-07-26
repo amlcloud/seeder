@@ -15,22 +15,22 @@ class TransactionList extends ConsumerWidget {
           error: (e, s) => ErrorWidget(e),
           data: (trnCol) => trnCol.size == 0
               ? Text('no records')
-              : Column(
-                  children: [
-                    Expanded(
-                        child: Column(
-                      children: [
-                        DataTable(columns: showDataColumn(trnCol), rows: []),
-                        Expanded(
-                            child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: DataTable(
-                                    headingRowHeight: 0,
-                                    columns: showDataColumn(trnCol),
-                                    rows: showDataRows(trnCol))))
-                      ],
-                    ))
-                  ],
+              : Center(
+                  child: ListView(
+                    children: [
+                      Table(
+                        children: [
+                          TableRow(children: [
+                            Expanded(
+                              child: DataTable(
+                                  columns: showDataColumn(trnCol),
+                                  rows: showDataRows(trnCol)),
+                            )
+                          ]),
+                        ],
+                      ),
+                    ],
+                  ),
                 ));
 
   List<DataRow> showDataRows(QuerySnapshot<Map<String, dynamic>> trnCol) {
