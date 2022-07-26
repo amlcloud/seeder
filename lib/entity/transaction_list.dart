@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/providers/firestore.dart';
+import 'package:data_table_2/data_table_2.dart';
 
 class TransactionList extends ConsumerWidget {
   final String entityId;
@@ -15,23 +16,10 @@ class TransactionList extends ConsumerWidget {
           error: (e, s) => ErrorWidget(e),
           data: (trnCol) => trnCol.size == 0
               ? Text('no records')
-              : Column(
-                  children: [
-                    Expanded(
-                        child: Column(
-                      children: [
-                        DataTable(columns: showDataColumn(trnCol), rows: []),
-                        Expanded(
-                            child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: DataTable(
-                                    headingRowHeight: 0,
-                                    columns: showDataColumn(trnCol),
-                                    rows: showDataRows(trnCol))))
-                      ],
-                    ))
-                  ],
-                ));
+              : DataTable2(
+                  //headingRowHeight: 0,
+                  columns: showDataColumn(trnCol),
+                  rows: showDataRows(trnCol)));
 
   List<DataRow> showDataRows(QuerySnapshot<Map<String, dynamic>> trnCol) {
     return trnCol.docs

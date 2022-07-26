@@ -6,6 +6,7 @@ import 'package:seeder/entity/generate_transactions_button.dart';
 import 'package:seeder/entity/transaction_list.dart';
 import 'package:seeder/timeline/timeline.dart';
 
+import '../controls/group.dart';
 import 'data_export_csv.dart';
 
 class EntityDetails extends ConsumerWidget {
@@ -18,47 +19,48 @@ class EntityDetails extends ConsumerWidget {
   EntityDetails(this.entityId);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          border: Border.all(
-            color: Colors.grey,
-          )),
-      child: Row(
-        children: [
-          Flexible(
-              flex: 1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    EntityInfo(entityId),
-                    EntityConfig(entityId),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+  Widget build(BuildContext context, WidgetRef ref) => Group(
+      child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              border: Border.all(
+                color: Colors.grey,
+              )),
+          child: Row(
+            children: [
+              Flexible(
+                  flex: 1,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0.00, 0.0, 30.0, 0),
-                          child: GenerateTransactionsButton(entityId),
-                        )
-                      ],
-                    ),
-                    Divider(),
-                  ])),
-          Flexible(
-              flex: 2,
-              child: Column(
-                children: [
-                  Timeline(entityId),
-                  Expanded(
-                    flex: 10,
-                    child: TransactionList(entityId),
-                  ),
-                  DataExportButton(entityId),
-                ],
-              ))
-        ],
-      ));
+                      children: [
+                        EntityInfo(entityId),
+                        EntityConfig(entityId),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0.00, 0.0, 30.0, 0),
+                              child: GenerateTransactionsButton(entityId),
+                            )
+                          ],
+                        ),
+                        Divider(),
+                      ])),
+              Flexible(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      Timeline(entityId),
+                      Expanded(
+                        flex: 10,
+                        child: TransactionList(entityId),
+                      ),
+                      DataExportButton(entityId),
+                    ],
+                  ))
+            ],
+          )));
 }
