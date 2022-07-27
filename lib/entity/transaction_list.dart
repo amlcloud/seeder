@@ -15,11 +15,12 @@ class TransactionList extends ConsumerWidget {
           loading: () => Container(),
           error: (e, s) => ErrorWidget(e),
           data: (trnCol) => trnCol.size == 0
-              ?  DataTable2(
+              ? Text('no records')
+              : DataTable2(
                   //headingRowHeight: 0,
                   columns: showDataColumn(trnCol),
-                  rows: showDataRows(trnCol)));
-
+                  rows: showDataRows(trnCol),
+                ));
 
   List<DataRow> showDataRows(QuerySnapshot<Map<String, dynamic>> trnCol) {
     return trnCol.docs
