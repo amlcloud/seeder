@@ -64,7 +64,7 @@ class GenerateTransactionsButtonState
               child: ElevatedButton(
                   onPressed: () {
                     if (selectedDateRange != null) {
-                      AddTrnsactionToServer(
+                      addTrnsactionToServer(
                           selectedDateRange!, widget.entityId, ref);
                     } else {
                       Fluttertoast.showToast(

@@ -98,7 +98,7 @@ class AddRandomConfig extends ConsumerWidget {
                 onChanged: (String? newValue) {
                   ref.read(frequencySelector.notifier).value = newValue;
                 },
-                items: <String>['Day', 'Week', 'Month', 'Quarter', 'Year']
+                items: <String>['Week', 'Month', 'Quarter']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
