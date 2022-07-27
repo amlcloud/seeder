@@ -44,32 +44,51 @@ class EntityDetails extends ConsumerWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         EntityInfo(entityId),
-                        EntityConfig(entityId),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.fromLTRB(0.00, 0.0, 30.0, 0),
-                              child: GenerateTransactions(entityId),
-                            )
-                          ],
+                        // EntityConfig(entityId),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.end,
+                        //   mainAxisSize: MainAxisSize.max,
+                        //   crossAxisAlignment: CrossAxisAlignment.center,
+                        //   children: <Widget>[
+                        //     Container(
+                        //       margin: EdgeInsets.fromLTRB(0.00, 0.0, 30.0, 0),
+                        //       child: Container(),
+                        //     )
+                        //   ],
+                        // ),
+                        // Divider(),
+
+                        Expanded(
+                          child: PeriodicConfig(entityId),
                         ),
-                        Divider(),
+                        Expanded(
+                          child: RandomConfig(entityId),
+                        ),
+                        Expanded(
+                          child: SpecificConfig(),
+                        ),
+
+                        GenerateTransactions(entityId),
                       ])),
               Flexible(
                   flex: 2,
-                  child: Column(
-                    children: [
-                      Timeline(entityId),
-                      Expanded(
-                        flex: 10,
-                        child: TransactionList(entityId),
-                      ),
-                      DataExportButton(entityId),
-                    ],
-                  ))
+                  child: ref.watch(isTranLoading)
+                      ? Center(
+                          child: Container(
+                            alignment: Alignment(0.0, 0.0),
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      : Column(
+                          children: [
+                            Timeline(entityId),
+                            Expanded(
+                              flex: 10,
+                              child: TransactionList(entityId),
+                            ),
+                            DataExportButton(entityId),
+                          ],
+                        ))
             ],
           )));
 }

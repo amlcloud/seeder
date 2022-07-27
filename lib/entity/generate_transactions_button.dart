@@ -70,7 +70,7 @@ generate(DateTimeRange selectedDateRange, String entityId) async {
     List<Map<String, dynamic>> randomMonthData = await addRandomDataToList(
         randMonthList, "month", dateIterator, dateIterator.dateTime.day);
     List<Map<String, dynamic>> randomQuaterData = await addRandomDataToList(
-        randQuaterList, "quater", dateIterator, quaterCounter);
+        randQuaterList, "quarter", dateIterator, quaterCounter);
 
     /// Merging the list together
     dataList.addAll(periodicWeekData);
