@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:group_button/group_button.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
+import 'package:data_table_2/data_table_2.dart';
 
 /// expose [ColumnStateNotifier] from [StateNotifierProvider]
 final columnStateNotifierProvider =
@@ -37,25 +38,10 @@ class TransactionList extends ConsumerWidget {
           error: (e, s) => ErrorWidget(e),
           data: (trnCol) => trnCol.size == 0
               ? Text('no records')
-              : Column(
-                  children: [
-                    Expanded(
-                        child: Column(
-                      children: [
-                        ColumnSelectionButtonGroup(trnCol),
-                        // stick table col on the top of page
-                        DataTable(
-                            columns: showDataColumn(trnCol, ref), rows: []),
-                        Expanded(
-                            child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: DataTable(
-                                    headingRowHeight: 0,
-                                    columns: showDataColumn(trnCol, ref),
-                                    rows: showDataRows(trnCol, ref))))
-                      ],
-                    ))
-                  ],
+              : DataTable2(
+                  //headingRowHeight: 0,
+                  columns: showDataColumn(trnCol, ref),
+                  rows: showDataRows(trnCol, ref),
                 ));
 
   List<DataRow> showDataRows(
