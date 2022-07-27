@@ -44,42 +44,62 @@ class TransactionList extends ConsumerWidget {
                       children: [
                         ColumnSelectionButtonGroup(trnCol),
                         // stick table col on the top of page
-                        DataTable(columns: showDataColumn(trnCol), rows: []),
+                        DataTable(
+                            columns: showDataColumn(trnCol, ref), rows: []),
                         Expanded(
                             child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: DataTable(
                                     headingRowHeight: 0,
-                                    columns: showDataColumn(trnCol),
-                                    rows: showDataRows(trnCol))))
+                                    columns: showDataColumn(trnCol, ref),
+                                    rows: showDataRows(trnCol, ref))))
                       ],
                     ))
                   ],
                 ));
 
-  List<DataRow> showDataRows(QuerySnapshot<Map<String, dynamic>> trnCol) {
-    return trnCol.docs
-        .map((trnDoc) => DataRow(
-                cells: (trnDoc.data().entries.toList()
-                      ..sort((a, b) => a.key.compareTo(b.key)))
-                    .map((cell) {
-              // print(cell.value);
-              if (cell.value is Timestamp) {
-                // print(cell.value.runtimeType);
-                DateTime d = cell.value.toDate();
-                // print(d);
-                return DataCell(Text(d.toString()));
-              }
-              return DataCell(Text(cell.value.toString()));
-            }).toList()))
-        .toList();
+  List<DataRow> showDataRows(
+      QuerySnapshot<Map<String, dynamic>> trnCol, WidgetRef ref) {
+    var docs = trnCol.docs;
+    List<String> selectedColumnList =
+        ref.watch(columnStateNotifierProvider.notifier).value;
+    // print(docs);
+    return docs.map((trnDoc) {
+      var dataList = trnDoc.data().entries.toList();
+      var selectedDataList = dataList.where((element) {
+        return selectedColumnList.contains(element.key);
+      });
+      debugPrint(selectedDataList.toString());
+      if (selectedDataList.isEmpty) {
+        return DataRow(cells: [DataCell(Text('no data rows'))]);
+      } else {
+        return DataRow(
+            cells: (selectedDataList.toList()
+                  ..sort((a, b) => a.key.compareTo(b.key)))
+                .map((cell) {
+          // print(cell.value);
+          if (cell.value is Timestamp) {
+            // print(cell.value.runtimeType);
+            DateTime d = cell.value.toDate();
+            // print(d);
+            return DataCell(Text(d.toString()));
+          }
+          return DataCell(Text(cell.value.toString()));
+        }).toList());
+      }
+    }).toList();
   }
 
-  List<DataColumn> showDataColumn(QuerySnapshot<Map<String, dynamic>> trnCol) {
+  List<DataColumn> showDataColumn(
+      QuerySnapshot<Map<String, dynamic>> trnCol, WidgetRef ref) {
     var transactionDataMap = trnCol.docs.first.data();
     // print(transactionDataMap.keys);
-    var dataColumnNameList = transactionDataMap.keys.toList();
-    dataColumnNameList.sort();
+    List<String> selectedColumnList =
+        ref.watch(columnStateNotifierProvider.notifier).value;
+    var dataColumnNameList = transactionDataMap.keys
+        .toList()
+        .where((element) => selectedColumnList.contains(element));
+    dataColumnNameList.toList().sort();
     // print(dataEntryList);
     List<DataColumn> dataColumnList = [];
     dataColumnNameList.forEach((columnName) {
@@ -91,7 +111,10 @@ class TransactionList extends ConsumerWidget {
       );
       dataColumnList.add(dataColumn);
     });
-    return dataColumnList;
+    debugPrint(dataColumnList.toString());
+    return dataColumnList.isEmpty
+        ? [DataColumn(label: Text('no column'))]
+        : dataColumnList;
   }
 }
 
@@ -115,12 +138,12 @@ class ColumnSelectionButtonGroup extends ConsumerWidget {
         }
         print("new column selected ${notifier.value}");
       },
-      buttons: showDataColumn(trnCol),
+      buttons: showAllDataColumn(trnCol),
       enableDeselect: true,
     );
   }
 
-  List<String> showDataColumn(QuerySnapshot<Map<String, dynamic>> trnCol) {
+  List<String> showAllDataColumn(QuerySnapshot<Map<String, dynamic>> trnCol) {
     var transactionDataMap = trnCol.docs.first.data();
     // print(transactionDataMap.keys);
     var dataColumnNameList = transactionDataMap.keys.toList();
