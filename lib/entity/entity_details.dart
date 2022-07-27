@@ -12,6 +12,7 @@ import 'package:seeder/entity/transaction_list.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:seeder/timeline/timeline.dart';
 
+import '../controls/group.dart';
 import 'data_export_csv.dart';
 
 final isTranLoading = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
@@ -27,66 +28,48 @@ class EntityDetails extends ConsumerWidget {
   EntityDetails(this.entityId);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          border: Border.all(
-            color: Colors.grey,
-          )),
-      child: Row(
-        children: [
-          Flexible(
-              flex: 1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    EntityInfo(entityId),
-                    //EntityConfig(entityId),
-                    Expanded(
-                      child: PeriodicConfig(entityId),
-                    ),
-                    Expanded(
-                      child: RandomConfig(entityId),
-                    ),
-                    Expanded(
-                      child: SpecificConfig(),
-                    ),
-
-                    GenerateTransactions(entityId),
-
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.end,
-                    //   mainAxisSize: MainAxisSize.max,
-                    //   crossAxisAlignment: CrossAxisAlignment.center,
-                    //   children: <Widget>[
-                    //     Container(
-                    //       margin: EdgeInsets.fromLTRB(0.00, 0.0, 30.0, 0),
-                    //       child: GenerateTransactionsButton(entityId),
-                    //     )
-                    //   ],
-                    // ),
-                    // Divider(),
-                  ])),
-          Flexible(
-              flex: 2,
-              child: ref.watch(isTranLoading)
-                  ? Center(
-                      child: Container(
-                        alignment: Alignment(0.0, 0.0),
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  : Column(
+  Widget build(BuildContext context, WidgetRef ref) => Group(
+      child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              border: Border.all(
+                color: Colors.grey,
+              )),
+          child: Row(
+            children: [
+              Flexible(
+                  flex: 1,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
                       children: [
-                        Timeline(entityId),
-                        Expanded(
-                          flex: 10,
-                          child: TransactionList(entityId),
+                        EntityInfo(entityId),
+                        EntityConfig(entityId),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0.00, 0.0, 30.0, 0),
+                              child: GenerateTransactions(entityId),
+                            )
+                          ],
                         ),
-                        DataExportButton(entityId),
-                      ],
-                    ))
-        ],
-      ));
+                        Divider(),
+                      ])),
+              Flexible(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      Timeline(entityId),
+                      Expanded(
+                        flex: 10,
+                        child: TransactionList(entityId),
+                      ),
+                      DataExportButton(entityId),
+                    ],
+                  ))
+            ],
+          )));
 }
