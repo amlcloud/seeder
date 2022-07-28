@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:group_button/group_button.dart';
+import 'package:seeder/dialogs/column_selection_dialog.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -38,11 +39,25 @@ class TransactionList extends ConsumerWidget {
           error: (e, s) => ErrorWidget(e),
           data: (trnCol) => trnCol.size == 0
               ? Text('no records')
-              : DataTable2(
-                  //headingRowHeight: 0,
-                  columns: showDataColumn(trnCol, ref),
-                  rows: showDataRows(trnCol, ref),
-                ));
+              : Column(children: [
+                  Flexible(
+                      child: IconButton(
+                    icon: Icon(Icons.settings),
+                    onPressed: () {
+                      showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            ColumnSelectionDialog(),
+                      );
+                    },
+                  )),
+                  Expanded(
+                      child: DataTable2(
+                    //headingRowHeight: 0,
+                    columns: showDataColumn(trnCol, ref),
+                    rows: showDataRows(trnCol, ref),
+                  ))
+                ]));
 
   List<DataRow> showDataRows(
       QuerySnapshot<Map<String, dynamic>> trnCol, WidgetRef ref) {
@@ -111,22 +126,28 @@ class ColumnSelectionButtonGroup extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var allDataColumnnList = showAllDataColumn(trnCol);
+    final List<int> columnIndexList =
+        Iterable<int>.generate(allDataColumnnList.length).toList();
+    final buttonController =
+        GroupButtonController(selectedIndexes: columnIndexList);
+
     return GroupButton(
-      isRadio: false,
-      onSelected: (col, index, isSelected) {
-        print(
-            "$index th button $col is ${isSelected ? 'selected' : 'deselected'}");
-        var notifier = ref.read(columnStateNotifierProvider.notifier);
-        if (isSelected == false) {
-          notifier.removeColumn(col.toString());
-        } else {
-          notifier.addColumn(col.toString());
-        }
-        print("new column selected ${notifier.value}");
-      },
-      buttons: showAllDataColumn(trnCol),
-      enableDeselect: true,
-    );
+        isRadio: false,
+        onSelected: (col, index, isSelected) {
+          print(
+              "$index th button $col is ${isSelected ? 'selected' : 'deselected'}");
+          var notifier = ref.read(columnStateNotifierProvider.notifier);
+          if (isSelected == false) {
+            notifier.removeColumn(col.toString());
+          } else {
+            notifier.addColumn(col.toString());
+          }
+          print("new column selected ${notifier.value}");
+        },
+        buttons: allDataColumnnList,
+        enableDeselect: true,
+        controller: buttonController);
   }
 
   List<String> showAllDataColumn(QuerySnapshot<Map<String, dynamic>> trnCol) {
@@ -138,3 +159,4 @@ class ColumnSelectionButtonGroup extends ConsumerWidget {
     return dataColumnNameList;
   }
 }
+
