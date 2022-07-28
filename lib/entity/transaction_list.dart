@@ -17,7 +17,7 @@ class TransactionList extends ConsumerWidget {
           data: (trnCol) => trnCol.size == 0
               ? Text('no records')
               : DataTable2(
-                  //headingRowHeight: 0,
+                  columnSpacing: 1,
                   columns: showDataColumn(trnCol),
                   rows: showDataRows(trnCol),
                 ));
