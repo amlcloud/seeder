@@ -159,4 +159,3 @@ class ColumnSelectionButtonGroup extends ConsumerWidget {
     return dataColumnNameList;
   }
 }
-

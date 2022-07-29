@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ColumnSelectionDialog extends ConsumerWidget {
-  // const ColumnSelectionDialog(trnCol);
-  final columnList = ['amount', 'ref', 'time'];
+class ColumnSelectionDialog extends ConsumerStatefulWidget {
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return ColumnSelectionDialogState();
+  }
+}
+
+class ColumnSelectionDialogState extends ConsumerState<ColumnSelectionDialog> {
+  // const ColumnSelectionDialog(trnCol);
+  @override
+  void initState() {
+    // TODO: implement initState adding ref.read
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // todo ref.read all column and set it a map<column, bool>
     return SimpleDialog(
       title: Text('column selection dialog'),
       children: _createDialogOptions(),
@@ -13,15 +26,23 @@ class ColumnSelectionDialog extends ConsumerWidget {
   }
 
   List<Widget> _createDialogOptions() {
-    return columnList
-        .map((e) => ColumnSelectionDialogOption(e.toString()))
-        .toList();
+    final Map columnSelectedStatusMap = {
+      "balance": true,
+      "time": true,
+      'ref': true
+    };
+    List<Widget> columnSelectionOptionList = [];
+    columnSelectedStatusMap.forEach((key, value) {
+      columnSelectionOptionList.add(ColumnSelectionDialogOption(key, value));
+    });
+    return columnSelectionOptionList;
   }
 }
 
 class ColumnSelectionDialogOption extends ConsumerWidget {
   final String columnName;
-  const ColumnSelectionDialogOption(this.columnName);
+  final bool isSelected;
+  const ColumnSelectionDialogOption(this.columnName, this.isSelected);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SimpleDialogOption(
