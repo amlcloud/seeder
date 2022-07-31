@@ -9,6 +9,7 @@ import 'package:csv/csv.dart';
 import 'package:seeder/providers/selected_list.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import "package:universal_html/html.dart" as html;
+import 'package:data_table_2/data_table_2.dart';
 
 class BatchViewCsv extends ConsumerWidget {
   final String batchId;
@@ -16,119 +17,83 @@ class BatchViewCsv extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(children: <Widget>[
-      Container(
-        margin: EdgeInsets.only(right: 30.0, bottom: 10.0),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: ElevatedButton(
-                    key: null,
-                    onPressed: () => exportCSV(ref),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Copy To Clipboard",
-                        ),
-                        Icon(
-                          Icons.content_copy_outlined,
-                          color: Colors.black,
-                          size: 18.0,
-                        )
-                      ],
-                    )),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: ElevatedButton(
-                    key: null,
-                    onPressed: () => generateCSV(ref),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Download CSV  ",
-                        ),
-                        Icon(
-                          Icons.download,
-                          color: Colors.black,
-                          size: 18.0,
-                        )
-                      ],
-                    )),
-              ),
-            ]),
-      ),
-      Container(
-        margin: EdgeInsets.all(20.0),
-        child: ref.watch(selectedTransactionList(ref.watch(activeBatch)!)).when(
-            loading: () => Text("loading"),
-            error: (e, s) => Text("No data found"),
-            data: (entities) {
-              return Column(
-                children: <Widget>[
-                  Table(
-                      border: TableBorder.all(
-                          color: Colors.grey,
-                          style: BorderStyle.solid,
-                          width: 0.5),
-                      children: [
-                        TableRow(
-                            children: ((entities.first.entries
-                                    .toList()
-                                    .where((element) =>
-                                        element.key.toString() !=
-                                            'time Created' &&
-                                        element.key.toString() != 'author' &&
-                                        element.key.toString() != 'desc')
-                                    .toList())
-                                  ..sort((a, b) => a.key.compareTo(b.key)))
-                                .map((values) => Column(children: [
-                                      Text(
-                                        values.key.toString(),
-                                      )
-                                    ]))
-                                .toList())
-                      ]),
-                  Container(
-                      height: 400,
-                      child: SingleChildScrollView(
-                          child: Table(
-                              border: TableBorder.all(
-                                  color: Colors.grey,
-                                  style: BorderStyle.solid,
-                                  width: 0.5),
-                              children: entities.map((e) {
-                                return TableRow(
-                                    children: ((e.entries
-                                            .toList()
-                                            .where((element) =>
-                                                element.key.toString() !=
-                                                    'time Created' &&
-                                                element.key.toString() !=
-                                                    'author' &&
-                                                element.key.toString() !=
-                                                    'desc')
-                                            .toList())
-                                          ..sort(
-                                              (a, b) => a.key.compareTo(b.key)))
-                                        .map((values) => Column(children: [
-                                              Text(
-                                                values.value.toString(),
-                                              )
-                                            ]))
-                                        .toList());
-
-                                //return Container();
-                              }).toList()))),
-                ],
-              );
-            }),
-      )
-    ]);
+    return //Column(children: <Widget>[
+        // Container(
+        //   margin: EdgeInsets.only(right: 30.0, bottom: 10.0),
+        //   child: Row(
+        //       mainAxisAlignment: MainAxisAlignment.end,
+        //       mainAxisSize: MainAxisSize.max,
+        //       crossAxisAlignment: CrossAxisAlignment.center,
+        //       children: <Widget>[
+        //         Padding(
+        //           padding: const EdgeInsets.only(left: 10.0),
+        //           child: ElevatedButton(
+        //               key: null,
+        //               onPressed: () => exportCSV(ref),
+        //               child: Row(
+        //                 children: [
+        //                   Text(
+        //                     "Copy To Clipboard",
+        //                   ),
+        //                   Icon(
+        //                     Icons.content_copy_outlined,
+        //                     color: Colors.black,
+        //                     size: 18.0,
+        //                   )
+        //                 ],
+        //               )),
+        //         ),
+        //         Padding(
+        //           padding: const EdgeInsets.only(left: 10.0),
+        //           child: ElevatedButton(
+        //               key: null,
+        //               onPressed: () => generateCSV(ref),
+        //               child: Row(
+        //                 children: [
+        //                   Text(
+        //                     "Download CSV  ",
+        //                   ),
+        //                   Icon(
+        //                     Icons.download,
+        //                     color: Colors.black,
+        //                     size: 18.0,
+        //                   )
+        //                 ],
+        //               )),
+        //         ),
+        //       ]),
+        // ),
+        Container(
+            margin: EdgeInsets.all(20.0),
+            child: ref
+                .watch(selectedTransactionList(ref.watch(activeBatch)!))
+                .when(
+                    loading: () => Text("loading"),
+                    error: (e, s) => Text("No data found"),
+                    data: (trns) {
+                      return DataTable2(
+                          columnSpacing: 1,
+                          columns: (trns.first.entries)
+                              //..sort((a, b) => a.key.compareTo(b.key))
+                              .map(
+                                (column) => DataColumn2(
+                                  label: Text(column.key),
+                                ),
+                              )
+                              .toList(),
+                          rows: trns
+                              .map((trn) => DataRow2(
+                                  cells: ((trn.entries.toList())
+                                        ..sort(
+                                            (a, b) => a.key.compareTo(b.key)))
+                                      .map((values) => DataCell(Text(
+                                            values.value.toString(),
+                                          )))
+                                      .toList()))
+                              .toList());
+                    }));
+    //   )
+    // ]);
   }
 
   Future<List<List>> generateListData(WidgetRef ref) async {
