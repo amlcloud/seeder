@@ -2,19 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 
-/// expose [ColumnSelectionStateNotifier] from [StateNotifierProvider]
-final columnSelectionStateNotifierProvider =
-    StateNotifierProvider<ColumnSelectionStateNotifier, Map>((ref) {
-  var allColumnStatusMap = {
-    'type': true,
-    'amount': true,
-    'ben_name': true,
-    'timestamp': true
-  };
-  print(allColumnStatusMap);
-  return ColumnSelectionStateNotifier(allColumnStatusMap);
-});
-
 // class ColumnSelectionDialog extends ConsumerStatefulWidget {
 //   @override
 //   ConsumerState<ConsumerStatefulWidget> createState() {
@@ -32,18 +19,34 @@ class ColumnSelectionDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var columnSelectedMap = ref.watch(columnSelectionStateNotifierProvider);
     // todo ref.read all column and set it a map<column, bool>
+
     return SimpleDialog(
       title: Text('column selection dialog'),
-      children: _createDialogOptions(ref),
+      children: [
+        for (final k in columnSelectedMap.keys)
+          SimpleDialogOption(
+            child: Row(
+              children: [
+                Text(k),
+                Switch(
+                    value: columnSelectedMap[k] ?? true,
+                    onChanged: (newValue) {
+                      ref
+                          .read(columnSelectionStateNotifierProvider.notifier)
+                          .updateColumnState(k, newValue);
+                    })
+              ],
+            ),
+          ),
+      ],
     );
   }
 
-  List<Widget> _createDialogOptions(ref) {
+  List<Widget> _createDialogOptions(stateValue) {
     List<Widget> columnSelectionOptionList = [];
-    Map columnSelectedStatusMap =
-        ref.read(columnSelectionStateNotifierProvider.notifier).value;
-    columnSelectedStatusMap.forEach((key, value) {
+    stateValue.forEach((key, value) {
       columnSelectionOptionList.add(ColumnSelectionDialogOption(key, value));
     });
     return columnSelectionOptionList;
@@ -56,31 +59,16 @@ class ColumnSelectionDialogOption extends ConsumerWidget {
   const ColumnSelectionDialogOption(this.columnName, this.isSelected);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    bool selectedStatusValue = ref
-            .watch(columnSelectionStateNotifierProvider.notifier)
-            .value[columnName] ??
-        false;
-    print('selected' +
-        columnName +
-        'StatusValue' +
-        selectedStatusValue.toString());
     return SimpleDialogOption(
         child: Row(
       children: [
         Text(columnName),
         Switch(
-          value: selectedStatusValue,
+          value: isSelected,
           onChanged: (bool newValue) {
             ref
-                .watch(columnSelectionStateNotifierProvider.notifier)
+                .read(columnSelectionStateNotifierProvider.notifier)
                 .updateColumnState(columnName, newValue);
-            print('new changed ' +
-                columnName +
-                ' value ' +
-                ref
-                    .read(columnSelectionStateNotifierProvider.notifier)
-                    .value[columnName]
-                    .toString());
           },
         )
       ],

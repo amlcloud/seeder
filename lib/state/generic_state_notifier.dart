@@ -13,13 +13,26 @@ class GenericStateNotifier<V> extends StateNotifier<V> {
 /// map for state of ColumnSelectionState
 /// key: column name of data
 /// value: selected status, defaultly true
-class ColumnSelectionStateNotifier
-    extends GenericStateNotifier<Map<String, bool>> {
-  ColumnSelectionStateNotifier(super.state);
-
-  // fetch data
+class ColumnSelectionStateNotifier extends StateNotifier<Map<String, bool>> {
+  var allColumnStatusMap = {
+    'type': true,
+    'amount': true,
+    'ben_name': true,
+    'timestamp': true
+  };
+  ColumnSelectionStateNotifier() : super({}) {
+    state = allColumnStatusMap;
+  }
   void updateColumnState(String columnName, bool newValue) {
-    state.update(columnName, (value) => newValue);
-    print(state);
+    // since state is immutable,
+    // all state should be reassigned
+    state = {...state, columnName: newValue};
   }
 }
+
+/// expose [ColumnSelectionStateNotifier] from [StateNotifierProvider]
+final columnSelectionStateNotifierProvider =
+    StateNotifierProvider<ColumnSelectionStateNotifier, Map<String, bool>>(
+        (ref) {
+  return ColumnSelectionStateNotifier();
+});
