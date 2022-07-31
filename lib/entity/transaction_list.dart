@@ -36,7 +36,7 @@ class TransactionList extends ConsumerWidget {
                     child: DataTable2(
                   //headingRowHeight: 0,
                   columns: showDataColumn(trnCol, ref),
-                  rows: [],
+                  rows: showDataRows(trnCol, ref),
                 ))
               ]));
   }
@@ -46,7 +46,8 @@ class TransactionList extends ConsumerWidget {
     var docs = trnCol.docs;
     var columnSelectedMap =
         ref.watch(columnSelectionStateNotifierProvider(entityId));
-    var selectedColumnList = columnSelectedMap.keys;
+    var selectedColumnList = columnSelectedMap.keys
+        .where((element) => columnSelectedMap[element] == true);
     print("data rows selectedColumnList" + selectedColumnList.toString());
     return docs.map((trnDoc) {
       var dataList = trnDoc.data().entries.toList();
