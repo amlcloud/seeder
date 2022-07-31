@@ -47,7 +47,7 @@ class TransactionList extends ConsumerWidget {
                       showDialog<String>(
                         context: context,
                         builder: (BuildContext context) =>
-                            ColumnSelectionDialog(),
+                            ColumnSelectionDialog(entityId),
                       );
                     },
                   )),

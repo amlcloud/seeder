@@ -2,24 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 
-// class ColumnSelectionDialog extends ConsumerStatefulWidget {
-//   @override
-//   ConsumerState<ConsumerStatefulWidget> createState() {
-//     return ColumnSelectionDialogState();
-//   }
-// }
-
 class ColumnSelectionDialog extends ConsumerWidget {
-  // todo fetch data as columnSelectedList and convert to columnSelectedStatusMap
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // set initState as columnSelectedStatusMap
-  // }
-
+  final String entityId;
+  const ColumnSelectionDialog(this.entityId);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var columnSelectedMap = ref.watch(columnSelectionStateNotifierProvider);
+    var columnSelectedMap =
+        ref.watch(columnSelectionStateNotifierProvider(entityId));
     // todo ref.read all column and set it a map<column, bool>
 
     return SimpleDialog(
@@ -34,7 +23,7 @@ class ColumnSelectionDialog extends ConsumerWidget {
                     value: columnSelectedMap[k] ?? true,
                     onChanged: (newValue) {
                       ref
-                          .read(columnSelectionStateNotifierProvider.notifier)
+                          .read(columnSelectionStateNotifierProvider(entityId).notifier)
                           .updateColumnState(k, newValue);
                     })
               ],
@@ -66,9 +55,7 @@ class ColumnSelectionDialogOption extends ConsumerWidget {
         Switch(
           value: isSelected,
           onChanged: (bool newValue) {
-            ref
-                .read(columnSelectionStateNotifierProvider.notifier)
-                .updateColumnState(columnName, newValue);
+  
           },
         )
       ],
