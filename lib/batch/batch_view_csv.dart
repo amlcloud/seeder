@@ -69,7 +69,7 @@ class BatchViewCsv extends ConsumerWidget {
             loading: () => Text("loading"),
             error: (e, s) => Text("No data found"),
             data: (entities) {
-              return DataTable(
+              return DataTable2(
                   columns: batchCsvHeader(entities),
                   rows: batchCsvRows(entities));
             }),
