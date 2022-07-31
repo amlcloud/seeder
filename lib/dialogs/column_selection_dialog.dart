@@ -33,13 +33,6 @@ class ColumnSelectionDialog extends ConsumerWidget {
     );
   }
 
-  List<Widget> _createDialogOptions(stateValue) {
-    List<Widget> columnSelectionOptionList = [];
-    stateValue.forEach((key, value) {
-      columnSelectionOptionList.add(ColumnSelectionDialogOption(key, value));
-    });
-    return columnSelectionOptionList;
-  }
 }
 
 class ColumnSelectionDialogOption extends ConsumerWidget {

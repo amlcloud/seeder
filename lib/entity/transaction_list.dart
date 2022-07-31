@@ -1,29 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:group_button/group_button.dart';
 import 'package:seeder/dialogs/column_selection_dialog.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:data_table_2/data_table_2.dart';
-
-/// expose [ColumnStateNotifier] from [StateNotifierProvider]
-final columnStateNotifierProvider =
-    StateNotifierProvider<ColumnStateNotifier, List<String>>((ref) {
-  return ColumnStateNotifier([]);
-});
-
-class ColumnStateNotifier extends GenericStateNotifier<List<String>> {
-  ColumnStateNotifier(super.d);
-
-  void addColumn(String columnName) {
-    state.add(columnName);
-  }
-
-  void removeColumn(String columnName) {
-    state.remove(columnName);
-  }
-}
 
 /// datatable showing generated transaction records.
 /// where data column will be fixed on the top.
@@ -33,38 +14,40 @@ class TransactionList extends ConsumerWidget {
   const TransactionList(this.entityId);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) =>
-      ref.watch(colSP('entity/$entityId/transaction')).when(
-          loading: () => Container(),
-          error: (e, s) => ErrorWidget(e),
-          data: (trnCol) => trnCol.size == 0
-              ? Text('no records')
-              : Column(children: [
-                  Flexible(
-                      child: IconButton(
-                    icon: Icon(Icons.settings),
-                    onPressed: () {
-                      showDialog<String>(
-                        context: context,
-                        builder: (BuildContext context) =>
-                            ColumnSelectionDialog(entityId),
-                      );
-                    },
-                  )),
-                  Expanded(
-                      child: DataTable2(
-                    //headingRowHeight: 0,
-                    columns: showDataColumn(trnCol, ref),
-                    rows: showDataRows(trnCol, ref),
-                  ))
-                ]));
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref.watch(colSP('entity/$entityId/transaction')).when(
+        loading: () => Container(),
+        error: (e, s) => ErrorWidget(e),
+        data: (trnCol) => trnCol.size == 0
+            ? Text('no records')
+            : Column(children: [
+                Flexible(
+                    child: IconButton(
+                  icon: Icon(Icons.settings),
+                  onPressed: () {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          ColumnSelectionDialog(entityId),
+                    );
+                  },
+                )),
+                Expanded(
+                    child: DataTable2(
+                  //headingRowHeight: 0,
+                  columns: showDataColumn(trnCol, ref),
+                  rows: [],
+                ))
+              ]));
+  }
 
   List<DataRow> showDataRows(
       QuerySnapshot<Map<String, dynamic>> trnCol, WidgetRef ref) {
     var docs = trnCol.docs;
-    List<String> selectedColumnList =
-        ref.watch(columnStateNotifierProvider.notifier).value;
-    // print(docs);
+    var columnSelectedMap =
+        ref.watch(columnSelectionStateNotifierProvider(entityId));
+    var selectedColumnList = columnSelectedMap.keys;
+    print("data rows selectedColumnList" + selectedColumnList.toString());
     return docs.map((trnDoc) {
       var dataList = trnDoc.data().entries.toList();
       var selectedDataList = dataList.where((element) {
@@ -95,8 +78,11 @@ class TransactionList extends ConsumerWidget {
       QuerySnapshot<Map<String, dynamic>> trnCol, WidgetRef ref) {
     var transactionDataMap = trnCol.docs.first.data();
     // print(transactionDataMap.keys);
-    List<String> selectedColumnList =
-        ref.watch(columnStateNotifierProvider.notifier).value;
+    var columnSelectedMap =
+        ref.watch(columnSelectionStateNotifierProvider(entityId));
+    var selectedColumnList = columnSelectedMap.keys
+        .where((element) => columnSelectedMap[element] == true);
+    print("data column selectedColumnList" + selectedColumnList.toString());
     var dataColumnNameList = transactionDataMap.keys
         .toList()
         .where((element) => selectedColumnList.contains(element));
@@ -116,46 +102,5 @@ class TransactionList extends ConsumerWidget {
     return dataColumnList.isEmpty
         ? [DataColumn(label: Text('no column'))]
         : dataColumnList;
-  }
-}
-
-class ColumnSelectionButtonGroup extends ConsumerWidget {
-  final QuerySnapshot<Map<String, dynamic>> trnCol;
-
-  const ColumnSelectionButtonGroup(this.trnCol);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var allDataColumnnList = showAllDataColumn(trnCol);
-    final List<int> columnIndexList =
-        Iterable<int>.generate(allDataColumnnList.length).toList();
-    final buttonController =
-        GroupButtonController(selectedIndexes: columnIndexList);
-
-    return GroupButton(
-        isRadio: false,
-        onSelected: (col, index, isSelected) {
-          print(
-              "$index th button $col is ${isSelected ? 'selected' : 'deselected'}");
-          var notifier = ref.read(columnStateNotifierProvider.notifier);
-          if (isSelected == false) {
-            notifier.removeColumn(col.toString());
-          } else {
-            notifier.addColumn(col.toString());
-          }
-          print("new column selected ${notifier.value}");
-        },
-        buttons: allDataColumnnList,
-        enableDeselect: true,
-        controller: buttonController);
-  }
-
-  List<String> showAllDataColumn(QuerySnapshot<Map<String, dynamic>> trnCol) {
-    var transactionDataMap = trnCol.docs.first.data();
-    // print(transactionDataMap.keys);
-    var dataColumnNameList = transactionDataMap.keys.toList();
-    dataColumnNameList.sort();
-
-    return dataColumnNameList;
   }
 }
