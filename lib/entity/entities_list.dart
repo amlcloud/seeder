@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/controls/group.dart';
 import 'package:seeder/entity/entity_list_item.dart';
 import 'package:seeder/entity/filter_my_entities.dart';
 import 'package:seeder/providers/firestore.dart';
@@ -42,17 +43,18 @@ class EntitiesList extends ConsumerWidget {
               FilterMyEntities(),
             ],
           ),
-          ListView(
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              children: sortAndFilterOnServer(ref))
+          Group(
+              child: ListView(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  children: sortAndFilterOnServer(ref)))
         ],
       );
 
   List<Widget> sortAndFilterOnServer(WidgetRef ref) => ref
       .watch(filteredColSP(QueryParams(
           path: 'entity',
-          orderBy: ref.watch(activeSort)??'id',
+          orderBy: ref.watch(activeSort) ?? 'id',
           distinct: (a, b) {
             return true;
             // a.size = b.size;
@@ -77,5 +79,4 @@ class EntitiesList extends ConsumerWidget {
           data: (entities) => entities.docs
               .map((entity) => EntityListItem(entity.id))
               .toList());
-
 }
