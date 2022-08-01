@@ -1,7 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:math' as math;
 import 'package:jiffy/jiffy.dart';
 import 'package:seeder/common.dart';
 import 'package:seeder/entity/entity_details.dart';

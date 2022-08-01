@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/dialogs/add_random_config.dart';
 import 'package:seeder/entity/config/config_list.dart';
-import 'package:seeder/entity/config/periodic_config.dart';
-import 'package:seeder/entity/config/selected_config_list.dart';
-import 'package:seeder/state/generic_state_notifier.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class RandomConfig extends ConsumerWidget {
   final String entityId;
