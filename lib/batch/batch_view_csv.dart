@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,67 +69,48 @@ class BatchViewCsv extends ConsumerWidget {
             loading: () => Text("loading"),
             error: (e, s) => Text("No data found"),
             data: (entities) {
-              return Column(
-                children: <Widget>[
-                  Table(
-                      border: TableBorder.all(
-                          color: Colors.grey,
-                          style: BorderStyle.solid,
-                          width: 0.5),
-                      children: [
-                        TableRow(
-                            children: ((entities.first.entries
-                                    .toList()
-                                    .where((element) =>
-                                        element.key.toString() !=
-                                            'time Created' &&
-                                        element.key.toString() != 'author' &&
-                                        element.key.toString() != 'desc')
-                                    .toList())
-                                  ..sort((a, b) => a.key.compareTo(b.key)))
-                                .map((values) => Column(children: [
-                                      Text(
-                                        values.key.toString(),
-                                      )
-                                    ]))
-                                .toList())
-                      ]),
-                  Container(
-                      height: 400,
-                      child: SingleChildScrollView(
-                          child: Table(
-                              border: TableBorder.all(
-                                  color: Colors.grey,
-                                  style: BorderStyle.solid,
-                                  width: 0.5),
-                              children: entities.map((e) {
-                                return TableRow(
-                                    children: ((e.entries
-                                            .toList()
-                                            .where((element) =>
-                                                element.key.toString() !=
-                                                    'time Created' &&
-                                                element.key.toString() !=
-                                                    'author' &&
-                                                element.key.toString() !=
-                                                    'desc')
-                                            .toList())
-                                          ..sort(
-                                              (a, b) => a.key.compareTo(b.key)))
-                                        .map((values) => Column(children: [
-                                              Text(
-                                                values.value.toString(),
-                                              )
-                                            ]))
-                                        .toList());
-
-                                //return Container();
-                              }).toList()))),
-                ],
-              );
+              return DataTable(
+                  columns: batchCsvHeader(entities),
+                  rows: batchCsvRows(entities));
             }),
       )
     ]);
+  }
+
+  List<DataColumn> batchCsvHeader(List<Map<String, dynamic>> entities) {
+    return ((entities.first.entries
+            .toList()
+            .where((element) =>
+                element.key.toString() != 'time Created' &&
+                element.key.toString() != 'author' &&
+                element.key.toString() != 'desc')
+            .toList())
+          ..sort((a, b) => a.key.compareTo(b.key)))
+        .map((values) => DataColumn(
+                label: Text(
+              values.key.toString(),
+            )))
+        .toList();
+  }
+
+  List<DataRow> batchCsvRows(List<Map<String, dynamic>> entities) {
+    return entities.map((e) {
+      return DataRow(
+          cells: ((e.entries
+                  .toList()
+                  .where((element) =>
+                      element.key.toString() != 'time Created' &&
+                      element.key.toString() != 'author' &&
+                      element.key.toString() != 'desc')
+                  .toList())
+                ..sort((a, b) => a.key.compareTo(b.key)))
+              .map((values) => DataCell(Text(
+                    values.value.toString(),
+                  )))
+              .toList());
+
+      //return Container();
+    }).toList();
   }
 
   Future<List<List>> generateListData(WidgetRef ref) async {
