@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/entity/config/periodic_config.dart';
-import 'package:seeder/entity/config/random_config.dart';
-import 'package:seeder/entity/config/specific_config.dart';
-import 'package:seeder/entity/employer_widget.dart';
 import 'package:seeder/entity/entity_info.dart';
 import 'package:seeder/entity/config/entity_config.dart';
-import 'package:seeder/entity/generate_transactions.dart';
-import 'package:seeder/entity/generate_transactions_button.dart';
 import 'package:seeder/entity/transaction_list.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:seeder/timeline/timeline.dart';
-
 import '../controls/group.dart';
 import 'data_export_csv.dart';
 
@@ -44,31 +37,7 @@ class EntityDetails extends ConsumerWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         EntityInfo(entityId),
-                        // EntityConfig(entityId),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.end,
-                        //   mainAxisSize: MainAxisSize.max,
-                        //   crossAxisAlignment: CrossAxisAlignment.center,
-                        //   children: <Widget>[
-                        //     Container(
-                        //       margin: EdgeInsets.fromLTRB(0.00, 0.0, 30.0, 0),
-                        //       child: Container(),
-                        //     )
-                        //   ],
-                        // ),
-                        // Divider(),
-
-                        Expanded(
-                          child: PeriodicConfig(entityId),
-                        ),
-                        Expanded(
-                          child: RandomConfig(entityId),
-                        ),
-                        Expanded(
-                          child: SpecificConfig(),
-                        ),
-
-                        GenerateTransactions(entityId),
+                        EntityConfig(entityId),
                       ])),
               Flexible(
                   flex: 2,
