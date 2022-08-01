@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:jiffy/jiffy.dart';
 import 'package:seeder/common.dart';
 import 'package:seeder/entity/entity_details.dart';
+import 'package:seeder/entity/generate_name.dart';
 
 generate(DateTimeRange selectedDateRange, String entityId) async {
   List<Map<String, dynamic>> dataList = [];
@@ -152,12 +153,12 @@ generateSeparateRandomList(QuerySnapshot<Map<String, dynamic>> randomList,
   return randPeriodicList;
 }
 
-addPeriodicDataToList(
-    List<Map<String, dynamic>> configList, Jiffy dateIterator, int Counter) {
-  List<Map<String, dynamic>> listData = [];
+List<Map<String, dynamic>> generateTransactionData(
+    List<Map<String, dynamic>> configList, Jiffy dateIterator) {
   var random = math.Random();
+  List<Map<String, dynamic>> listData = [];
 
-  configList.where((ele) => ele['day'] == Counter).forEach((configData) {
+  configList.forEach((configData) {
     DateTime configDate = DateTime(
         dateIterator.year,
         dateIterator.month,
@@ -171,7 +172,7 @@ addPeriodicDataToList(
         random.nextInt(configData['maxAmount'] - configData['minAmount']);
     listData.add({
       'amount': amount,
-      'ben_name': "Beneficiary",
+      'ben_name': generateName(),
       'reference': "Example Transaction",
       'rem_name': configData['benName'],
       'Type': configData['credit'] ? "Credit" : "Debit",
@@ -179,34 +180,24 @@ addPeriodicDataToList(
       'day': "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}",
     });
   });
+
   return listData;
+}
+
+addPeriodicDataToList(
+    List<Map<String, dynamic>> configList, Jiffy dateIterator, int Counter) {
+  var configData = configList.where((ele) => ele['day'] == Counter).toList();
+
+  return generateTransactionData(configData, dateIterator);
 }
 
 addRandomDataToList(List<Map<String, dynamic>> configList, String period,
     Jiffy dateIterator, int Counter) {
   List<Map<String, dynamic>> listData = [];
-  var random = math.Random();
+
   configList.forEach((configData) {
     configData[period].where((date) => date == Counter).forEach((config) {
-      DateTime configDate = DateTime(
-          dateIterator.year,
-          dateIterator.month,
-          dateIterator.date,
-          random.nextInt(24),
-          random.nextInt(60),
-          random.nextInt(3600),
-          random.nextInt(3600000));
-      double amount = configData['minAmount'] +
-          random.nextInt(configData['maxAmount'] - configData['minAmount']);
-      listData.add({
-        'amount': amount,
-        'ben_name': "Beneficiary",
-        'reference': "Example Transaction",
-        'rem_name': configData['benName'],
-        'Type': configData['credit'] ? "Credit" : "Debit",
-        'timestamp': configDate,
-        'day': "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}",
-      });
+      listData += generateTransactionData([configData], dateIterator);
     });
   });
   return listData;
