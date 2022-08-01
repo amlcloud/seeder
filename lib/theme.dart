@@ -36,5 +36,8 @@ final darkTheme = ThemeData(
         onError: Color(0xffcdcbc9)),
     sliderTheme: ThemeData.dark().sliderTheme.copyWith(
         valueIndicatorColor: Colors.black,
-        valueIndicatorTextStyle: TextStyle(
-            color: Colors.grey, backgroundColor: Colors.transparent)));
+        valueIndicatorTextStyle:
+            TextStyle(color: Colors.grey, backgroundColor: Colors.transparent)),
+    textTheme: TextTheme(
+      labelSmall: TextStyle(fontSize: 12, color: Colors.red),
+    ));

@@ -69,6 +69,14 @@ class TransactionList extends ConsumerWidget {
             // print(d);
             return DataCell(Text(d.toString()));
           }
+          if (cell.key == "Type") {
+                return DataCell(Text(
+                  cell.value.toString(),
+                  style: TextStyle(
+                      color:
+                          cell.value == "Credit" ? Colors.green : Colors.red),
+                ));
+              }
           return DataCell(Text(cell.value.toString()));
         }).toList());
       }
