@@ -47,4 +47,4 @@ app.*.map.json
 
 
 .firebase/*
-.vscode/
+.vscode/settings.json
