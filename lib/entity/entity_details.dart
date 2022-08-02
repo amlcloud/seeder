@@ -22,18 +22,18 @@ class EntityDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Group(
+      child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              border: Border.all(
+                color: Colors.grey,
+              )),
           child: Row(
-        children: [
-          Flexible(
-              flex: 1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    EntityInfo(entityId),
-                    EntityConfig(entityId),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Flexible(
+                  flex: 1,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         EntityInfo(entityId),
