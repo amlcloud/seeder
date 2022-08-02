@@ -22,23 +22,14 @@ class EntityDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Group(
-          child: Row(
-        children: [
-          Flexible(
-              flex: 1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    EntityInfo(entityId),
-                    EntityConfig(entityId),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        EntityInfo(entityId),
-                        EntityConfig(entityId),
-                      ])),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+            EntityInfo(entityId),
+            Expanded(
+                child: Row(children: [
+              Flexible(flex: 2, child: EntityConfig(entityId)),
               Flexible(
                   flex: 2,
                   child: ref.watch(isTranLoading)
@@ -58,6 +49,6 @@ class EntityDetails extends ConsumerWidget {
                             DataExportButton(entityId),
                           ],
                         ))
-            ],
-          )));
+            ]))
+          ]));
 }
