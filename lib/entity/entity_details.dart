@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/entity/entity_info.dart';
 import 'package:seeder/entity/config/entity_config.dart';
-import 'package:seeder/entity/generate_transactions_button.dart';
 import 'package:seeder/entity/transaction_list.dart';
+import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:seeder/timeline/timeline.dart';
-
 import '../controls/group.dart';
 import 'data_export_csv.dart';
+
+final isTranLoading = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
+    (ref) => GenericStateNotifier<bool>(false));
 
 class EntityDetails extends ConsumerWidget {
   final String entityId;
@@ -33,28 +35,29 @@ class EntityDetails extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0.00, 0.0, 30.0, 0),
-                          child: GenerateTransactionsButton(entityId),
+                      children: [
+                        EntityInfo(entityId),
+                        EntityConfig(entityId),
+                      ])),
+              Flexible(
+                  flex: 2,
+                  child: ref.watch(isTranLoading)
+                      ? Center(
+                          child: Container(
+                            alignment: Alignment(0.0, 0.0),
+                            child: CircularProgressIndicator(),
+                          ),
                         )
-                      ],
-                    ),
-                    Divider(),
-                  ])),
-          Flexible(
-              flex: 2,
-              child: Column(
-                children: [
-                  Timeline(entityId),
-                  Expanded(
-                    flex: 10,
-                    child: TransactionList(entityId),
-                  ),
-                  DataExportButton(entityId),
-                ],
-              ))
-        ],
-      ));
+                      : Column(
+                          children: [
+                            Timeline(entityId),
+                            Expanded(
+                              flex: 10,
+                              child: TransactionList(entityId),
+                            ),
+                            DataExportButton(entityId),
+                          ],
+                        ))
+            ],
+          )));
 }

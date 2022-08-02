@@ -37,6 +37,14 @@ class MyAppBar {
                 },
               ))),
       actions: [
+        //Text('${FirebaseAuth.instance.currentUser!.uid}'),
+        ///
+        /// if person is not logged-in or anonymous show person icon
+        /// otherwise show photo from his profile
+        ///
+        ///https://firebase.google.com/docs/auth/flutter/manage-users
+        ///
+        Icon(Icons.person),
         IconButton(
             onPressed: () {
               ref.read(isLoggedIn.notifier).value = false;

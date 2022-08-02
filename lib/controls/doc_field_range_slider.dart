@@ -61,8 +61,8 @@ class DocFieldRangeSliderState extends ConsumerState<DocFieldRangeSlider> {
                   },
                   onChangeEnd: (RangeValues endValues) {
                     widget.docRef.set({
-                      widget.minfield: endValues.start.toInt().toString(),
-                      widget.maxfield: endValues.end.toInt().toString(),
+                      widget.minfield: endValues.start.toInt(),
+                      widget.maxfield: endValues.end.toInt(),
                     }, SetOptions(merge: true));
                   },
                 )

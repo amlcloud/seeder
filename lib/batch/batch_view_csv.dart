@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,83 +18,100 @@ class BatchViewCsv extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return //Column(children: <Widget>[
-        // Container(
-        //   margin: EdgeInsets.only(right: 30.0, bottom: 10.0),
-        //   child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.end,
-        //       mainAxisSize: MainAxisSize.max,
-        //       crossAxisAlignment: CrossAxisAlignment.center,
-        //       children: <Widget>[
-        //         Padding(
-        //           padding: const EdgeInsets.only(left: 10.0),
-        //           child: ElevatedButton(
-        //               key: null,
-        //               onPressed: () => exportCSV(ref),
-        //               child: Row(
-        //                 children: [
-        //                   Text(
-        //                     "Copy To Clipboard",
-        //                   ),
-        //                   Icon(
-        //                     Icons.content_copy_outlined,
-        //                     color: Colors.black,
-        //                     size: 18.0,
-        //                   )
-        //                 ],
-        //               )),
-        //         ),
-        //         Padding(
-        //           padding: const EdgeInsets.only(left: 10.0),
-        //           child: ElevatedButton(
-        //               key: null,
-        //               onPressed: () => generateCSV(ref),
-        //               child: Row(
-        //                 children: [
-        //                   Text(
-        //                     "Download CSV  ",
-        //                   ),
-        //                   Icon(
-        //                     Icons.download,
-        //                     color: Colors.black,
-        //                     size: 18.0,
-        //                   )
-        //                 ],
-        //               )),
-        //         ),
-        //       ]),
-        // ),
-        Container(
-            margin: EdgeInsets.all(20.0),
-            child: ref
-                .watch(selectedTransactionList(ref.watch(activeBatch)!))
-                .when(
-                    loading: () => Text("loading"),
-                    error: (e, s) => Text("No data found"),
-                    data: (trns) {
-                      return DataTable2(
-                          columnSpacing: 1,
-                          columns: (trns.first.entries)
-                              //..sort((a, b) => a.key.compareTo(b.key))
-                              .map(
-                                (column) => DataColumn2(
-                                  label: Text(column.key),
-                                ),
-                              )
-                              .toList(),
-                          rows: trns
-                              .map((trn) => DataRow2(
-                                  cells: ((trn.entries.toList())
-                                        ..sort(
-                                            (a, b) => a.key.compareTo(b.key)))
-                                      .map((values) => DataCell(Text(
-                                            values.value.toString(),
-                                          )))
-                                      .toList()))
-                              .toList());
-                    }));
-    //   )
-    // ]);
+    return Column(children: <Widget>[
+      Container(
+        margin: EdgeInsets.only(right: 30.0, bottom: 10.0),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: ElevatedButton(
+                    key: null,
+                    onPressed: () => exportCSV(ref),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Copy To Clipboard",
+                        ),
+                        Icon(
+                          Icons.content_copy_outlined,
+                          color: Colors.black,
+                          size: 18.0,
+                        )
+                      ],
+                    )),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: ElevatedButton(
+                    key: null,
+                    onPressed: () => generateCSV(ref),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Download CSV  ",
+                        ),
+                        Icon(
+                          Icons.download,
+                          color: Colors.black,
+                          size: 18.0,
+                        )
+                      ],
+                    )),
+              ),
+            ]),
+      ),
+      Container(
+        margin: EdgeInsets.all(20.0),
+        child: ref.watch(selectedTransactionList(ref.watch(activeBatch)!)).when(
+            loading: () => Text("loading"),
+            error: (e, s) => Text("No data found"),
+            data: (entities) {
+              return DataTable(
+                  columns: batchCsvHeader(entities),
+                  rows: batchCsvRows(entities));
+            }),
+      )
+    ]);
+  }
+
+  List<DataColumn> batchCsvHeader(List<Map<String, dynamic>> entities) {
+    return ((entities.first.entries
+            .toList()
+            .where((element) =>
+                element.key.toString() != 'time Created' &&
+                element.key.toString() != 'author' &&
+                element.key.toString() != 'desc')
+            .toList())
+          ..sort((a, b) => a.key.compareTo(b.key)))
+        .map((values) => DataColumn(
+                label: Text(
+              values.key.toString(),
+            )))
+        .toList();
+  }
+
+  List<DataRow> batchCsvRows(List<Map<String, dynamic>> entities) {
+    return entities.map((e) {
+      return DataRow(
+          cells: ((e.entries
+                  .toList()
+                  .where((element) =>
+                      element.key.toString() != 'time Created' &&
+                      element.key.toString() != 'author' &&
+                      element.key.toString() != 'desc')
+                  .toList())
+                ..sort((a, b) => a.key.compareTo(b.key)))
+              .map((values) => DataCell(Text(
+                    values.value.toString(),
+                  )))
+              .toList());
+
+      //return Container();
+    }).toList();
   }
 
   Future<List<List>> generateListData(WidgetRef ref) async {
