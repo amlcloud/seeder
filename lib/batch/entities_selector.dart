@@ -9,12 +9,15 @@ class EntitiesSelector extends ConsumerWidget {
         children: [
           Flexible(
               child: Column(
-            children: [Text('Available entities:'), AvailableEntitiesList()],
+            children: [
+              Text('Available entities:'),
+              Container(height: 250, child: AvailableEntitiesList())
+            ],
           )),
           Flexible(
               child: Column(children: [
             Text('Selected entities:'),
-            SelectedEntitiesList()
+            Container(height: 250, child: SelectedEntitiesList())
           ]))
         ],
       );

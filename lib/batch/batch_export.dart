@@ -11,9 +11,9 @@ import 'package:seeder/providers/selected_list.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import "package:universal_html/html.dart" as html;
 
-class BatchViewCsv extends ConsumerWidget {
+class BatchExport extends ConsumerWidget {
   final String batchId;
-  const BatchViewCsv(this.batchId);
+  const BatchExport(this.batchId);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -63,7 +63,7 @@ class BatchViewCsv extends ConsumerWidget {
               ),
             ]),
       ),
-      Container(
+      /*Container(
         margin: EdgeInsets.all(20.0),
         child: ref.watch(selectedTransactionList(ref.watch(activeBatch)!)).when(
             loading: () => Text("loading"),
@@ -73,7 +73,7 @@ class BatchViewCsv extends ConsumerWidget {
                   columns: batchCsvHeader(entities),
                   rows: batchCsvRows(entities));
             }),
-      )
+      )*/
     ]);
   }
 
