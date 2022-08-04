@@ -16,7 +16,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  //another new comment
 
   runApp(ProviderScope(
       child: MaterialApp(
@@ -25,7 +24,7 @@ void main() async {
     theme: lightTheme,
     darkTheme: darkTheme,
     home: TheApp(),
-  )));//comment here
+  )));
 }
 
 final isLoggedIn = StateNotifierProvider<GenericStateNotifier<bool>, bool>(

@@ -16,7 +16,7 @@ class AddRandomConfig extends ConsumerWidget {
           (ref) => GenericStateNotifier<bool>(false));
   final frequencySelector =
       StateNotifierProvider<GenericStateNotifier<String?>, String?>(
-          (ref) => GenericStateNotifier<String?>('Day'));
+          (ref) => GenericStateNotifier<String?>('Week'));
 
   final creditDebit = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
       (ref) => GenericStateNotifier<bool>(true));
