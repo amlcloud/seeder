@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/controls/group.dart';
 import 'package:seeder/controls/scrollable_table.dart';
+import 'package:seeder/field/test_field.dart';
 import 'package:seeder/theme.dart';
 
 import 'firebase_options.dart';
@@ -26,7 +27,8 @@ void main() async {
           themeMode: ThemeMode.dark,
           theme: lightTheme,
           darkTheme: darkTheme,
-          home: Scaffold(body: Group(child: ScrollableTable()))
+
+          ///home: Scaffold(body: Group(child: ScrollableTable()))
 
           //EntityConfig('DcyMKCGiQ1ENnWaq7VVU')
 
@@ -35,7 +37,6 @@ void main() async {
           //RecurrentIncome('DcyMKCGiQ1ENnWaq7VVU')
           // Text('another widget')
           ///
-          ///
-          ///
-          )));
+          /// Example of Field widget By Thuvarakan*
+          home: Scaffold(body: Group(child: TestField())))));
 }

@@ -58,7 +58,7 @@ class EntityConfigState extends ConsumerState<EntityConfig>
             children: <Widget>[
               PeriodicConfig(widget.entityId),
               RandomConfig(widget.entityId),
-              SpecificConfig(),
+              SpecificConfig(widget.entityId),
             ],
           ),
         ),
