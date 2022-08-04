@@ -51,7 +51,7 @@ class BatchDetails extends ConsumerWidget {
                 ))
               ]),
               Divider(),
-              EntitiesSelector(),
+              Flexible(child: EntitiesSelector()),
               Divider(),
               BatchExport(entityId!),
               Divider(),
