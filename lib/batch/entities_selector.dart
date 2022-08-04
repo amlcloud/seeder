@@ -11,13 +11,13 @@ class EntitiesSelector extends ConsumerWidget {
               child: Column(
             children: [
               Text('Available entities:'),
-              Expanded(child: AvailableEntitiesList())
+              Container(height: 250, child: AvailableEntitiesList())
             ],
           )),
           Flexible(
               child: Column(children: [
             Text('Selected entities:'),
-            SelectedEntitiesList()
+            Container(height: 250, child: SelectedEntitiesList())
           ]))
         ],
       );
