@@ -42,3 +42,13 @@ List<Jiffy> generateDays(Jiffy start, Jiffy end) {
 }
 
 final DAYS_IN_MONTH = [for (var i = 1; i < 29; i++) i];
+
+final List<Map<String, dynamic>> FIELDS = [
+  {'name': 'title', 'type': 'string'},
+  {'name': 'ben_name', 'type': "string"},
+  {'name': 'rem_name', 'type': "string"},
+  {'name': 'amount', 'type': 'number'},
+  {'name': 'credit', 'type': "bool"},
+  {'name': 'timestamp', 'type': "timestamp"},
+  //{'name': 'day', 'type': "string"}
+];

@@ -6,10 +6,10 @@ import 'package:seeder/providers/firestore.dart';
 
 class ConfigListItem extends ConsumerWidget {
   final String path;
-  final String batchId;
+  final String entityId;
   final String configType;
   final bool isAdded;
-  const ConfigListItem(this.path, this.batchId, this.configType, this.isAdded);
+  const ConfigListItem(this.path, this.entityId, this.configType, this.isAdded);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(docSP(path)).when(
@@ -26,7 +26,7 @@ class ConfigListItem extends ConsumerWidget {
                           ? DocFieldRangeSlider(
                               FirebaseFirestore.instance
                                   .collection('entity')
-                                  .doc(batchId)
+                                  .doc(entityId)
                                   .collection(configType)
                                   .doc(configDoc.id),
                               "minAmount",
@@ -53,7 +53,7 @@ class ConfigListItem extends ConsumerWidget {
                             .runTransaction((Transaction myTransaction) async {
                             myTransaction.delete(FirebaseFirestore.instance
                                 .collection('entity')
-                                .doc(batchId)
+                                .doc(entityId)
                                 .collection(configType)
                                 .doc(configDoc.id));
                           })
@@ -63,9 +63,11 @@ class ConfigListItem extends ConsumerWidget {
   }
 
   addEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {
+    var data = (await FirebaseFirestore.instance.doc(path).get()).data();
+    print("hit${data}");
     FirebaseFirestore.instance
         .collection('entity')
-        .doc(batchId)
+        .doc(entityId)
         .collection(configType)
         .doc(d.id)
         .set((await FirebaseFirestore.instance.doc(path).get()).data()!);
