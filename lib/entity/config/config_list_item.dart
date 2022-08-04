@@ -37,14 +37,32 @@ class ConfigListItem extends ConsumerWidget {
                                   configDoc.data()!,
                                 ),
                                 configType == 'randomConfig'
-                                    ? DocFieldSlider(
-                                        FirebaseFirestore.instance
-                                            .collection('entity')
-                                            .doc(entityId)
-                                            .collection(configType)
-                                            .doc(configDoc.id),
-                                        "frequency",
-                                        configDoc.data()!,
+                                    ? Column(
+                                        children: <Widget>[
+                                          ref
+                                              .watch(docSP(
+                                                  'entity/${entityId}/${configType}/${configDoc.id}'))
+                                              .when(
+                                                  loading: () => Container(),
+                                                  error: (e, s) => Container(),
+                                                  data: (configDoc) => Text(
+                                                      "Frequency: ${configDoc.data()!['frequency']} days a ${configDoc.data()!['period']} ")),
+                                          DocFieldSlider(
+                                              FirebaseFirestore.instance
+                                                  .collection('entity')
+                                                  .doc(entityId)
+                                                  .collection(configType)
+                                                  .doc(configDoc.id),
+                                              "frequency",
+                                              configDoc.data()!['period'] ==
+                                                      'Week'
+                                                  ? 7
+                                                  : configDoc.data()![
+                                                              'period'] ==
+                                                          'Month'
+                                                      ? 28
+                                                      : 84)
+                                        ],
                                       )
                                     : Container()
                               ],

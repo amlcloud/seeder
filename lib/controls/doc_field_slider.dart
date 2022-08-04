@@ -6,12 +6,13 @@ import 'package:seeder/providers/firestore.dart';
 class DocFieldSlider extends ConsumerStatefulWidget {
   final DocumentReference docRef;
   final String field;
-  final Map mapData;
-  const DocFieldSlider(this.docRef, this.field, this.mapData, {Key? key})
+  final double maxValue;
+  const DocFieldSlider(this.docRef, this.field, this.maxValue, {Key? key})
       : super(key: key);
   @override
   DocFieldRangeSliderState createState() => DocFieldRangeSliderState();
 }
+
 class DocFieldRangeSliderState extends ConsumerState<DocFieldSlider> {
   double currentSliderValue = 0;
   @override
@@ -22,16 +23,10 @@ class DocFieldRangeSliderState extends ConsumerState<DocFieldSlider> {
         data: (Docfield) {
           return Column(
             children: <Widget>[
-              Text(
-                  "Frequency: ${Docfield.data()!['frequency']} days a ${Docfield.data()!['period']} "),
               Slider(
                 value: currentSliderValue,
-                max: widget.mapData['period'] == 'Week'
-                    ? 7
-                    : widget.mapData['period'] == 'Month'
-                        ? 28
-                        : 84,
-                divisions: 100,
+                max: widget.maxValue,
+                divisions: widget.maxValue.round(),
                 label: currentSliderValue.round().toString(),
                 onChanged: (double values) {
                   setState(() {
