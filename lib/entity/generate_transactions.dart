@@ -20,7 +20,15 @@ generate(DateTimeRange selectedDateRange, String entityId) async {
 
   var quaterCounter = startDate.dayOfYear - (84 * (startDate.quarter - 1));
 
-  print("Test date 1: ${startDate.dayOfYear - (84 * (startDate.quarter - 1))}");
+  //print("Test date 1: ${startDate.dayOfYear - (84 * (startDate.quarter - 1))}");
+
+  QuerySnapshot<Map<String, dynamic>> data =
+      await FirebaseFirestore.instance.collection("field").get();
+  Map<String, dynamic> mapData = {};
+  //print("example data:${data.docs}");
+  data.docs.forEach((element) {
+    mapData[element.data()['name']] = element.data()['name'];
+  });
 
   List dates = generateDays(
       Jiffy(selectedDateRange.start), Jiffy(selectedDateRange.end));
@@ -171,9 +179,9 @@ addPeriodicDataToList(
         random.nextInt(configData['maxAmount'] - configData['minAmount']);
     listData.add({
       'amount': amount,
-      'ben_name': "Beneficiary",
+      'ben_name': configData['credit'] ? "Beneficiary" : configData['benName'],
       'reference': "Example Transaction",
-      'rem_name': configData['benName'],
+      'rem_name': configData['credit'] ? configData['benName'] : "Beneficiary",
       'Type': configData['credit'] ? "Credit" : "Debit",
       'timestamp': configDate,
       'day': "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}",
@@ -200,9 +208,11 @@ addRandomDataToList(List<Map<String, dynamic>> configList, String period,
           random.nextInt(configData['maxAmount'] - configData['minAmount']);
       listData.add({
         'amount': amount,
-        'ben_name': "Beneficiary",
+        'ben_name':
+            configData['credit'] ? "Beneficiary" : configData['benName'],
         'reference': "Example Transaction",
-        'rem_name': configData['benName'],
+        'rem_name':
+            configData['credit'] ? configData['benName'] : "Beneficiary",
         'Type': configData['credit'] ? "Credit" : "Debit",
         'timestamp': configDate,
         'day': "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}",

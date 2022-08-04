@@ -10,6 +10,7 @@ import 'package:csv/csv.dart';
 import 'package:seeder/providers/selected_list.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import "package:universal_html/html.dart" as html;
+import 'package:data_table_2/data_table_2.dart';
 
 class BatchExport extends ConsumerWidget {
   final String batchId;
