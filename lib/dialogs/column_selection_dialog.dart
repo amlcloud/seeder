@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/state/generic_state_notifier.dart';
+import 'package:seeder/state/column_selection_state_notifier.dart';
+
 
 class ColumnSelectionDialog extends ConsumerWidget {
   final String entityId;
@@ -15,20 +16,7 @@ class ColumnSelectionDialog extends ConsumerWidget {
       title: Text('column selection dialog'),
       children: [
         for (final k in columnSelectedMap.keys)
-          SimpleDialogOption(
-            child: Row(
-              children: [
-                Text(k),
-                Switch(
-                    value: columnSelectedMap[k] ?? true,
-                    onChanged: (newValue) {
-                      ref
-                          .read(columnSelectionStateNotifierProvider(entityId).notifier)
-                          .updateColumnState(k, newValue);
-                    })
-              ],
-            ),
-          ),
+          ColumnSelectionDialogOption(k: k, columnSelectedMap: columnSelectedMap, entityId: entityId),
       ],
     );
   }
@@ -36,22 +24,33 @@ class ColumnSelectionDialog extends ConsumerWidget {
 }
 
 class ColumnSelectionDialogOption extends ConsumerWidget {
-  final String columnName;
-  final bool isSelected;
-  const ColumnSelectionDialogOption(this.columnName, this.isSelected);
+  const ColumnSelectionDialogOption({
+    Key? key,
+    required this.k,
+    required this.columnSelectedMap,
+    required this.entityId,
+  }) : super(key: key);
+
+  final String k;
+  final Map<String, bool> columnSelectedMap;
+  final String entityId;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SimpleDialogOption(
-        child: Row(
-      children: [
-        Text(columnName),
-        Switch(
-          value: isSelected,
-          onChanged: (bool newValue) {
-  
-          },
-        )
-      ],
-    ));
+      child: Row(
+        children: [
+          Text(k),
+          Switch(
+              value: columnSelectedMap[k] ?? true,
+              onChanged: (newValue) {
+                ref
+                    .read(columnSelectionStateNotifierProvider(entityId).notifier)
+                    .updateColumnState(k, newValue);
+              })
+        ],
+      ),
+    );
   }
 }
+

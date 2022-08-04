@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/dialogs/column_selection_dialog.dart';
 import 'package:seeder/providers/firestore.dart';
-import 'package:seeder/state/generic_state_notifier.dart';
-import 'package:data_table_2/data_table_2.dart';
+import 'package:seeder/state/column_selection_state_notifier.dart';
 
 /// datatable showing generated transaction records.
 /// where data column will be fixed on the top.
@@ -48,7 +48,7 @@ class TransactionList extends ConsumerWidget {
         ref.watch(columnSelectionStateNotifierProvider(entityId));
     var selectedColumnList = columnSelectedMap.keys
         .where((element) => columnSelectedMap[element] == true);
-    print("data rows selectedColumnList" + selectedColumnList.toString());
+    // print("data rows selectedColumnList" + selectedColumnList.toString());
     return docs.map((trnDoc) {
       var dataList = trnDoc.data().entries.toList();
       var selectedDataList = dataList.where((element) {
