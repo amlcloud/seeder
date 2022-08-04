@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/controls/doc_field_range_slider.dart';
+import 'package:seeder/controls/doc_field_slider.dart';
+import 'package:seeder/controls/group.dart';
 import 'package:seeder/providers/firestore.dart';
 
 class ConfigListItem extends ConsumerWidget {
@@ -18,33 +20,47 @@ class ConfigListItem extends ConsumerWidget {
         data: (configDoc) => Card(
                 child: Row(children: [
               Expanded(
-                  child: Column(
-                children: [
-                  ListTile(
-                      title: Text(configDoc.id.toString()),
-                      subtitle: isAdded
-                          ? DocFieldRangeSlider(
-                              FirebaseFirestore.instance
-                                  .collection('entity')
-                                  .doc(entityId)
-                                  .collection(configType)
-                                  .doc(configDoc.id),
-                              "minAmount",
-                              "maxAmount",
-                              configDoc.data()!,
+                child: ListTile(
+                    title: Text(configDoc.id.toString()),
+                    subtitle: Group(
+                      child: isAdded
+                          ? Column(
+                              children: <Widget>[
+                                DocFieldRangeSlider(
+                                  FirebaseFirestore.instance
+                                      .collection('entity')
+                                      .doc(entityId)
+                                      .collection(configType)
+                                      .doc(configDoc.id),
+                                  "minAmount",
+                                  "maxAmount",
+                                  configDoc.data()!,
+                                ),
+                                configType == 'randomConfig'
+                                    ? DocFieldSlider(
+                                        FirebaseFirestore.instance
+                                            .collection('entity')
+                                            .doc(entityId)
+                                            .collection(configType)
+                                            .doc(configDoc.id),
+                                        "frequency",
+                                        configDoc.data()!,
+                                      )
+                                    : Container()
+                              ],
                             )
                           : Text(
                               "Min Amount: ${configDoc.data()!['minAmount']} - Max Amount: ${configDoc.data()!['maxAmount']}"),
-                      trailing: Column(
-                        children: [
-                          Text((configDoc.data()!['credit'] == true
-                              ? 'Credit'
-                              : 'Debit')),
-                          Text(configDoc.data()!['period'])
-                        ],
-                      )),
-                ],
-              )),
+                    ),
+                    trailing: Column(
+                      children: [
+                        Text((configDoc.data()!['credit'] == true
+                            ? 'Credit'
+                            : 'Debit')),
+                        Text(configDoc.data()!['period'])
+                      ],
+                    )),
+              ),
               Switch(
                   value: isAdded,
                   onChanged: (value) {

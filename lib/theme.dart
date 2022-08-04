@@ -40,6 +40,7 @@ final darkTheme = ThemeData(
       valueIndicatorTextStyle:
           TextStyle(color: Colors.grey, backgroundColor: Colors.transparent)),
   textTheme: TextTheme(
+    
     labelSmall: TextStyle(fontSize: 12, color: Colors.red),
   ),
   tabBarTheme: TabBarTheme(
