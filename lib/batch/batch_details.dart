@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/batch/batch_view_csv.dart';
+import 'package:seeder/batch/batch_export.dart';
+import 'package:seeder/batch/batch_transactions.dart';
 import 'package:seeder/batch/entities_selector.dart';
 import 'package:seeder/controls/doc_field_text_edit.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
+import 'package:seeder/controls/group.dart';
 
 final activeEntity =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
@@ -28,75 +30,33 @@ class BatchDetails extends ConsumerWidget {
               border: Border.all(
                 color: Colors.grey,
               )),
-          child: SingleChildScrollView(
-              child: Column(
+          child: /*SingleChildScrollView(
+              child: */
+              Column(
             children: [
-              // Text(entityId!),
-              DocFieldTextEdit(
-                  FirebaseFirestore.instance.doc('batch/${entityId}'), 'id'),
-              DocFieldTextEdit(
-                FirebaseFirestore.instance.doc('batch/${entityId}'),
-                'name',
-              ),
-              DocFieldTextEdit(
-                FirebaseFirestore.instance.doc('batch/${entityId}'),
-                'desc',
-              ),
+              Row(children: [
+                Flexible(
+                    child: DocFieldTextEdit(
+                        FirebaseFirestore.instance.doc('batch/${entityId}'),
+                        'id')),
+                Flexible(
+                    child: DocFieldTextEdit(
+                  FirebaseFirestore.instance.doc('batch/${entityId}'),
+                  'name',
+                )),
+                Flexible(
+                    child: DocFieldTextEdit(
+                  FirebaseFirestore.instance.doc('batch/${entityId}'),
+                  'desc',
+                ))
+              ]),
               Divider(),
-              EntitiesSelector(),
+              Flexible(child: EntitiesSelector()),
               Divider(),
-              // ElevatedButton(onPressed: () {}, child: Text('Generate')),
-              // Text("Output:"),
-              // Card(
-              //   child: Text('CSV output goes here...'),
-              // ),
-              // ElevatedButton(
-              //     onPressed: () {
-              //       final List<List<String>> exportList = [
-              //         <String>["id", "name", "desc", "author", "timestamp"]
-              //       ];
-              //       List<String> clipboard = [];
-              //       ref.watch(colSP('entity')).when(
-              //             loading: () => [Container()],
-              //             error: (e, s) => [ErrorWidget(e)],
-              //             data: (entities) => entities.docs
-              //                 .map(
-              //                   (entity) => {
-              //                     print('data is:' + entity['name'].toString()),
-              //                     exportList.add(<String>[
-              //                       entity["id"].toString(),
-              //                       entity["name"].toString(),
-              //                       entity["desc"].toString(),
-              //                       entity["author"].toString(),
-              //                       entity["time Created"].toString()
-              //                     ]),
-              //                     clipboard.add(entity.data().toString())
-              //                   },
-              //                 )
-              //                 .toList(),
-              //           );
-              //       // final docRef = FirebaseFirestore.instance
-              //       //     .collection('set/BUVlUXhvauQzw384GxE7/entity')
-              //       //     .get();
-              //       // docRef.then(
-              //       //   (doc) {
-              //       //     final data = doc.docs.asMap();
-              //       //     data.forEach((key, value) {
-              //       //       clipboard.add(value[key].toString());
-              //       //       print("What is this: " + value[key]);
-              //       //     });
-              //       //     //clipboard.add(data.toString());
-              //       //     print('data is: ' + data.toString());
-              //       //   },
-              //       // );
-              //       String csv =
-              //           ListToCsvConverter().convert(exportList).toString();
-              //       Clipboard.setData(ClipboardData(text: csv));
-
-              //       Fluttertoast.showToast(msg: 'Copied to clipboard');
-              //     },
-              //     child: Text('Copy To Clipboard'))
-              BatchViewCsv(entityId!)
+              BatchExport(entityId!),
+              Divider(),
+              Flexible(child: BatchTransactions(entityId!))
             ],
-          )));
+            //)
+          ));
 }

@@ -6,15 +6,19 @@ import 'package:seeder/batch/selected_entities_list.dart';
 class EntitiesSelector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Flexible(
               child: Column(
-            children: [Text('Available entities:'), AvailableEntitiesList()],
+            children: [
+              Text('Available entities:'),
+              Expanded(child: AvailableEntitiesList())
+            ],
           )),
           Flexible(
               child: Column(children: [
             Text('Selected entities:'),
-            SelectedEntitiesList()
+            Expanded(child: SelectedEntitiesList())
           ]))
         ],
       );

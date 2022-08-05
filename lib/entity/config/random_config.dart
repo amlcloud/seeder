@@ -47,4 +47,3 @@ class RandomConfig extends ConsumerWidget {
         ]));
   }
 }
-
