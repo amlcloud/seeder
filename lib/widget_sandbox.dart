@@ -16,7 +16,7 @@ import 'firebase_options.dart';
 /// Run it by clicking on the Run.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  String testId = 'DcyMKCGiQ1ENnWaq7VVU';
+  String testId = 'HNqcMSGJbMbddGGMHhvC';
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
