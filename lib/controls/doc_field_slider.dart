@@ -10,10 +10,10 @@ class DocFieldSlider extends ConsumerStatefulWidget {
   const DocFieldSlider(this.docRef, this.field, this.maxValue, {Key? key})
       : super(key: key);
   @override
-  DocFieldRangeSliderState createState() => DocFieldRangeSliderState();
+  DocFieldSliderState createState() => DocFieldSliderState();
 }
 
-class DocFieldRangeSliderState extends ConsumerState<DocFieldSlider> {
+class DocFieldSliderState extends ConsumerState<DocFieldSlider> {
   double currentSliderValue = 0;
   @override
   Widget build(BuildContext context) {
