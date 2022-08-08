@@ -22,20 +22,18 @@ class ConfigListItem extends ConsumerWidget {
               Expanded(
                 child: ListTile(
                     title: Text(configDoc.id.toString()),
-                    subtitle: Group(
-                      child: isAdded
-                          ? Column(
-
-                              children: <Widget>[
-                                ref
-                                    .watch(docSP(
-                                        'entity/${entityId}/${configType}/${configDoc.id}'))
-                                    .when(
-                                        loading: () => Container(),
-                                        error: (e, s) => Container(),
-                                        data: (configDoc) => Text(
-                    "Min: ${configDoc.data()!['minAmount']} - Max: ${configDoc.data()!['maxAmount']}")),
-                                DocFieldRangeSlider(
+                    subtitle: isAdded
+                        ? Column(
+                            children: <Widget>[
+                              ref
+                                  .watch(docSP(
+                                      'entity/${entityId}/${configType}/${configDoc.id}'))
+                                  .when(
+                                      loading: () => Container(),
+                                      error: (e, s) => Container(),
+                                      data: (configDoc) => Text(
+                                          "Min: ${configDoc.data()!['minAmount']} - Max: ${configDoc.data()!['maxAmount']}")),
+                              DocFieldRangeSlider(
                                   FirebaseFirestore.instance
                                       .collection('entity')
                                       .doc(entityId)
@@ -43,44 +41,46 @@ class ConfigListItem extends ConsumerWidget {
                                       .doc(configDoc.id),
                                   "minAmount",
                                   "maxAmount",
-                                  double.parse(configDoc.data()!['minAmount']!.toString()),
-    double.parse(configDoc.data()!['maxAmount']!.toString())
+                                  double.parse(configDoc
+                                      .data()!['minAmount']!
+                                      .toString()),
+                                  double.parse(configDoc
+                                      .data()!['maxAmount']!
+                                      .toString())
                                   //configDoc.data()!,
-                                ),
-                                configType == 'randomConfig'
-                                    ? Column(
-                                        children: <Widget>[
-                                          ref
-                                              .watch(docSP(
-                                                  'entity/${entityId}/${configType}/${configDoc.id}'))
-                                              .when(
-                                                  loading: () => Container(),
-                                                  error: (e, s) => Container(),
-                                                  data: (configDoc) => Text(
-                                                      "Frequency: ${configDoc.data()!['frequency']} days a ${configDoc.data()!['period']} ")),
-                                          DocFieldSlider(
-                                              FirebaseFirestore.instance
-                                                  .collection('entity')
-                                                  .doc(entityId)
-                                                  .collection(configType)
-                                                  .doc(configDoc.id),
-                                              "frequency",
-                                              configDoc.data()!['period'] ==
-                                                      'Week'
-                                                  ? 7
-                                                  : configDoc.data()![
-                                                              'period'] ==
-                                                          'Month'
-                                                      ? 28
-                                                      : 84)
-                                        ],
-                                      )
-                                    : Container()
-                              ],
-                            )
-                          : Text(
-                              "Min Amount: ${configDoc.data()!['minAmount']} - Max Amount: ${configDoc.data()!['maxAmount']}"),
-                    ),
+                                  ),
+                              configType == 'randomConfig'
+                                  ? Column(
+                                      children: <Widget>[
+                                        ref
+                                            .watch(docSP(
+                                                'entity/${entityId}/${configType}/${configDoc.id}'))
+                                            .when(
+                                                loading: () => Container(),
+                                                error: (e, s) => Container(),
+                                                data: (configDoc) => Text(
+                                                    "Frequency: ${configDoc.data()!['frequency']} days a ${configDoc.data()!['period']} ")),
+                                        DocFieldSlider(
+                                            FirebaseFirestore.instance
+                                                .collection('entity')
+                                                .doc(entityId)
+                                                .collection(configType)
+                                                .doc(configDoc.id),
+                                            "frequency",
+                                            configDoc.data()!['period'] ==
+                                                    'Week'
+                                                ? 7
+                                                : configDoc.data()!['period'] ==
+                                                        'Month'
+                                                    ? 28
+                                                    : 84)
+                                      ],
+                                    )
+                                  : Container()
+                            ],
+                          )
+                        : Text(
+                            "Min Amount: ${configDoc.data()!['minAmount']} - Max Amount: ${configDoc.data()!['maxAmount']}"),
                     trailing: Column(
                       children: [
                         Text((configDoc.data()!['credit'] == true
