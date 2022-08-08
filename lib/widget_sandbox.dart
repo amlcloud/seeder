@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/controls/group.dart';
-import 'package:seeder/controls/scrollable_table.dart';
 import 'package:seeder/field/test_field.dart';
 import 'package:seeder/theme.dart';
 
