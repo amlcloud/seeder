@@ -25,7 +25,16 @@ class ConfigListItem extends ConsumerWidget {
                     subtitle: Group(
                       child: isAdded
                           ? Column(
+
                               children: <Widget>[
+                                ref
+                                    .watch(docSP(
+                                        'entity/${entityId}/${configType}/${configDoc.id}'))
+                                    .when(
+                                        loading: () => Container(),
+                                        error: (e, s) => Container(),
+                                        data: (configDoc) => Text(
+                    "Min: ${configDoc.data()!['minAmount']} - Max: ${configDoc.data()!['maxAmount']}")),
                                 DocFieldRangeSlider(
                                   FirebaseFirestore.instance
                                       .collection('entity')
@@ -34,7 +43,9 @@ class ConfigListItem extends ConsumerWidget {
                                       .doc(configDoc.id),
                                   "minAmount",
                                   "maxAmount",
-                                  configDoc.data()!,
+                                  double.parse(configDoc.data()!['minAmount']!.toString()),
+    double.parse(configDoc.data()!['maxAmount']!.toString())
+                                  //configDoc.data()!,
                                 ),
                                 configType == 'randomConfig'
                                     ? Column(
