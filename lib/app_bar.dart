@@ -60,12 +60,16 @@ class MyAppBar {
 }
 
 class ThemeIconButton extends ConsumerWidget {
+  
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var isDarkState = ref.watch(themeStateNotifierProvider);
     return IconButton(
         onPressed: () {
           ref.read(themeStateNotifierProvider.notifier).changeTheme();
         },
-        icon: Icon(Icons.nightlight));
+        icon: Icon(
+          isDarkState==true?
+          Icons.nightlight:Icons.nightlight_outlined));
   }
 }
