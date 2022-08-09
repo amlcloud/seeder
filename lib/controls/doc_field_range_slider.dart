@@ -9,9 +9,7 @@ class DocFieldRangeSlider extends ConsumerStatefulWidget {
   final String maxfield;
   final double maxValue;
   final double minValue;
-
   //final Map mapData;
-
   const DocFieldRangeSlider(
       this.docRef,
       this.minfield,
@@ -35,7 +33,6 @@ class DocFieldRangeSliderState extends ConsumerState<DocFieldRangeSlider> {
   @override
   void initState() {
     super.initState();
-
     RangeValues setrange = RangeValues(widget.minValue, widget.maxValue);
     setState(() {
       currentRangeValues = setrange;
@@ -47,8 +44,7 @@ class DocFieldRangeSliderState extends ConsumerState<DocFieldRangeSlider> {
     return ref.watch(docSP(widget.docRef.path)).when(
         loading: () => Container(),
         error: (e, s) => Container(),
-        data: (Docfield) => Column(
-              children: <Widget>[
+        data: (Docfield) => 
                 RangeSlider(
                   values: currentRangeValues,
                   min: widget.minValue,
@@ -69,8 +65,6 @@ class DocFieldRangeSliderState extends ConsumerState<DocFieldRangeSlider> {
                       widget.maxfield: endValues.end.toInt(),
                     }, SetOptions(merge: true));
                   },
-                )
-              ],
             ));
   }
 }
