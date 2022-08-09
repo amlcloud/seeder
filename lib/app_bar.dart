@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/avatar_image.dart';
 import 'package:seeder/main.dart';
 
 class MyAppBar {
@@ -37,21 +38,18 @@ class MyAppBar {
                 },
               ))),
       actions: [
-        //Text('${FirebaseAuth.instance.currentUser!.uid}'),
-        ///
-        /// if person is not logged-in or anonymous show person icon
-        /// otherwise show photo from his profile
-        ///
-        ///https://firebase.google.com/docs/auth/flutter/manage-users
-        ///
-        Icon(Icons.person),
         IconButton(
             onPressed: () {
               ref.read(isLoggedIn.notifier).value = false;
               FirebaseAuth.instance.signOut();
               // print("Signed out");
             },
-            icon: Icon(Icons.exit_to_app))
+            icon: Icon(Icons.exit_to_app)),
+        // AvatarImage(),
+        Container(
+          margin: EdgeInsets.all(2),
+          child: AvatarImage(),
+        )
       ],
     );
   }
