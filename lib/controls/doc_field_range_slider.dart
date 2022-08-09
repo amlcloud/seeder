@@ -7,9 +7,16 @@ class DocFieldRangeSlider extends ConsumerStatefulWidget {
   final DocumentReference docRef;
   final String minfield;
   final String maxfield;
-  final Map mapData;
+  final double maxValue;
+  final double minValue;
+  //final Map mapData;
   const DocFieldRangeSlider(
-      this.docRef, this.minfield, this.maxfield, this.mapData,
+      this.docRef,
+      this.minfield,
+      this.maxfield,
+      //this.mapData,
+      this.minValue,
+      this.maxValue,
       {Key? key})
       : super(key: key);
 
@@ -21,16 +28,12 @@ class DocFieldRangeSliderState extends ConsumerState<DocFieldRangeSlider> {
   RangeLabels labels = RangeLabels('1', "100");
   RangeValues currentRangeValues = const RangeValues(0, 10000);
 
-  var minvalue = 0.0;
-  var maxvalue = 0.0;
+  // var minvalue = 0.0;
+  // var maxvalue = 0.0;
   @override
   void initState() {
     super.initState();
-    minvalue = double.parse(widget.mapData['minAmount']!.toString());
-    maxvalue = double.parse(widget.mapData['maxAmount']!.toString());
-    RangeValues setrange = RangeValues(
-        double.parse(widget.mapData['minAmount']!.toString()),
-        double.parse(widget.mapData['maxAmount']!.toString()));
+    RangeValues setrange = RangeValues(widget.minValue, widget.maxValue);
     setState(() {
       currentRangeValues = setrange;
     });
@@ -41,19 +44,16 @@ class DocFieldRangeSliderState extends ConsumerState<DocFieldRangeSlider> {
     return ref.watch(docSP(widget.docRef.path)).when(
         loading: () => Container(),
         error: (e, s) => Container(),
-        data: (Docfield) => Column(
-              children: <Widget>[
-                Text(
-                    "Min: ${Docfield.data()!['minAmount']} - Max: ${Docfield.data()!['maxAmount']}"),
+        data: (Docfield) => 
                 RangeSlider(
                   values: currentRangeValues,
-                  min: minvalue,
-                  max: maxvalue,
+                  min: widget.minValue,
+                  max: widget.maxValue,
                   labels: RangeLabels(
                     "\$${currentRangeValues.start.round().toString()}",
                     "\$${currentRangeValues.end.round().toString()}",
                   ),
-                  divisions: 1000,
+                  divisions: widget.maxValue.round(),
                   onChanged: (RangeValues values) {
                     setState(() {
                       currentRangeValues = values;
@@ -65,8 +65,6 @@ class DocFieldRangeSliderState extends ConsumerState<DocFieldRangeSlider> {
                       widget.maxfield: endValues.end.toInt(),
                     }, SetOptions(merge: true));
                   },
-                )
-              ],
             ));
   }
 }
