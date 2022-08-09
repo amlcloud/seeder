@@ -21,8 +21,7 @@ class DocFieldSliderState extends ConsumerState<DocFieldSlider> {
         loading: () => Container(),
         error: (e, s) => Container(),
         data: (Docfield) {
-          return Column(
-            children: <Widget>[
+          return 
               Slider(
                 value: currentSliderValue,
                 max: widget.maxValue,
@@ -38,8 +37,7 @@ class DocFieldSliderState extends ConsumerState<DocFieldSlider> {
                     widget.field: endValues.toInt(),
                   }, SetOptions(merge: true));
                 },
-              )
-            ],
+             
           );
         });
   }

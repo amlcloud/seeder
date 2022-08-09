@@ -41,36 +41,31 @@ class DocFieldRangeSliderState extends ConsumerState<DocFieldRangeSlider> {
       currentRangeValues = setrange;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return ref.watch(docSP(widget.docRef.path)).when(
         loading: () => Container(),
         error: (e, s) => Container(),
-        data: (Docfield) => Column(
-              children: <Widget>[
-                RangeSlider(
-                  values: currentRangeValues,
-                  min: widget.minValue,
-                  max: widget.maxValue,
-                  labels: RangeLabels(
-                    "\$${currentRangeValues.start.round().toString()}",
-                    "\$${currentRangeValues.end.round().toString()}",
-                  ),
-                  divisions: widget.maxValue.round(),
-                  onChanged: (RangeValues values) {
-                    setState(() {
-                      currentRangeValues = values;
-                    });
-                  },
-                  onChangeEnd: (RangeValues endValues) {
-                    widget.docRef.set({
-                      widget.minfield: endValues.start.toInt(),
-                      widget.maxfield: endValues.end.toInt(),
-                    }, SetOptions(merge: true));
-                  },
-                )
-              ],
+        data: (Docfield) => RangeSlider(
+              values: currentRangeValues,
+              min: widget.minValue,
+              max: widget.maxValue,
+              labels: RangeLabels(
+                "\$${currentRangeValues.start.round().toString()}",
+                "\$${currentRangeValues.end.round().toString()}",
+              ),
+              divisions: widget.maxValue.round(),
+              onChanged: (RangeValues values) {
+                setState(() {
+                  currentRangeValues = values;
+                });
+              },
+              onChangeEnd: (RangeValues endValues) {
+                widget.docRef.set({
+                  widget.minfield: endValues.start.toInt(),
+                  widget.maxfield: endValues.end.toInt(),
+                }, SetOptions(merge: true));
+              },
             ));
   }
 }
