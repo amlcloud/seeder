@@ -10,35 +10,31 @@ class ThemeStateNotifier extends StateNotifier<bool> {
   final dbInstance = FirebaseFirestore.instance;
   ThemeStateNotifier(bool loginState) : super(false) {
     if (loginState == true && auth.currentUser != null) {
-      var userSettingDoc =
-          dbInstance.collection('user').doc(auth.currentUser!.uid);
-      Future theme = userSettingDoc.get().then((value) {
-        print('theme' + value.toString());
-        return value['themeMode'];
-      });
-      theme
+      dbInstance
+          .collection('user')
+          .doc(auth.currentUser!.uid)
+          .get()
           .then((value) {
-            bool isDark = value == 'light' ? false : true;
-            return isDark;
-          })
-          .then((isDark) => state = isDark)
-          .whenComplete(() => print(state));
+        String theme = value['themeMode'];
+        bool isDark = theme == 'light' ? false : true;
+        state = isDark;
+      });
     }
   }
   void changeTheme() {
     state = !state;
     String themeMode = state == false ? 'light' : 'dark';
     if (auth.currentUser != null) {
-      var userSettingDoc =
-          dbInstance.collection('user').doc(auth.currentUser!.uid);
-      userSettingDoc.set({'themeMode': themeMode});
-      // print(userSettingDoc);
+      dbInstance
+          .collection('user')
+          .doc(auth.currentUser!.uid)
+          .set({'themeMode': themeMode});
     }
   }
 }
 
 final themeStateNotifierProvider =
     StateNotifierProvider<ThemeStateNotifier, bool>((ref) {
-  var loginState = ref.watch(isLoggedIn);
+  bool loginState = ref.watch(isLoggedIn);
   return ThemeStateNotifier(loginState);
 }, dependencies: [isLoggedIn]);
