@@ -38,6 +38,10 @@ class MyAppBar {
                 },
               ))),
       actions: [
+        Container(
+          margin: EdgeInsets.all(2),
+          child: AvatarImage(),
+        ),
         IconButton(
             onPressed: () {
               ref.read(isLoggedIn.notifier).value = false;
@@ -46,10 +50,6 @@ class MyAppBar {
             },
             icon: Icon(Icons.exit_to_app)),
         // AvatarImage(),
-        Container(
-          margin: EdgeInsets.all(2),
-          child: AvatarImage(),
-        )
       ],
     );
   }

@@ -27,10 +27,25 @@ class AvatarImageState extends ConsumerState<AvatarImage> {
       //     'img': Style(height: 24, width: 24),
       //   },
       // );
-      return Image(
-        height: 24,
-        image: NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!),
-      );
+      // return Image(
+      //   height: 24,
+      //   image: NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!),
+      // );
+      return Tooltip(
+          message: 'edit profile',
+          child: Padding(
+              padding: EdgeInsets.only(right: 4),
+              child: Center(
+                  child: CircleAvatar(
+                      radius: 12,
+                      backgroundImage: FirebaseAuth
+                                  .instance.currentUser?.photoURL ==
+                              null
+                          ? Image.asset("""../web/icons/Icon-192.png""").image
+                          //: Image.asset("""../web/icons/Icon-192.png""").image
+                          : Image.network(
+                                  FirebaseAuth.instance.currentUser!.photoURL!)
+                              .image))));
     }
     return Container();
   }
