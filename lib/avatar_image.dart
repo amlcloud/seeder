@@ -38,6 +38,7 @@ class AvatarImageState extends ConsumerState<AvatarImage> {
               child: Center(
                   child: CircleAvatar(
                       radius: 12,
+                      
                       backgroundImage: FirebaseAuth
                                   .instance.currentUser?.photoURL ==
                               null
