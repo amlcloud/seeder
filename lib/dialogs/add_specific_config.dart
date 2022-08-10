@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiver/time.dart';
 import 'package:seeder/common.dart';
 import 'package:seeder/field/field_selector.dart';
 import 'package:seeder/providers/firestore.dart';

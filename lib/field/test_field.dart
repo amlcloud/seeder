@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/field/add_specific_config_field.dart';
-import 'package:seeder/field/field_selector.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 
 class TestField extends ConsumerWidget {

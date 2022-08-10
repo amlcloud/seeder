@@ -37,8 +37,7 @@ class DocFieldSliderState extends ConsumerState<DocFieldSlider> {
                     widget.field: endValues.toInt(),
                   }, SetOptions(merge: true));
                 },
-             
-          );
+              );
         });
   }
 }
