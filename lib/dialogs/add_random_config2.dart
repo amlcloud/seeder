@@ -5,8 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 
 class AddRandomConfig2 extends ConsumerWidget {
-  final TextEditingController maxAmount_inp = TextEditingController();
-  final TextEditingController minAmount_inp = TextEditingController();
+  /// TextEditingController for Common
+  final List<TextEditingController> controllerList = [];
+  final List<String> fieldLables = [];
+  final TextEditingController maxAmount_inp =
+      TextEditingController.fromValue(TextEditingValue(text: "0.00"));
+  final TextEditingController minAmount_inp =
+      TextEditingController.fromValue(TextEditingValue(text: "0.00"));
   final TextEditingController title_inp = TextEditingController();
   final TextEditingController frequency_inp = TextEditingController();
 
@@ -39,12 +44,11 @@ class AddRandomConfig2 extends ConsumerWidget {
     List<String> categoryCredit = [
       'cash deposit',
       'cash deposit third party',
-      'interest',
       'cheque deposit',
-      'direct credit',
       'third party transfer'
     ];
     List<String> categoryDebit = [
+      'purchase',
       'payment',
       'cash withdrawal',
       'linked account transfer',
@@ -54,7 +58,7 @@ class AddRandomConfig2 extends ConsumerWidget {
 
     return AlertDialog(
       scrollable: true,
-      title: Text('Adding Config...'),
+      title: Text('Adding Random Config...'),
       content: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
@@ -85,6 +89,7 @@ class AddRandomConfig2 extends ConsumerWidget {
                   ),
                 ],
               ),
+
               DecoratedBox(
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -135,42 +140,51 @@ class AddRandomConfig2 extends ConsumerWidget {
                     )
                   : Container(),
 
-              ref.watch(isRandomTransaction) == false &&
-                      ref.watch(categorySelector) != null
-                  ? ref.watch(categorySelector) == 'payment'
-                      ? TextFormField(
-                          controller: title_inp,
-                          decoration: InputDecoration(labelText: 'Beneficiary'),
-                        )
-                      : Column(
-                          children: <Widget>[
-                            TextFormField(
-                              controller: title_inp,
-                              decoration: InputDecoration(
-                                  labelText: 'Bank Name/Atm Name'),
-                            ),
-                            TextFormField(
-                              controller: minAmount_inp,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                              decoration:
-                                  InputDecoration(labelText: 'Bank BSB'),
-                            ),
-                            TextFormField(
-                              controller: title_inp,
-                              decoration:
-                                  InputDecoration(labelText: 'Reference'),
-                            ),
-                          ],
-                        )
-                  : Container(),
-
-              /// end Example
+              /// Start Field Section
               TextFormField(
                 controller: title_inp,
                 decoration: InputDecoration(labelText: 'Title'),
               ),
+
+              ref.watch(isRandomTransaction) == false &&
+                      ref.watch(categorySelector) != null
+                  ? ref.watch(creditDebit) == false
+                      ?
+                      // Debit debit conditions
+                      ref.watch(categorySelector) == 'purchase'
+                          ? fieldAdder(context, ref, [
+                              "Retailer_Name",
+                              "Retailer_Address",
+                              "Reference"
+                            ])
+                          : ref.watch(categorySelector) ==
+                                  'linked account transfer'
+                              ? fieldAdder(context, ref, ["Reference"])
+                              : ref.watch(categorySelector) == 'cash withdrawal'
+                                  ? fieldAdder(context, ref,
+                                      ["Branch", "Address", "Reference"])
+                                  : fieldAdder(context, ref, [
+                                      "Beneficiary _Name",
+                                      "Beneficiary_Account",
+                                      "Beneficiary_Bank",
+                                      "Beneficiary_BSB",
+                                      "Reference"
+                                    ])
+                      //Credit conditionns
+                      : ref.watch(categorySelector) == 'cash deposit'
+                          ? fieldAdder(
+                              context, ref, ["Branch", "Address", "Reference"])
+                          : fieldAdder(context, ref, [
+                              "Remiter_Name",
+                              "Remiter_Account",
+                              "Remiter_Bank",
+                              "Remiter_BSB",
+                              "Reference"
+                            ])
+                  : Container(),
+
+              /// end Example
+
               TextFormField(
                 controller: minAmount_inp,
                 inputFormatters: <TextInputFormatter>[
@@ -249,24 +263,53 @@ class AddRandomConfig2 extends ConsumerWidget {
         TextButton(
             child: Text("Submit"),
             onPressed: () {
-              if (!ref.read(isValiedAmount) &&
-                  ref.read(periodSelector) != null &&
-                  ref.read(categorySelector) != null) {
-                FirebaseFirestore.instance
-                    .collection('randomConfig')
-                    .doc(title_inp.text)
-                    .set({
-                  'credit': ref.watch(creditDebit),
-                  'cattegory': ref.watch(categorySelector),
-                  'maxAmount': double.parse(maxAmount_inp.text),
-                  'minAmount': double.parse(minAmount_inp.text),
-                  'period': ref.watch(periodSelector),
-                  'frequency': int.parse(frequency_inp.text),
-                });
-                Navigator.of(context).pop();
+              // if (!ref.read(isValiedAmount) &&
+              //     ref.read(periodSelector) != null &&
+              //     ref.read(categorySelector) != null) {
+              //   FirebaseFirestore.instance
+              //       .collection('randomConfig')
+              //       .doc(title_inp.text)
+              //       .set({
+              //     'credit': ref.watch(creditDebit),
+              //     'cattegory': ref.watch(categorySelector),
+              //     'maxAmount': double.parse(maxAmount_inp.text),
+              //     'minAmount': double.parse(minAmount_inp.text),
+              //     'period': ref.watch(periodSelector),
+              //     'frequency': int.parse(frequency_inp.text),
+              //   });
+              //   Navigator.of(context).pop();
+              // }
+
+              Map<String, dynamic> listData = {};
+              listData['credit'] = ref.watch(creditDebit);
+              listData['cattegory'] = ref.watch(categorySelector);
+              listData['maxAmount'] = double.parse(maxAmount_inp.text);
+              listData['minAmount'] = double.parse(minAmount_inp.text);
+              listData['period'] = ref.watch(periodSelector);
+              listData['frequency'] = ref.watch(periodSelector);
+
+              for (var i = 0; i < fieldLables.length; i++) {
+                listData[fieldLables[i].toLowerCase()] = controllerList[i].text;
               }
+              print("list data ${listData}");
             })
       ],
     );
+  }
+
+  Widget fieldAdder(
+      BuildContext context, WidgetRef ref, List<String> fieldList) {
+    controllerList.clear();
+    fieldLables.clear();
+    return Column(
+        children: fieldList.map((element) {
+      TextEditingController controller = TextEditingController();
+      controllerList.add(controller);
+      fieldLables.add(element);
+      return TextFormField(
+        controller: controller,
+        decoration: InputDecoration(labelText: element),
+      );
+    }).toList());
   }
 }
