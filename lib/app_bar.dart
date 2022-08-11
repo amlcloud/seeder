@@ -48,6 +48,7 @@ class MyAppBar {
         ThemeIconButton(),
         Icon(Icons.person),
         IconButton(
+            tooltip: 'sign out',
             onPressed: () {
               ref.read(isLoggedIn.notifier).value = false;
               FirebaseAuth.instance.signOut();
@@ -60,16 +61,16 @@ class MyAppBar {
 }
 
 class ThemeIconButton extends ConsumerWidget {
-  
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var isDarkState = ref.watch(themeStateNotifierProvider);
     return IconButton(
+        tooltip: 'dark/light mode',
         onPressed: () {
           ref.read(themeStateNotifierProvider.notifier).changeTheme();
         },
-        icon: Icon(
-          isDarkState==true?
-          Icons.nightlight:Icons.nightlight_outlined));
+        icon: Icon(isDarkState == true
+            ? Icons.nightlight
+            : Icons.nightlight_outlined));
   }
 }
