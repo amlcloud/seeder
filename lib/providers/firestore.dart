@@ -118,7 +118,9 @@ final AutoDisposeStreamProviderFamily<QuerySnapshot<Map<String, dynamic>>,
 
   if (filter.limit != null) q = q.limit(filter.limit!);
 
-  return q.snapshots();
+  return filter.distinct == null
+      ? q.snapshots()
+      : q.snapshots().distinct(filter.distinct);
 });
 
 /// Riverpod Provider listening to a Firestore document by the path specified
