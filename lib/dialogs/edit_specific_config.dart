@@ -68,7 +68,7 @@ class EditSpecificConfig extends ConsumerWidget {
         .toList()
       ..sort((a, b) => a.data()['type'].compareTo(b.data()['type']));
 
-    print('example:${fieldData}');
+    //print('example:${fieldData}');
     Map<String, dynamic> trnList = {};
 
     for (int i = 0; i < fieldData.length; i++) {

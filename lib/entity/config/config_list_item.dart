@@ -106,7 +106,7 @@ class ConfigListItem extends ConsumerWidget {
 
   addEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {
     var data = (await FirebaseFirestore.instance.doc(path).get()).data();
-    print("hit${data}");
+    //print("hit${data}");
     FirebaseFirestore.instance
         .collection('entity')
         .doc(entityId)

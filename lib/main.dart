@@ -31,7 +31,8 @@ class MainApp extends ConsumerWidget {
     bool isDarkTheme = ref.watch(themeStateNotifierProvider);
     return MaterialApp(
       title: 'Data Generator',
-      themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+      //themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+      themeMode: ThemeMode.dark, // Added by Thuva* for just comfortable delete later.
       theme: lightTheme,
       darkTheme: darkTheme,
       home: TheApp(),

@@ -21,23 +21,22 @@ class DocFieldSliderState extends ConsumerState<DocFieldSlider> {
         loading: () => Container(),
         error: (e, s) => Container(),
         data: (Docfield) {
-          return 
-              Slider(
-                value: currentSliderValue,
-                max: widget.maxValue,
-                divisions: widget.maxValue.round(),
-                label: currentSliderValue.round().toString(),
-                onChanged: (double values) {
-                  setState(() {
-                    currentSliderValue = values;
-                  });
-                },
-                onChangeEnd: (double endValues) {
-                  widget.docRef.set({
-                    widget.field: endValues.toInt(),
-                  }, SetOptions(merge: true));
-                },
-              );
+          return Slider(
+            value: currentSliderValue,
+            max: widget.maxValue,
+            divisions: widget.maxValue.round(),
+            label: currentSliderValue.round().toString(),
+            onChanged: (double values) {
+              setState(() {
+                currentSliderValue = values;
+              });
+            },
+            onChangeEnd: (double endValues) {
+              widget.docRef.set({
+                widget.field: endValues.toInt(),
+              }, SetOptions(merge: true));
+            },
+          );
         });
   }
 }

@@ -18,8 +18,8 @@ class AddSpecificConfig extends ConsumerWidget {
         .doc(entityId)
         .collection('fields')
         .get();
-    print(data);
-    print(FIELDS);
+    //print(data);
+    //print(FIELDS);
 
     return AlertDialog(
       scrollable: true,
@@ -61,7 +61,7 @@ class AddSpecificConfig extends ConsumerWidget {
     List<QueryDocumentSnapshot<Map<String, dynamic>>> fieldData = field.docs
       ..sort((a, b) => a.data()['type'].compareTo(b.data()['type']));
 
-    print('example:${fieldData}');
+    //print('example:${fieldData}');
     Map<String, dynamic> trnList = {};
     String Title = 'Title';
     trnList['author'] = FirebaseAuth.instance.currentUser!.uid.toString();
