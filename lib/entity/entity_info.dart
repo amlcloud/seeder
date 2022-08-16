@@ -27,6 +27,22 @@ class EntityInfo extends ConsumerWidget {
             FirebaseFirestore.instance.doc('entity/${entityId}'),
             'desc',
             decoration: InputDecoration(hintText: "Description"),
+          )),
+          Flexible(
+              child: DocFieldTextEdit(
+                  FirebaseFirestore.instance.doc('entity/${entityId}'), 'bank',
+                  decoration: InputDecoration(hintText: "Bank"))),
+          Flexible(
+              child: DocFieldTextEdit(
+            FirebaseFirestore.instance.doc('entity/${entityId}'),
+            'account',
+            decoration: InputDecoration(hintText: "Account Numver"),
+          )),
+          Flexible(
+              child: DocFieldTextEdit(
+            FirebaseFirestore.instance.doc('entity/${entityId}'),
+            'bsb',
+            decoration: InputDecoration(hintText: "BSB"),
           ))
         ],
       );

@@ -37,7 +37,7 @@ class PeriodicConfig extends ConsumerWidget {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return AddPeriodicConfig();
+                            return AddPeriodicConfig(entityId);
                           });
                     },
                   )

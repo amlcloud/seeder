@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/app_bar.dart';
 import 'package:seeder/entity/entities_list.dart';
@@ -44,6 +45,9 @@ class EntitiesPage extends ConsumerWidget {
     TextEditingController id_inp = TextEditingController();
     TextEditingController name_inp = TextEditingController();
     TextEditingController desc_inp = TextEditingController();
+    TextEditingController bsb_inp = TextEditingController();
+    TextEditingController account_inp = TextEditingController();
+    TextEditingController bank_inp = TextEditingController();
     return ElevatedButton(
       child: Text("Add Entity"),
       onPressed: () {
@@ -74,6 +78,28 @@ class EntitiesPage extends ConsumerWidget {
                             labelText: 'Description',
                           ),
                         ),
+                        TextFormField(
+                          controller: bank_inp,
+                          decoration: InputDecoration(labelText: 'Bank'),
+                        ),
+                        TextFormField(
+                          controller: account_inp,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            labelText: 'Account Number',
+                          ),
+                        ),
+                        TextFormField(
+                          controller: bsb_inp,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            labelText: 'BSB',
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -86,6 +112,9 @@ class EntitiesPage extends ConsumerWidget {
                           'id': id_inp.text.toString(),
                           'name': name_inp.text.toString(),
                           'desc': desc_inp.text.toString(),
+                          'bank': bank_inp.text.toString().toUpperCase(),
+                          'account': account_inp.text.toString(),
+                          'bsb': bsb_inp.text.toString(),
                           'time Created': FieldValue.serverTimestamp(),
                           'author': FirebaseAuth.instance.currentUser!.uid,
                           // 'author': FirebaseAuth.instance.currentUser!.uid
