@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/dialogs/add_specific_config.dart';
+import 'package:seeder/dialogs/add_config_field.dart';
 import 'package:seeder/entity/config/specific_config_list.dart';
 
 class SpecificConfig extends ConsumerWidget {
@@ -21,8 +21,8 @@ class SpecificConfig extends ConsumerWidget {
             children: [
               Text('available periodic templates'),
               Expanded(
-                child: SingleChildScrollView(
-                    child: SpecificConfigList(entityId)),
+                child:
+                    SingleChildScrollView(child: SpecificConfigList(entityId)),
               ),
               Divider(),
               Card(
@@ -36,7 +36,7 @@ class SpecificConfig extends ConsumerWidget {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return AddSpecificConfig(entityId);
+                            return AddConfigField("specificConfig", entityId);
                           });
                     },
                   )

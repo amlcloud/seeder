@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/controls/custom_date_picker.dart';
 import 'package:seeder/controls/custom_dropdown.dart';
 import 'package:seeder/controls/group.dart';
 import 'package:seeder/random_datas/random_TPT.dart';
@@ -10,22 +12,19 @@ import 'package:seeder/random_datas/random_names.dart';
 import 'package:seeder/random_datas/random_streets.dart';
 import 'package:seeder/random_datas/random_suburbs.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
+import 'package:intl/intl.dart';
 
-class ComonConfig extends ConsumerWidget {
-  ComonConfig(this.configType, this.entityId);
+class AddConfigField extends ConsumerWidget {
+  AddConfigField(this.configType, this.entityId);
   final String configType;
   final String entityId;
   final List<TextEditingController> controllerList = [];
   final List<String> fieldLables = [];
-  final TextEditingController maxAmount_inp =
-      TextEditingController.fromValue(TextEditingValue(text: "1"));
-  final TextEditingController minAmount_inp =
-      TextEditingController.fromValue(TextEditingValue(text: "0"));
-  final TextEditingController title_inp = TextEditingController();
-  final TextEditingController dayFrequency_inp =
-      TextEditingController.fromValue(TextEditingValue(text: "1"));
-
+  final DateFormat formatter = DateFormat('yyyy-MM-dd');
   final isValiedAmount =
+      StateNotifierProvider<GenericStateNotifier<bool>, bool>(
+          (ref) => GenericStateNotifier<bool>(false));
+  final isValiedDateTime =
       StateNotifierProvider<GenericStateNotifier<bool>, bool>(
           (ref) => GenericStateNotifier<bool>(false));
   final periodSelector =
@@ -40,7 +39,15 @@ class ComonConfig extends ConsumerWidget {
   final isValiedDayFreq =
       StateNotifierProvider<GenericStateNotifier<bool>, bool>(
           (ref) => GenericStateNotifier<bool>(false));
-
+  final TextEditingController title_inp = TextEditingController();
+  final TextEditingController maxAmount_inp =
+      TextEditingController.fromValue(TextEditingValue(text: "1"));
+  final TextEditingController minAmount_inp =
+      TextEditingController.fromValue(TextEditingValue(text: "0"));
+  final TextEditingController dayFrequency_inp =
+      TextEditingController.fromValue(TextEditingValue(text: "1"));
+  final TextEditingController dateTime_inp = TextEditingController.fromValue(
+      TextEditingValue(text: DateTime.now().toUtc().toString()));
   final TextEditingController benBSB_inp =
       TextEditingController.fromValue(TextEditingValue(text: randomBSB()));
   final TextEditingController benAccount_inp =
@@ -59,7 +66,7 @@ class ComonConfig extends ConsumerWidget {
       TextEditingController.fromValue(TextEditingValue(text: randomBank()));
   final TextEditingController reference_inp =
       TextEditingController.fromValue(TextEditingValue(text: randomTPTF()));
-      
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     reference_inp.text =
@@ -76,7 +83,9 @@ class ComonConfig extends ConsumerWidget {
         ref.read(isValiedAmount.notifier).value = false;
       }
     });
+
     var dayOrFrequence = configType == "periodicConfig" ? "Day" : "Frequency";
+
     dayFrequency_inp.addListener(() {
       int day = ref.read(periodSelector) == "Week"
           ? 7
@@ -90,6 +99,7 @@ class ComonConfig extends ConsumerWidget {
         ref.read(isValiedDayFreq.notifier).value = false;
       }
     });
+
     List<String> categoryCredit = [
       'cash deposit',
       'cash deposit third party',
@@ -254,60 +264,79 @@ class ComonConfig extends ConsumerWidget {
                               ],
                             )
                   : Container(),
-              TextFormField(
-                controller: minAmount_inp,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                decoration: InputDecoration(labelText: 'Min Amount'),
-              ),
-              TextFormField(
-                controller: maxAmount_inp,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                decoration: InputDecoration(
-                  labelText: 'Max Amount',
-                ),
-              ),
-              Container(
-                width: 200,
-                margin: EdgeInsets.only(top: 5),
-                child: ref.watch(isValiedAmount)
-                    ? Text(
-                        'Max Amount should be greter than Min amount',
-                        style: Theme.of(context).textTheme.labelSmall,
-                      )
-                    : Container(),
-              ),
-              CustomDropdown("Select period", ['Week', 'Month', 'Quarter'],
-                  periodSelector),
-              TextFormField(
-                controller: dayFrequency_inp,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                decoration: InputDecoration(
-                    labelText: ref.watch(periodSelector) == "Week"
-                        ? 'Selecy ${dayOrFrequence} 1-7'
-                        : ref.watch(periodSelector) == "Month"
-                            ? 'Selecy ${dayOrFrequence} 1-28'
-                            : 'Selecy ${dayOrFrequence} 1-84'),
-              ),
-              Container(
-                width: 200,
-                margin: EdgeInsets.only(top: 5),
-                child: ref.watch(isValiedDayFreq)
-                    ? Text(
-                        ref.watch(periodSelector) == "Week"
-                            ? 'please selecy ${dayOrFrequence} 1-7'
-                            : ref.watch(periodSelector) == "Month"
-                                ? 'Please selecy ${dayOrFrequence} 1-28'
-                                : 'Please selecy ${dayOrFrequence} 1-84',
-                        style: Theme.of(context).textTheme.labelSmall,
-                      )
-                    : Container(),
-              ),
+
+              /// specificConfig doesnt need min or max ammount and periods just need amount.
+              configType == 'specificConfig'
+                  ? Column(
+                      children: <Widget>[
+                        TextFormField(
+                          controller: minAmount_inp,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(labelText: 'Amount'),
+                        ),
+                        CustomDatePicker('Select date', dateTime_inp)
+                      ],
+                    )
+                  : Column(
+                      children: <Widget>[
+                        TextFormField(
+                          controller: minAmount_inp,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(labelText: 'Min Amount'),
+                        ),
+                        TextFormField(
+                          controller: maxAmount_inp,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            labelText: 'Max Amount',
+                          ),
+                        ),
+                        Container(
+                          width: 200,
+                          margin: EdgeInsets.only(top: 5),
+                          child: ref.watch(isValiedAmount)
+                              ? Text(
+                                  'Max Amount should be greter than Min amount',
+                                  style: Theme.of(context).textTheme.labelSmall,
+                                )
+                              : Container(),
+                        ),
+                        CustomDropdown("Select period",
+                            ['Week', 'Month', 'Quarter'], periodSelector),
+                        TextFormField(
+                          controller: dayFrequency_inp,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                              labelText: ref.watch(periodSelector) == "Week"
+                                  ? 'Selecy ${dayOrFrequence} 1-7'
+                                  : ref.watch(periodSelector) == "Month"
+                                      ? 'Selecy ${dayOrFrequence} 1-28'
+                                      : 'Selecy ${dayOrFrequence} 1-84'),
+                        ),
+                        Container(
+                          width: 200,
+                          margin: EdgeInsets.only(top: 5),
+                          child: ref.watch(isValiedDayFreq)
+                              ? Text(
+                                  ref.watch(periodSelector) == "Week"
+                                      ? 'please selecy ${dayOrFrequence} 1-7'
+                                      : ref.watch(periodSelector) == "Month"
+                                          ? 'Please selecy ${dayOrFrequence} 1-28'
+                                          : 'Please selecy ${dayOrFrequence} 1-84',
+                                  style: Theme.of(context).textTheme.labelSmall,
+                                )
+                              : Container(),
+                        ),
+                      ],
+                    )
             ],
           ),
         ),
@@ -317,28 +346,36 @@ class ComonConfig extends ConsumerWidget {
             child: Text("Submit"),
             onPressed: () async {
               if (!ref.read(isValiedAmount) &&
-                  !ref.read(isValiedDayFreq) &&
-                  ref.read(periodSelector) != null &&
-                  ref.read(categorySelector) != null) {
+                      !ref.read(isValiedDayFreq) &&
+                      ref.read(periodSelector) != null ||
+                  configType == 'specificConfig' &&
+                      ref.read(categorySelector) != null) {
                 //print(getListData(context, ref));
-                await getListData(context, ref, configType).then((value) {
-                  print(value);
-                  FirebaseFirestore.instance
-                      .collection(configType)
-                      .doc(title_inp.text)
-                      .set(value)
-                      .then((value2) {
-                    print("done");
-                    Navigator.of(context).pop();
-                  });
-                });
-                // DocumentSnapshot<Map<String, dynamic>> data =
-                //     await FirebaseFirestore.instance
-                //         .collection('entity')
-                //         .doc(entityId)
-                //         .get();
-                // print(data.data());
 
+                await getListData(context, ref, configType).then((resData) {
+                  print(resData);
+                  if (configType == 'specificConfig') {
+                    FirebaseFirestore.instance
+                        .collection('entity')
+                        .doc(entityId)
+                        .collection('specificConfig')
+                        .doc(title_inp.text)
+                        .set(resData)
+                        .then((res) {
+                      print("Done");
+                      Navigator.of(context).pop();
+                    });
+                  } else {
+                    FirebaseFirestore.instance
+                        .collection(configType)
+                        .doc(title_inp.text)
+                        .set(resData)
+                        .then((res) {
+                      print("Done");
+                      Navigator.of(context).pop();
+                    });
+                  }
+                });
               }
             })
       ],
@@ -350,13 +387,26 @@ class ComonConfig extends ConsumerWidget {
     Map<String, dynamic> listData = {};
     listData['credit'] = ref.watch(creditDebit);
     listData['cattegory'] = ref.watch(categorySelector);
-    listData['maxAmount'] = double.parse(maxAmount_inp.text);
-    listData['minAmount'] = double.parse(minAmount_inp.text);
-    listData['period'] = ref.watch(periodSelector);
     listData["reference"] = reference_inp.text;
-    configType == "periodicConfig"
-        ? listData['day'] = int.parse(dayFrequency_inp.text)
-        : listData['frequency'] = int.parse(dayFrequency_inp.text);
+    listData['author'] = FirebaseAuth.instance.currentUser!.uid;
+
+    /// Differing fields are based on the config type.
+    if (configType == "periodicConfig") {
+      listData['day'] = int.parse(dayFrequency_inp.text);
+      listData['maxAmount'] = double.parse(maxAmount_inp.text);
+      listData['minAmount'] = double.parse(minAmount_inp.text);
+      listData['period'] = ref.watch(periodSelector);
+    } else if (configType == "randomConfig") {
+      listData['frequency'] = int.parse(dayFrequency_inp.text);
+      listData['maxAmount'] = double.parse(maxAmount_inp.text);
+      listData['minAmount'] = double.parse(minAmount_inp.text);
+      listData['period'] = ref.watch(periodSelector);
+    } else {
+      listData['amount'] = double.parse(minAmount_inp.text);
+      listData['timestamp'] = DateTime.parse(dateTime_inp.text);
+    }
+
+    /// Differing fields values are based on the categorySelector.
     if (ref.watch(categorySelector) == 'linked account transfer' ||
         ref.watch(categorySelector) == 'cash withdrawal' ||
         ref.watch(categorySelector) == 'cash deposit') {
@@ -384,7 +434,6 @@ Future<Map<String, dynamic>> getSelfAccountDetails(
     String entityId, String requiredDetail) async {
   DocumentSnapshot<Map<String, dynamic>> data =
       await FirebaseFirestore.instance.collection('entity').doc(entityId).get();
-  //print(data.data());
   Map<String, dynamic> selBenData = {};
   if (requiredDetail == "Beneficiary") {
     selBenData["Beneficiary_Name"] = data.data()!['name'];
@@ -392,11 +441,10 @@ Future<Map<String, dynamic>> getSelfAccountDetails(
     selBenData["Beneficiary_Bank"] = data.data()!['bank'];
     selBenData["Beneficiary_BSB"] = data.data()!['bsb'];
   } else {
-    selBenData["Remitter_Name"] = data.data()!['Name'];
+    selBenData["Remitter_Name"] = data.data()!['name'];
     selBenData["Remitter_Account"] = data.data()!['account'];
     selBenData["Remitter_Bank"] = data.data()!['bank'];
     selBenData["Remitter_BSB"] = data.data()!['bsb'];
   }
-
   return selBenData;
 }

@@ -19,8 +19,8 @@ class FieldSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
 
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
     void selectDate() async {
       final DateTime? result = await showDatePicker(
         context: context,
