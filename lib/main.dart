@@ -78,6 +78,7 @@ class TheAppState extends ConsumerState<TheApp> {
         ),
       );
     } else {
+      // fixme: should only one Scaffold
       return Scaffold(
           body: ref.watch(isLoggedIn) == false
               ? LoginPage()
