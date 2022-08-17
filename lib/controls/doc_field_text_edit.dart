@@ -1,18 +1,19 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/providers/firestore.dart';
 
 class DocFieldTextEdit extends ConsumerStatefulWidget {
+  bool? isEnabled;
   final DocumentReference docRef;
   final String field;
   final InputDecoration? decoration;
 
   final TextEditingController ctrl = TextEditingController();
 
-  DocFieldTextEdit(this.docRef, this.field, {this.decoration, Key? key})
+  DocFieldTextEdit(this.docRef, this.field,
+      {this.decoration, Key? key, this.isEnabled})
       : super(key: key);
 
   @override
@@ -22,11 +23,12 @@ class DocFieldTextEdit extends ConsumerStatefulWidget {
 
 class DocFieldTextEditState extends ConsumerState<DocFieldTextEdit> {
   Timer? descSaveTimer;
-
+  final dbInstance = FirebaseFirestore.instance;
   @override
   void initState() {
     super.initState();
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +52,7 @@ class DocFieldTextEditState extends ConsumerState<DocFieldTextEdit> {
             data: (docSnapshot) {
               return TextField(
                 decoration: widget.decoration,
+                enabled: widget.isEnabled,
                 controller: widget.ctrl
                   ..text = docSnapshot.data()![widget.field] ?? '',
                 onChanged: (v) {

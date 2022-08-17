@@ -5,13 +5,15 @@ import 'package:seeder/controls/doc_field_range_slider.dart';
 import 'package:seeder/controls/doc_field_slider.dart';
 import 'package:seeder/controls/group.dart';
 import 'package:seeder/providers/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ConfigListItem extends ConsumerWidget {
+  final String currentAuthor = FirebaseAuth.instance.currentUser!.uid;
   final String path;
   final String entityId;
   final String configType;
   final bool isAdded;
-  const ConfigListItem(this.path, this.entityId, this.configType, this.isAdded);
+  ConfigListItem(this.path, this.entityId, this.configType, this.isAdded);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(docSP(path)).when(
@@ -89,17 +91,23 @@ class ConfigListItem extends ConsumerWidget {
               ),
               Switch(
                   value: isAdded,
-                  onChanged: (value) {
-                    isAdded
-                        ? FirebaseFirestore.instance
-                            .runTransaction((Transaction myTransaction) async {
-                            myTransaction.delete(FirebaseFirestore.instance
-                                .collection('entity')
-                                .doc(entityId)
-                                .collection(configType)
-                                .doc(configDoc.id));
-                          })
-                        : addEntity(context, ref, configDoc);
+                  onChanged: (value){
+                    String author = '';
+                    ref.read(docFP('entity/${entityId}')).whenData((value) {
+                      author = value.data()!['author'];
+                    });
+                    if (author == currentAuthor) {
+                      isAdded
+                          ? FirebaseFirestore.instance.runTransaction(
+                              (Transaction myTransaction) async {
+                              myTransaction.delete(FirebaseFirestore.instance
+                                  .collection('entity')
+                                  .doc(entityId)
+                                  .collection(configType)
+                                  .doc(configDoc.id));
+                            })
+                          : addEntity(context, ref, configDoc);
+                    }
                   })
             ])));
   }

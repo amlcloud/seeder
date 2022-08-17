@@ -2,25 +2,34 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:csv/csv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:seeder/providers/firestore.dart';
 import "package:universal_html/html.dart" as html;
 
 class DataExportButton extends ConsumerWidget {
   final db = FirebaseFirestore.instance;
   final String entityId;
+  final String currentAuthor = FirebaseAuth.instance.currentUser!.uid;
   final List<List<String>> exportList = [
     <String>["amount", "balance", "ben_name", "rem_name"]
   ];
 
   DataExportButton(this.entityId);
   @override
-  Widget build(BuildContext context, WidgetRef ref) => ElevatedButton(
-      onPressed: () {
-        generateCSV(exportList);
-        Fluttertoast.showToast(msg: 'CSV exported');
-      },
-      child: Text('Export CSV'));
+  Widget build(BuildContext context, WidgetRef ref) =>
+      ref.watch(docFP('entity/${entityId}')).when(
+          loading: () => Container(),
+          error: (e, s) => ErrorWidget(e),
+          data: (entityDoc) => ElevatedButton(
+              onPressed: () {
+                if (entityDoc.data()!['author'] == currentAuthor) {
+                  generateCSV(exportList);
+                  Fluttertoast.showToast(msg: 'CSV exported');
+                }
+              },
+              child: Text('Export CSV')));
 }
 
 generateCSV(List<List<String>> list) async {
