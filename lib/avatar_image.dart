@@ -21,7 +21,7 @@ class AvatarImage extends ConsumerWidget {
                       backgroundImage: FirebaseAuth
                                   .instance.currentUser?.photoURL ==
                               null
-                          ? Image.asset("""../web/icons/Icon-192.png""").image
+                          ? Image.asset("""../web/icons/anonymous.png""").image
                           : Image.network(
                                   FirebaseAuth.instance.currentUser!.photoURL!)
                               .image))),
