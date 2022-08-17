@@ -18,7 +18,7 @@ final lightTheme = ThemeData(
     //     error: Colors.red,
     //     brightness: Brightness.dark,
     //     onError: Color(0xffcdcbc9))
-    );
+    tabBarTheme: const TabBarTheme(labelColor: Colors.black));
 
 final darkTheme = ThemeData(
     scaffoldBackgroundColor: Colors.black,
@@ -42,9 +42,8 @@ final darkTheme = ThemeData(
             TextStyle(color: Colors.grey, backgroundColor: Colors.transparent)),
     textTheme: TextTheme(
       labelSmall: TextStyle(fontSize: 12, color: Colors.red),
-    ));
-
-
+    ),
+    tabBarTheme: const TabBarTheme(labelColor: Colors.white));
 
 //style static class for login_page
 class LoginStyle {
