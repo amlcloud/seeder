@@ -38,15 +38,13 @@ class SpecificConfig extends ConsumerWidget {
                         Text('Add templates '),
                         IconButton(
                           icon: Icon(Icons.add),
-                          onPressed: () {
-                            if (entityDoc.data()!['author'] == currentAuthor) {
+                          onPressed: entityDoc.data()!['author'] == currentAuthor?() { 
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AddSpecificConfig(entityId);
                                   });
-                            }
-                          },
+                          }:null,
                         )
                       ],
                     ))

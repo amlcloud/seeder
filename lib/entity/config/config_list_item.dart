@@ -10,12 +10,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 class ConfigListItem extends ConsumerWidget {
   final String currentAuthor = FirebaseAuth.instance.currentUser!.uid;
   final String path;
+  String author="";
   final String entityId;
   final String configType;
   final bool isAdded;
+
   ConfigListItem(this.path, this.entityId, this.configType, this.isAdded);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+   
+    ref.watch(docFP('entity/${entityId}')).whenData((value) {
+      author = value.data()!['author'];
+    });
     return ref.watch(docSP(path)).when(
         loading: () => Text('loading...'),
         error: (e, s) => ErrorWidget(e),
@@ -91,12 +97,7 @@ class ConfigListItem extends ConsumerWidget {
               ),
               Switch(
                   value: isAdded,
-                  onChanged: (value){
-                    String author = '';
-                    ref.read(docFP('entity/${entityId}')).whenData((value) {
-                      author = value.data()!['author'];
-                    });
-                    if (author == currentAuthor) {
+                  onChanged:author==currentAuthor? (value) {
                       isAdded
                           ? FirebaseFirestore.instance.runTransaction(
                               (Transaction myTransaction) async {
@@ -107,8 +108,9 @@ class ConfigListItem extends ConsumerWidget {
                                   .doc(configDoc.id));
                             })
                           : addEntity(context, ref, configDoc);
-                    }
-                  })
+                    } : null
+                )
+                
             ])));
   }
 

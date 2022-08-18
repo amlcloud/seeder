@@ -23,12 +23,10 @@ class DataExportButton extends ConsumerWidget {
           loading: () => Container(),
           error: (e, s) => ErrorWidget(e),
           data: (entityDoc) => ElevatedButton(
-              onPressed: () {
-                if (entityDoc.data()!['author'] == currentAuthor) {
+              onPressed: entityDoc.data()!['author'] == currentAuthor? () {
                   generateCSV(exportList);
                   Fluttertoast.showToast(msg: 'CSV exported');
-                }
-              },
+              }:null,
               child: Text('Export CSV')));
 }
 
