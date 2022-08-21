@@ -34,6 +34,7 @@ final darkTheme = ThemeData(
         onSurface: Color(0xffcdcbc9),
         onBackground: Color(0xffcdcbc9),
         error: Colors.red,
+        onErrorContainer: Colors.redAccent,
         brightness: Brightness.dark,
         onError: Color(0xffcdcbc9)),
     sliderTheme: ThemeData.dark().sliderTheme.copyWith(

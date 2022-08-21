@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:seeder/dialogs/edit_specific_config.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 
 class SpecificConfigListItem extends ConsumerWidget {
@@ -50,18 +51,18 @@ class SpecificConfigListItem extends ConsumerWidget {
       )),
       Column(
         children: <Widget>[
-          // configDoc.data()!['author'] == FirebaseAuth.instance.currentUser!.uid
-          //     ? OutlinedButton(
-          //         child: Icon(Icons.edit),
-          //         onPressed: () {
-          //           showDialog(
-          //               context: context,
-          //               builder: (BuildContext context) {
-          //                 return EditSpecificConfig(entityId, configDoc);
-          //               });
-          //         },
-          //       )
-          //     : Container(),
+          configDoc.data()!['author'] == FirebaseAuth.instance.currentUser!.uid
+              ? OutlinedButton(
+                  child: Icon(Icons.edit),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return EditSpecificConfig(entityId, configDoc);
+                        });
+                  },
+                )
+              : Container(),
           Switch(
               value: configDoc.data()!['isAddedToTran'] ?? false,
               onChanged: (value) {
