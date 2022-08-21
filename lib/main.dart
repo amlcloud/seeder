@@ -31,7 +31,9 @@ class MainApp extends ConsumerWidget {
     bool isDarkTheme = ref.watch(themeStateNotifierProvider);
     return MaterialApp(
       title: 'Data Generator',
-      themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+      //themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+      themeMode:
+          ThemeMode.dark, // Added by Thuva* for just comfortable delete later.
       theme: lightTheme,
       darkTheme: darkTheme,
       home: TheApp(),
@@ -91,6 +93,9 @@ class TheAppState extends ConsumerState<TheApp> {
                         return PageRouteBuilder(
                             pageBuilder: (_, __, ___) => EntitiesPage());
                       } else if (settings.name == 'batches') {
+                        return PageRouteBuilder(
+                            pageBuilder: (_, __, ___) => BatchesPage());
+                      } else if (settings.name == 'fields') {
                         return PageRouteBuilder(
                             pageBuilder: (_, __, ___) => BatchesPage());
                       } else {

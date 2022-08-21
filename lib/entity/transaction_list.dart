@@ -54,7 +54,7 @@ class TransactionList extends ConsumerWidget {
       var selectedDataList = dataList.where((element) {
         return selectedColumnList.contains(element.key);
       });
-      debugPrint(selectedDataList.toString());
+      //debugPrint(selectedDataList.toString());
       if (selectedDataList.isEmpty) {
         return DataRow(cells: [DataCell(Text('no data rows'))]);
       } else {
@@ -107,7 +107,7 @@ class TransactionList extends ConsumerWidget {
       );
       dataColumnList.add(dataColumn);
     });
-    debugPrint(dataColumnList.toString());
+    //debugPrint(dataColumnList.toString());
     return dataColumnList.isEmpty
         ? [DataColumn(label: Text('no column'))]
         : dataColumnList;

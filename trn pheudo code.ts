@@ -25,12 +25,12 @@
 //       'category',
 //       //EMPLOYED:
 //       {
-//         'cash deposit': 0.1,
-//         'cash deposit third party': 0.1,
-//         'interest': 0.00001,
-//         'cheque deposit': 0.00001,
-//         'direct credit': 0.6, // salary for stable employer people
-//         'third party transfer': 0.2 // centerlink falls under this.
+        // 'cash deposit': 0.1,
+        // 'cash deposit third party': 0.1,
+        // 'interest': 0.00001,
+        // 'cheque deposit': 0.00001,
+        // 'direct credit': 0.6, // salary for stable employer people
+        // 'third party transfer': 0.2 // centerlink falls under this.
 //       },
 //       //UNEMPLOYED/STUDENT
 //       // {
@@ -126,14 +126,14 @@
 //     ...choose(
 //       'category',
 //       {
-//         'payment': 0.4, // random offline and online
-//         // 'direct debit': 0.2, // utilities, scheduled, monthly, insurance, 
-//         // amazon, netflix, apple, spotify, ...
-//         'cash withdrawal': 0.1,
-//         'linked account transfer': 0.1,
-//         'third party transfer': 0.15, //includes BPay, NPP, PayID
-//         //'loan repayment': 0.0005, // once a month
-//         'IFT': 0.05,
+        // 'payment': 0.4, // random offline and online
+        // // 'direct debit': 0.2, // utilities, scheduled, monthly, insurance, 
+        // // amazon, netflix, apple, spotify, ...
+        // 'cash withdrawal': 0.1,
+        // 'linked account transfer': 0.1,
+        // 'third party transfer': 0.15, //includes BPay, NPP, PayID
+        // //'loan repayment': 0.0005, // once a month
+        // 'IFT': 0.05,
 //       },
 //       {
 //         'payment': {

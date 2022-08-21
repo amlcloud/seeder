@@ -5,7 +5,10 @@ import 'package:seeder/main.dart';
 import 'package:seeder/state/theme_state_notifier.dart';
 
 class MyAppBar {
-  static final List<String> _tabs = ['entities', 'batches'];
+  static final List<String> _tabs = [
+    'entities',
+    'batches',
+  ];
 
   static PreferredSizeWidget getBar(BuildContext context, WidgetRef ref) {
     return AppBar(
