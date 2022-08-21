@@ -68,6 +68,7 @@ class ThemeIconButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var isDarkState = ref.watch(themeStateNotifierProvider);
     return IconButton(
+        tooltip: 'dark/light mode',
         onPressed: () {
           ref.read(themeStateNotifierProvider.notifier).changeTheme();
         },
