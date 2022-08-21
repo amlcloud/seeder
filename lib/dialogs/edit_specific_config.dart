@@ -1,18 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/controls/custom_date_picker.dart';
-import 'package:seeder/controls/custom_dropdown.dart';
-import 'package:seeder/controls/group.dart';
-import 'package:seeder/random_datas/random_TPT.dart';
-import 'package:seeder/random_datas/random_bank_details.dart';
-import 'package:seeder/random_datas/random_names.dart';
-import 'package:seeder/random_datas/random_streets.dart';
-import 'package:seeder/random_datas/random_suburbs.dart';
-import 'package:seeder/state/generic_state_notifier.dart';
-import 'package:intl/intl.dart';
 
 class EditSpecificConfig extends ConsumerWidget {
   EditSpecificConfig(this.entityId, this.configDoc);
@@ -83,7 +73,6 @@ class EditSpecificConfig extends ConsumerWidget {
                 print("Done");
                 Navigator.of(context).pop();
               });
-              print("example: ${configDoc.id}");
             })
       ],
     );
