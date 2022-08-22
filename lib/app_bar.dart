@@ -2,9 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/main.dart';
+import 'package:seeder/state/theme_state_notifier.dart';
 
 class MyAppBar {
-  static final List<String> _tabs = ['entities', 'batches'];
+  static final List<String> _tabs = [
+    'entities',
+    'batches',
+  ];
 
   static PreferredSizeWidget getBar(BuildContext context, WidgetRef ref) {
     return AppBar(
@@ -44,8 +48,10 @@ class MyAppBar {
         ///
         ///https://firebase.google.com/docs/auth/flutter/manage-users
         ///
+        ThemeIconButton(),
         Icon(Icons.person),
         IconButton(
+            tooltip: 'sign out',
             onPressed: () {
               ref.read(isLoggedIn.notifier).value = false;
               FirebaseAuth.instance.signOut();
@@ -54,5 +60,20 @@ class MyAppBar {
             icon: Icon(Icons.exit_to_app))
       ],
     );
+  }
+}
+
+class ThemeIconButton extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var isDarkState = ref.watch(themeStateNotifierProvider);
+    return IconButton(
+        tooltip: 'dark/light mode',
+        onPressed: () {
+          ref.read(themeStateNotifierProvider.notifier).changeTheme();
+        },
+        icon: Icon(isDarkState == true
+            ? Icons.nightlight
+            : Icons.nightlight_outlined));
   }
 }

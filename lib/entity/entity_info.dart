@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/controls/doc_field_text_edit.dart';
 
+import '../controls/doc_field_text_edit2.dart';
+
 class EntityInfo extends ConsumerWidget {
   final String entityId;
   const EntityInfo(this.entityId);
@@ -13,8 +15,10 @@ class EntityInfo extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Flexible(
-              child: DocFieldTextEdit(
-                  FirebaseFirestore.instance.doc('entity/${entityId}'), 'id',
+              child: DocFieldTextEdit2(
+                  // key: Key('entity/${entityId} ID'),
+                  FirebaseFirestore.instance.doc('entity/${entityId}'),
+                  'id',
                   decoration: InputDecoration(hintText: "ID"))),
           Flexible(
               child: DocFieldTextEdit(
@@ -27,6 +31,22 @@ class EntityInfo extends ConsumerWidget {
             FirebaseFirestore.instance.doc('entity/${entityId}'),
             'desc',
             decoration: InputDecoration(hintText: "Description"),
+          )),
+          Flexible(
+              child: DocFieldTextEdit(
+                  FirebaseFirestore.instance.doc('entity/${entityId}'), 'bank',
+                  decoration: InputDecoration(hintText: "Bank"))),
+          Flexible(
+              child: DocFieldTextEdit(
+            FirebaseFirestore.instance.doc('entity/${entityId}'),
+            'account',
+            decoration: InputDecoration(hintText: "Account Numver"),
+          )),
+          Flexible(
+              child: DocFieldTextEdit(
+            FirebaseFirestore.instance.doc('entity/${entityId}'),
+            'bsb',
+            decoration: InputDecoration(hintText: "BSB"),
           ))
         ],
       );

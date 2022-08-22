@@ -250,7 +250,7 @@ addTrnsactionToServer(
   /// Adding the transaction to the firestore database
   int setCount = 0;
   for (var i = 0; i < periodicData.length; i++) {
-    print("reference test ${periodicData[i]['day']!}");
+    //print("reference test ${periodicData[i]['day']!}");
     batch.set(
         FirebaseFirestore.instance
             .collection('entity/${entityId}/transaction')

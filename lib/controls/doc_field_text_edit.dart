@@ -29,6 +29,12 @@ class DocFieldTextEditState extends ConsumerState<DocFieldTextEdit> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    widget.ctrl.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ref
         .watch(docSPdistinct(DocParam(widget.docRef.path, (prev, curr) {

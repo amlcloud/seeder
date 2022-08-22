@@ -6,6 +6,7 @@ import 'package:seeder/batch/batch_page.dart';
 import 'package:seeder/entity/entities_page.dart';
 import 'package:seeder/login_page.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
+import 'package:seeder/state/theme_state_notifier.dart';
 import 'package:seeder/theme.dart';
 
 import 'firebase_options.dart';
@@ -17,14 +18,27 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(ProviderScope(
-      child: MaterialApp(
-    title: 'Data Generator',
-    themeMode: ThemeMode.dark,
-    theme: lightTheme,
-    darkTheme: darkTheme,
-    home: TheApp(),
-  )));
+  runApp(ProviderScope(child: MainApp()));
+}
+
+class MainApp extends ConsumerWidget {
+  const MainApp({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    bool isDarkTheme = ref.watch(themeStateNotifierProvider);
+    return MaterialApp(
+      title: 'Data Generator',
+      //themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+      themeMode:
+          ThemeMode.dark, // Added by Thuva* for just comfortable delete later.
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      home: TheApp(),
+    );
+  }
 }
 
 final isLoggedIn = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
@@ -79,6 +93,9 @@ class TheAppState extends ConsumerState<TheApp> {
                         return PageRouteBuilder(
                             pageBuilder: (_, __, ___) => EntitiesPage());
                       } else if (settings.name == 'batches') {
+                        return PageRouteBuilder(
+                            pageBuilder: (_, __, ___) => BatchesPage());
+                      } else if (settings.name == 'fields') {
                         return PageRouteBuilder(
                             pageBuilder: (_, __, ___) => BatchesPage());
                       } else {

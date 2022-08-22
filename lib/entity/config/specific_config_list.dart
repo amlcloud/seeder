@@ -23,7 +23,7 @@ class SpecificConfigList extends ConsumerWidget {
               loading: () => [Container()],
               error: (e, s) => [ErrorWidget(e)],
               data: (specificCol) => specificCol.docs.map((configDoc) {
-                    print("hit");
+                    //print("hit");
                     return SpecificConfigListItem(configDoc,entityId);
                   }).toList()));
   //.toList()));

@@ -55,10 +55,6 @@ class EntitiesList extends ConsumerWidget {
       .watch(filteredColSP(QueryParams(
           path: 'entity',
           orderBy: ref.watch(activeSort) ?? 'id',
-          distinct: (a, b) {
-            return true;
-            // a.size = b.size;
-          },
           queries: [
             QueryParam(
                 'author',

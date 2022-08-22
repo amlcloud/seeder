@@ -6,7 +6,6 @@ import 'package:seeder/batch/batch_transactions.dart';
 import 'package:seeder/batch/entities_selector.dart';
 import 'package:seeder/controls/doc_field_text_edit.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
-import 'package:seeder/controls/group.dart';
 
 final activeEntity =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
