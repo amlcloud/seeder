@@ -7,7 +7,9 @@ class DocFieldSlider extends ConsumerStatefulWidget {
   final DocumentReference docRef;
   final String field;
   final double maxValue;
-  const DocFieldSlider(this.docRef, this.field, this.maxValue, {Key? key})
+  final bool isEditable;
+  const DocFieldSlider(this.docRef, this.field, this.maxValue, this.isEditable,
+      {Key? key})
       : super(key: key);
   @override
   DocFieldSliderState createState() => DocFieldSliderState();
@@ -21,23 +23,26 @@ class DocFieldSliderState extends ConsumerState<DocFieldSlider> {
         loading: () => Container(),
         error: (e, s) => Container(),
         data: (Docfield) {
-          return 
-              Slider(
-                value: currentSliderValue,
-                max: widget.maxValue,
-                divisions: widget.maxValue.round(),
-                label: currentSliderValue.round().toString(),
-                onChanged: (double values) {
-                  setState(() {
-                    currentSliderValue = values;
-                  });
-                },
-                onChangeEnd: (double endValues) {
-                  widget.docRef.set({
-                    widget.field: endValues.toInt(),
-                  }, SetOptions(merge: true));
-                },
-              );
+          return Slider(
+            value: currentSliderValue,
+            max: widget.maxValue,
+            divisions: widget.maxValue.round(),
+            label: currentSliderValue.round().toString(),
+            onChanged: widget.isEditable
+                ? (double values) {
+                    setState(() {
+                      currentSliderValue = values;
+                    });
+                  }
+                : null,
+            onChangeEnd: widget.isEditable
+                ? (double endValues) {
+                    widget.docRef.set({
+                      widget.field: endValues.toInt(),
+                    }, SetOptions(merge: true));
+                  }
+                : null,
+          );
         });
   }
 }

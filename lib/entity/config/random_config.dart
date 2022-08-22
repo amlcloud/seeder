@@ -28,7 +28,7 @@ class RandomConfig extends ConsumerWidget {
                     Text('available periodic templates'),
                     Expanded(
                       child: SingleChildScrollView(
-                          child: ConfigList(entityId, "randomConfig")),
+                          child: ConfigList(entityId, "randomConfig",entityDoc.data()!["author"]==currentAuthor)),
                     ),
                     Divider(),
                     Card(

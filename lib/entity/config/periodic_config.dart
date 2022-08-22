@@ -28,7 +28,7 @@ class PeriodicConfig extends ConsumerWidget {
                     Text('available periodic templates'),
                     Expanded(
                       child: SingleChildScrollView(
-                          child: ConfigList(entityId, "periodicConfig")),
+                          child: ConfigList(entityId, "periodicConfig",entityDoc.data()!["author"]==currentAuthor)),
                     ),
                     Divider(),
                     Card(

@@ -6,9 +6,12 @@ import 'package:seeder/providers/firestore.dart';
 class ConfigList extends ConsumerWidget {
   final String entityId;
   final String configType;
-  const ConfigList(this.entityId, this.configType);
+  final bool isEditable;
+  const ConfigList(this.entityId, this.configType, this.isEditable);
   @override
-  Widget build(BuildContext context, WidgetRef ref) => ListView(
+  Widget build(BuildContext context, WidgetRef ref){
+   
+    return ListView(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       children: ref.watch(colSP(configType)).when(
@@ -24,6 +27,9 @@ class ConfigList extends ConsumerWidget {
                           '${configType}/${config.id}',
                           entityId,
                           configType,
-                          selectedEntityDoc.exists ? true : false)))
+                          selectedEntityDoc.exists ? true : false,
+                          isEditable
+                          )))
               .toList()));
+}
 }
