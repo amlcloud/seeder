@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/controls/assistant.dart';
 import 'package:seeder/controls/group.dart';
 import 'package:seeder/controls/scrollable_table.dart';
-import 'package:seeder/field/test_field.dart';
 import 'package:seeder/theme.dart';
 
 import 'firebase_options.dart';
@@ -17,7 +16,7 @@ import 'firebase_options.dart';
 /// Run it by clicking on the Run.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  String testId = 'DcyMKCGiQ1ENnWaq7VVU';
+  String testId = 'HNqcMSGJbMbddGGMHhvC';
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -29,7 +28,7 @@ void main() async {
           theme: lightTheme,
           darkTheme: darkTheme,
 
-          ///home: Scaffold(body: Group(child: ScrollableTable()))
+          //EntityConfig('DcyMKCGiQ1ENnWaq7VVU')
 
           //EntityConfig('DcyMKCGiQ1ENnWaq7VVU')
 
