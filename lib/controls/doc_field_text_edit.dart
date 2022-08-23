@@ -23,7 +23,7 @@ class DocFieldTextEdit extends ConsumerStatefulWidget {
 
 class DocFieldTextEditState extends ConsumerState<DocFieldTextEdit> {
   Timer? descSaveTimer;
-  final dbInstance = FirebaseFirestore.instance;
+
   @override
   void initState() {
     super.initState();
