@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/dialogs/add_periodic_config.dart';
+import 'package:seeder/dialogs/add_config_field.dart';
 import 'package:seeder/entity/config/config_list.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -42,7 +42,8 @@ class PeriodicConfig extends ConsumerWidget {
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return AddPeriodicConfig();
+                                    return AddConfigField("periodicConfig", entityId);
+                            ;
                                   });
                           }:null,
                         )

@@ -40,7 +40,6 @@ class DocFieldRangeSliderState extends ConsumerState<DocFieldRangeSlider> {
       currentRangeValues = setrange;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return ref.watch(docSP(widget.docRef.path)).when(
