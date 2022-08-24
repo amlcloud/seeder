@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/main.dart';
+import 'package:seeder/setting/setting_page.dart';
 import 'package:seeder/state/theme_state_notifier.dart';
 
 class MyAppBar {
@@ -48,6 +49,7 @@ class MyAppBar {
         ///
         ///https://firebase.google.com/docs/auth/flutter/manage-users
         ///
+        SettingPageIconButton(),
         ThemeIconButton(),
         Icon(Icons.person),
         IconButton(
@@ -75,5 +77,18 @@ class ThemeIconButton extends ConsumerWidget {
         icon: Icon(isDarkState == true
             ? Icons.nightlight
             : Icons.nightlight_outlined));
+  }
+}
+
+class SettingPageIconButton extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return IconButton(
+        onPressed: () => Navigator.push(context, MaterialPageRoute(
+              builder: (context) {
+                return SettingPage();
+              },
+            )),
+        icon: Icon(Icons.settings));
   }
 }

@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/controls/group.dart';
 import 'package:seeder/controls/scrollable_table.dart';
+import 'package:seeder/setting/setting_page.dart';
 import 'package:seeder/theme.dart';
 
+import 'app_bar.dart';
 import 'firebase_options.dart';
 
 /// This function is for testing individual Widgets
@@ -26,7 +28,7 @@ void main() async {
           themeMode: ThemeMode.dark,
           theme: lightTheme,
           darkTheme: darkTheme,
-          home: Scaffold(body: Group(child: ScrollableTable())))));
+          home: Scaffold(body: Group(child: SettingPageIconButton())))));
 
   //EntityConfig('DcyMKCGiQ1ENnWaq7VVU')
 
