@@ -16,8 +16,8 @@ class FeedList extends ConsumerWidget {
               ? Container(
                   margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
                   child: ListTile(
-                    tileColor: Color.fromARGB(255, 44, 44, 44),
-                    focusColor: Color.fromARGB(255, 133, 116, 116),
+                    tileColor: Theme.of(context).colorScheme.onSecondary,
+                    focusColor: Theme.of(context).colorScheme.secondary,
                     title: Center(
                       child: Text('No data found'),
                     ),

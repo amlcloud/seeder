@@ -33,9 +33,8 @@ class FeedInfo extends ConsumerWidget {
                                 return Container();
                               } else {
                                 return ListTile(
-                                    tileColor: Color.fromARGB(255, 44, 44, 44),
-                                    focusColor:
-                                        Color.fromARGB(255, 133, 116, 116),
+                                    tileColor: Theme.of(context).colorScheme.onSecondary,
+                                    focusColor:Theme.of(context).colorScheme.secondary,
                                     title: Text(
                                         entryData.key.toString().toUpperCase()),
                                     subtitle: entryData.key == 'time Created'
