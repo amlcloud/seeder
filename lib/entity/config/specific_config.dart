@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/dialogs/add_config_field.dart';
 import 'package:seeder/entity/config/specific_config_list.dart';
+import 'package:seeder/providers/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SpecificConfig extends ConsumerWidget {
   final String entityId;
-  const SpecificConfig(this.entityId);
+  final String currentAuthor = FirebaseAuth.instance.currentUser!.uid;
+  SpecificConfig(this.entityId);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
