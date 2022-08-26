@@ -6,10 +6,7 @@ import 'package:seeder/setting/setting_page.dart';
 import 'package:seeder/state/theme_state_notifier.dart';
 
 class MyAppBar {
-  static final List<String> _tabs = [
-    'entities',
-    'batches',
-  ];
+  static final List<String> _tabs = ['entities', 'batches', 'feeds'];
 
   static PreferredSizeWidget getBar(BuildContext context, WidgetRef ref) {
     return AppBar(
@@ -17,7 +14,7 @@ class MyAppBar {
       title: Align(
           alignment: Alignment.centerLeft,
           child: SizedBox(
-              width: 300,
+              width: 500,
               child: TabBar(
                 tabs: _tabs
                     .map((t) => Tab(

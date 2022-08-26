@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/batch/batch_page.dart';
 import 'package:seeder/entity/entities_page.dart';
+import 'package:seeder/feed/feed_page.dart';
 import 'package:seeder/login_page.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:seeder/state/theme_state_notifier.dart';
@@ -83,7 +84,7 @@ class TheAppState extends ConsumerState<TheApp> {
               ? LoginPage()
               : DefaultTabController(
                   initialIndex: 0,
-                  length: 2,
+                  length: 3,
                   child: Navigator(
                     onGenerateRoute: (RouteSettings settings) {
                       // print('onGenerateRoute: ${settings}');
@@ -93,9 +94,9 @@ class TheAppState extends ConsumerState<TheApp> {
                       } else if (settings.name == 'batches') {
                         return PageRouteBuilder(
                             pageBuilder: (_, __, ___) => BatchesPage());
-                      } else if (settings.name == 'fields') {
+                      } else if (settings.name == 'feeds') {
                         return PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => BatchesPage());
+                            pageBuilder: (_, __, ___) => FeedsPage());
                       } else {
                         throw 'no page to show';
                       }
