@@ -45,6 +45,12 @@ generate(DateTimeRange selectedDateRange, String entityId) async {
       .collection('randomConfig')
       .get();
 
+  var specificList = await FirebaseFirestore.instance
+      .collection('entity')
+      .doc(entityId)
+      .collection('specificConfig')
+      .get();
+
   List<Map<String, dynamic>> randWeekList = [];
   List<Map<String, dynamic>> randMonthList = [];
   List<Map<String, dynamic>> randQuaterList = [];
@@ -124,7 +130,6 @@ generate(DateTimeRange selectedDateRange, String entityId) async {
 generateSeparatePeriodicList(QuerySnapshot<Map<String, dynamic>> periodicList,
     String period, int dayCount) {
   List<Map<String, dynamic>> tempPeriodicList = [];
-  var random = math.Random();
   periodicList.docs
       .where((weekEl) => weekEl['period'] == period)
       .forEach((element) {
@@ -133,12 +138,14 @@ generateSeparatePeriodicList(QuerySnapshot<Map<String, dynamic>> periodicList,
     //temp[period.toLowerCase()] = random.nextInt(dayCount);
     tempPeriodicList.add(temp);
   });
+  print('randPeriodicList: ${tempPeriodicList}');
   return tempPeriodicList;
 }
 
 /// generate Separate List According to the period in randomList
 generateSeparateRandomList(QuerySnapshot<Map<String, dynamic>> randomList,
     String period, int dayCount) {
+  print("hello world");
   List<Map<String, dynamic>> randPeriodicList = [];
   var random = math.Random();
   randomList.docs
@@ -157,6 +164,7 @@ generateSeparateRandomList(QuerySnapshot<Map<String, dynamic>> randomList,
     temp[period.toLowerCase()] = periodArray;
     randPeriodicList.add(temp);
   });
+  print('randPeriodicList: ${randPeriodicList}');
   return randPeriodicList;
 }
 
@@ -229,7 +237,7 @@ addTrnsactionToServer(
   var batch = FirebaseFirestore.instance.batch();
   var deleteBatch = FirebaseFirestore.instance.batch();
 
-  final periodicData = await generate(selectedDateRange, entityId);
+  final finalTranData = await generate(selectedDateRange, entityId);
   final QuerySnapshot trnCol = await FirebaseFirestore.instance
       .collection('entity/${entityId}/transaction')
       .get();
@@ -249,13 +257,13 @@ addTrnsactionToServer(
 
   /// Adding the transaction to the firestore database
   int setCount = 0;
-  for (var i = 0; i < periodicData.length; i++) {
+  for (var i = 0; i < finalTranData.length; i++) {
     //print("reference test ${periodicData[i]['day']!}");
     batch.set(
         FirebaseFirestore.instance
             .collection('entity/${entityId}/transaction')
-            .doc((periodicData[i]['timestamp']!).toString()),
-        periodicData[i]);
+            .doc((finalTranData[i]['timestamp']!).toString()),
+        finalTranData[i]);
     setCount++;
     if (setCount > 450) {
       await batch.commit();
