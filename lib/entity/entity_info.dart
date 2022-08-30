@@ -7,7 +7,7 @@ import '../providers/firestore.dart';
 
 class EntityInfo extends ConsumerWidget {
   final String entityId;
-  final String currentAuthor =  FirebaseAuth.instance.currentUser!.uid;
+  final String currentAuthor = FirebaseAuth.instance.currentUser!.uid;
   EntityInfo(this.entityId);
   @override
   Widget build(BuildContext context, WidgetRef ref) =>
@@ -32,14 +32,35 @@ class EntityInfo extends ConsumerWidget {
                           'name',
                           decoration: InputDecoration(hintText: "Name"),
                           isEnabled: entityDoc.exists &&
-                              entityDoc.data()!['author'] ==currentAuthor)),
+                              entityDoc.data()!['author'] == currentAuthor)),
                   Flexible(
                       child: DocFieldTextEdit(
                           FirebaseFirestore.instance.doc('entity/${entityId}'),
                           'desc',
                           decoration: InputDecoration(hintText: "Description"),
                           isEnabled: entityDoc.exists &&
-                              entityDoc.data()!['author'] ==currentAuthor))
+                              entityDoc.data()!['author'] == currentAuthor)),
+                  Flexible(
+                      child: DocFieldTextEdit(
+                          FirebaseFirestore.instance.doc('entity/${entityId}'),
+                          'bank',
+                          decoration: InputDecoration(hintText: "Bank"),
+                          isEnabled: entityDoc.exists &&
+                              entityDoc.data()!['author'] == currentAuthor)),
+                  Flexible(
+                      child: DocFieldTextEdit(
+                          FirebaseFirestore.instance.doc('entity/${entityId}'),
+                          'bsb',
+                          decoration: InputDecoration(hintText: "BSB"),
+                          isEnabled: entityDoc.exists &&
+                              entityDoc.data()!['author'] == currentAuthor)),
+                  Flexible(
+                      child: DocFieldTextEdit(
+                          FirebaseFirestore.instance.doc('entity/${entityId}'),
+                          'account',
+                          decoration: InputDecoration(hintText: "Account No"),
+                          isEnabled: entityDoc.exists &&
+                              entityDoc.data()!['author'] == currentAuthor))
                 ],
               ));
 }

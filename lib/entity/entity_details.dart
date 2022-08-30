@@ -30,9 +30,9 @@ class EntityDetails extends ConsumerWidget {
             EntityInfo(entityId),
             Expanded(
                 child: Row(children: [
-              Flexible(flex: 2, child: EntityConfig(entityId)),
+              Flexible(flex: 1, child: EntityConfig(entityId)),
               Flexible(
-                  flex: 2,
+                  flex: 3,
                   child: ref.watch(isTranLoading)
                       ? Center(
                           child: Container(
