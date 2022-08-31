@@ -286,7 +286,8 @@ addTrnsactionToServer(
         key == "month" ||
         key == "frequency" ||
         key == "required" ||
-        key == "Quarter");
+        key == "week" ||
+        key == "quarter");
     commonTranData.add(elementList);
   });
 
