@@ -140,8 +140,7 @@ generateSeparatePeriodicList(QuerySnapshot<Map<String, dynamic>> periodicList,
       .where((weekEl) => weekEl['period'] == period)
       .forEach((element) {
     var temp = element.data();
-    //temp['benName'] = element.id.toString();
-    //temp[period.toLowerCase()] = random.nextInt(dayCount);
+
     tempPeriodicList.add(temp);
   });
   //print('PeriodicList: ${tempPeriodicList}');
@@ -195,17 +194,7 @@ addPeriodicDataToList(
     double amount = configData['minAmount'] +
         random.nextInt(configData['maxAmount'] - configData['minAmount']);
     tempMap['amount'] = amount;
-    // double amount = configData['minAmount'] +
-    //     random.nextInt(configData['maxAmount'] - configData['minAmount']);
-    // listData.add({
-    //   'amount': amount,
-    //   'ben_name': configData['credit'] ? "Beneficiary" : configData['benName'],
-    //   'reference': "Example Transaction",
-    //   'rem_name': configData['credit'] ? configData['benName'] : "Beneficiary",
-    //   'Type': configData['credit'] ? "Credit" : "Debit",
-    //   'timestamp': configDate,
-    //   'day': "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}",
-    // });
+  
     listData.add(tempMap);
   });
   return listData;
@@ -233,19 +222,7 @@ addRandomDataToList(List<Map<String, dynamic>> configList, String period,
       double amount = configData['minAmount'] +
           random.nextInt(configData['maxAmount'] - configData['minAmount']);
       tempMap['amount'] = amount;
-      // double amount = configData['minAmount'] +
-      //     random.nextInt(configData['maxAmount'] - configData['minAmount']);
-      // listData.add({
-      //   'amount': amount,
-      //   'ben_name':
-      //       configData['credit'] ? "Beneficiary" : configData['benName'],
-      //   'reference': "Example Transaction",
-      //   'rem_name':
-      //       configData['credit'] ? configData['benName'] : "Beneficiary",
-      //   'Type': configData['credit'] ? "Credit" : "Debit",
-      //   'timestamp': configDate,
-      //   'day': "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}",
-      // });
+  
       listData.add(tempMap);
     });
   });
@@ -258,7 +235,6 @@ addSpecificDataToList(
   List<Map<String, dynamic>> listData = [];
   var random = math.Random();
   configList.forEach((element) {
-    //print('sample: ${element.data()['timestamp'].toDate() == dateIterator.dateTime}');
   });
   configList
       .where((ele) =>
@@ -283,15 +259,6 @@ addSpecificDataToList(
     tempMap.addAll(temp);
     tempMap.remove('isAddedToTran');
 
-    // listData.add({
-    //   'amount': amount,
-    //   'ben_name': configData['credit'] ? "Beneficiary" : configData['benName'],
-    //   'reference': "Example Transaction",
-    //   'rem_name': configData['credit'] ? configData['benName'] : "Beneficiary",
-    //   'Type': configData['credit'] ? "Credit" : "Debit",
-    //   'timestamp': configDate,
-    //   'day': "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}",
-    // });
     listData.add(tempMap);
   });
   //print("specific data: ${listData}");
