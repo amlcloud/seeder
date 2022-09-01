@@ -6,7 +6,8 @@ import 'package:jiffy/jiffy.dart';
 import 'package:seeder/common.dart';
 import 'package:seeder/entity/entity_details.dart';
 
-generate(DateTimeRange selectedDateRange, String entityId) async {
+Future<List<Map<String, dynamic>>> generate(
+    DateTimeRange selectedDateRange, String entityId) async {
   List<Map<String, dynamic>> dataList = [];
 
   Jiffy startDate = Jiffy(selectedDateRange.start);
@@ -45,6 +46,12 @@ generate(DateTimeRange selectedDateRange, String entityId) async {
       .collection('randomConfig')
       .get();
 
+  var specificList = await FirebaseFirestore.instance
+      .collection('entity')
+      .doc(entityId)
+      .collection('specificConfig')
+      .get();
+
   List<Map<String, dynamic>> randWeekList = [];
   List<Map<String, dynamic>> randMonthList = [];
   List<Map<String, dynamic>> randQuaterList = [];
@@ -80,6 +87,10 @@ generate(DateTimeRange selectedDateRange, String entityId) async {
     List<Map<String, dynamic>> randomQuaterData = await addRandomDataToList(
         randQuaterList, "quarter", dateIterator, quaterCounter);
 
+    /// Add specific data to the list
+    List<Map<String, dynamic>> specificData =
+        await addSpecificDataToList(specificList.docs, dateIterator);
+
     /// Merging the list together
     dataList.addAll(periodicWeekData);
     dataList.addAll(periodicMonthData);
@@ -87,6 +98,7 @@ generate(DateTimeRange selectedDateRange, String entityId) async {
     dataList.addAll(randomWeekData);
     dataList.addAll(randomMonthData);
     dataList.addAll(randomQuaterData);
+    dataList.addAll(specificData);
 
     /// sort the list by the time
     // dataList = dataList
@@ -124,15 +136,14 @@ generate(DateTimeRange selectedDateRange, String entityId) async {
 generateSeparatePeriodicList(QuerySnapshot<Map<String, dynamic>> periodicList,
     String period, int dayCount) {
   List<Map<String, dynamic>> tempPeriodicList = [];
-  var random = math.Random();
   periodicList.docs
       .where((weekEl) => weekEl['period'] == period)
       .forEach((element) {
     var temp = element.data();
-    temp['benName'] = element.id.toString();
-    //temp[period.toLowerCase()] = random.nextInt(dayCount);
+
     tempPeriodicList.add(temp);
   });
+  //print('PeriodicList: ${tempPeriodicList}');
   return tempPeriodicList;
 }
 
@@ -146,7 +157,7 @@ generateSeparateRandomList(QuerySnapshot<Map<String, dynamic>> randomList,
       .forEach((element) {
     List periodArray = [];
     var temp = element.data();
-    temp['benName'] = element.id.toString();
+    //temp['benName'] = element.id.toString();
 
     while (periodArray.length < element['frequency']) {
       int randomWeek = random.nextInt(dayCount) + 1;
@@ -157,6 +168,7 @@ generateSeparateRandomList(QuerySnapshot<Map<String, dynamic>> randomList,
     temp[period.toLowerCase()] = periodArray;
     randPeriodicList.add(temp);
   });
+  //print('randList: ${randPeriodicList}');
   return randPeriodicList;
 }
 
@@ -166,6 +178,7 @@ addPeriodicDataToList(
   var random = math.Random();
 
   configList.where((ele) => ele['day'] == Counter).forEach((configData) {
+    Map<String, dynamic> tempMap = {};
     DateTime configDate = DateTime(
         dateIterator.year,
         dateIterator.month,
@@ -174,18 +187,15 @@ addPeriodicDataToList(
         random.nextInt(60),
         random.nextInt(3600),
         random.nextInt(3600000));
-
+    tempMap['timestamp'] = configDate;
+    tempMap['dayTime'] =
+        "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}";
+    tempMap.addAll(configData);
     double amount = configData['minAmount'] +
         random.nextInt(configData['maxAmount'] - configData['minAmount']);
-    listData.add({
-      'amount': amount,
-      'ben_name': configData['credit'] ? "Beneficiary" : configData['benName'],
-      'reference': "Example Transaction",
-      'rem_name': configData['credit'] ? configData['benName'] : "Beneficiary",
-      'Type': configData['credit'] ? "Credit" : "Debit",
-      'timestamp': configDate,
-      'day': "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}",
-    });
+    tempMap['amount'] = amount;
+  
+    listData.add(tempMap);
   });
   return listData;
 }
@@ -196,6 +206,7 @@ addRandomDataToList(List<Map<String, dynamic>> configList, String period,
   var random = math.Random();
   configList.forEach((configData) {
     configData[period].where((date) => date == Counter).forEach((config) {
+      Map<String, dynamic> tempMap = {};
       DateTime configDate = DateTime(
           dateIterator.year,
           dateIterator.month,
@@ -204,21 +215,54 @@ addRandomDataToList(List<Map<String, dynamic>> configList, String period,
           random.nextInt(60),
           random.nextInt(3600),
           random.nextInt(3600000));
+      tempMap['timestamp'] = configDate;
+      tempMap['dayTime'] =
+          "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}";
+      tempMap.addAll(configData);
       double amount = configData['minAmount'] +
           random.nextInt(configData['maxAmount'] - configData['minAmount']);
-      listData.add({
-        'amount': amount,
-        'ben_name':
-            configData['credit'] ? "Beneficiary" : configData['benName'],
-        'reference': "Example Transaction",
-        'rem_name':
-            configData['credit'] ? configData['benName'] : "Beneficiary",
-        'Type': configData['credit'] ? "Credit" : "Debit",
-        'timestamp': configDate,
-        'day': "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}",
-      });
+      tempMap['amount'] = amount;
+  
+      listData.add(tempMap);
     });
   });
+  return listData;
+}
+
+addSpecificDataToList(
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> configList,
+    Jiffy dateIterator) {
+  List<Map<String, dynamic>> listData = [];
+  var random = math.Random();
+  configList.forEach((element) {
+  });
+  configList
+      .where((ele) =>
+          ele.data()['timestamp'].toDate() == dateIterator.dateTime &&
+          ele.data()['isAddedToTran'] == true)
+      .forEach((configData) {
+    Map<String, dynamic> tempMap = {};
+    DateTime configDate = DateTime(
+        dateIterator.year,
+        dateIterator.month,
+        dateIterator.date,
+        random.nextInt(24),
+        random.nextInt(60),
+        random.nextInt(3600),
+        random.nextInt(3600000));
+    tempMap['timestamp'] = configDate;
+    tempMap['period'] = 'specified';
+    tempMap['dayTime'] =
+        "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}";
+    var temp = configData.data();
+    temp.remove('timestamp');
+    tempMap.addAll(temp);
+    tempMap.remove('isAddedToTran');
+
+    listData.add(tempMap);
+  });
+  //print("specific data: ${listData}");
+
   return listData;
 }
 
@@ -229,10 +273,31 @@ addTrnsactionToServer(
   var batch = FirebaseFirestore.instance.batch();
   var deleteBatch = FirebaseFirestore.instance.batch();
 
-  final periodicData = await generate(selectedDateRange, entityId);
+  List<Map<String, dynamic>> tranData =
+      await generate(selectedDateRange, entityId);
+  //print("final data: ${tranData}");
+  List<Map<String, dynamic>> commonTranData = [];
+  tranData.forEach((elementList) {
+    elementList.removeWhere((key, value) =>
+        key == "author" ||
+        key == "day" ||
+        key == "minAmount" ||
+        key == "maxAmount" ||
+        key == "month" ||
+        key == "frequency" ||
+        key == "required" ||
+        key == "week" ||
+        key == "quarter");
+    commonTranData.add(elementList);
+  });
+
+  print("common elements: ${commonTranData}");
+  List<Map<String, dynamic>> finalTranData = calculateBalance(commonTranData);
+
   final QuerySnapshot trnCol = await FirebaseFirestore.instance
       .collection('entity/${entityId}/transaction')
       .get();
+  print("finall elements: ${finalTranData}");
 
   /// deleting the transaction from the firestore database
   int deleCount = 0;
@@ -249,13 +314,13 @@ addTrnsactionToServer(
 
   /// Adding the transaction to the firestore database
   int setCount = 0;
-  for (var i = 0; i < periodicData.length; i++) {
+  for (var i = 0; i < finalTranData.length; i++) {
     //print("reference test ${periodicData[i]['day']!}");
     batch.set(
         FirebaseFirestore.instance
             .collection('entity/${entityId}/transaction')
-            .doc((periodicData[i]['timestamp']!).toString()),
-        periodicData[i]);
+            .doc((finalTranData[i]['timestamp']!).toString()),
+        finalTranData[i]);
     setCount++;
     if (setCount > 450) {
       await batch.commit();
@@ -268,32 +333,42 @@ addTrnsactionToServer(
   ref.read(isTranLoading.notifier).value = false;
 }
 
-// monthList
-//     .where((dayele) => dayele['monthCounter'] == monthCounter)
-//     .forEach((weekData) {
-//   //print("I am hited by month");
-//   double tempBal = weekData['minAmount'] +
-//       random.nextInt(weekData['maxAmount'] - weekData['minAmount']);
-//   //print("random amount ${tempBal}");
+List<Map<String, dynamic>> calculateBalance(
+    List<Map<String, dynamic>> listMapData) {
+  List<Map<String, dynamic>> finalTranData = [];
+  bool addonce = true;
+  List<Map<String, dynamic>> sortedData = listMapData
+    ..sort(((a, b) {
+      print('sample data: ${a['timestamp']} ${b['timestamp']}');
+      //return a['timestamp'].compareTo(b['timestamp']);
+      return a['timestamp'].compareTo(b['timestamp']);
+    }));
+  double previousbalance = 0.00;
+  sortedData.forEach((tranData) {
+    Map<String, dynamic> tempMap = {};
+    double ammount = double.parse(tranData['amount'].toString());
+    if (addonce) {
+      if (tranData['credit'] == true) {
+        tempMap['balance'] = ammount;
+        previousbalance = ammount;
+        addonce = false;
+      } else {
+        tempMap['balance'] = -ammount;
+        previousbalance = -ammount;
+        addonce = false;
+      }
+    } else {
+      if (tranData['credit'] == true) {
+        tempMap['balance'] = previousbalance + ammount;
+        previousbalance = previousbalance + ammount;
+      } else {
+        tempMap['balance'] = previousbalance - ammount;
+        previousbalance = previousbalance - ammount;
+      }
+    }
+    tempMap.addAll(tranData);
+    finalTranData.add(tempMap);
+  });
 
-//   if (addonce) {
-//     AddTrnsaction(weekData['benName'], dateIterator, tempBal, tempBal,
-//         weekData['credit'] ? "Credit" : "Debit");
-//     latestbalance = tempBal;
-
-//     addonce = false;
-//   } else {
-//     var balance = weekData['credit']!
-//         ? latestbalance + tempBal
-//         : latestbalance - tempBal;
-//     balance = double.parse(balance.toString());
-//     //print("is empte ${latestbalance}");
-
-//     AddTrnsaction(weekData['benName'], dateIterator, balance, tempBal,
-//         weekData['credit'] ? "Credit" : "Debit");
-//     latestbalance = balance.toDouble();
-//   }
-
-//   //print("I am printing ${weekData} counter:${weekCounter}");
-// });
-// print("random data ${quaterCounter}");
+  return finalTranData;
+}

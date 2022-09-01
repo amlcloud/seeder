@@ -7,6 +7,8 @@ import 'package:seeder/controls/group.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../dialogs/add_config_field.dart';
+
 class ConfigListItem extends ConsumerWidget {
   final String currentAuthor = FirebaseAuth.instance.currentUser!.uid;
   final String path;
@@ -15,7 +17,8 @@ class ConfigListItem extends ConsumerWidget {
   final bool isAdded;
   final bool isEditable;
 
-  ConfigListItem(this.path, this.entityId, this.configType, this.isAdded,this.isEditable);
+  ConfigListItem(
+      this.path, this.entityId, this.configType, this.isAdded, this.isEditable);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(docSP(path)).when(
@@ -51,7 +54,7 @@ class ConfigListItem extends ConsumerWidget {
                                             double.parse(configDoc
                                                 .data()!['maxAmount']!
                                                 .toString()),
-                                                isEditable
+                                            isEditable
                                             //configDoc.data()!,
                                             ),
                                         configType == 'randomConfig'
@@ -76,7 +79,7 @@ class ConfigListItem extends ConsumerWidget {
                                                                   'Month'
                                                               ? 28
                                                               : 84,
-                                                              isEditable)
+                                                      isEditable)
                                                 ],
                                               )
                                             : Container()
@@ -95,7 +98,7 @@ class ConfigListItem extends ConsumerWidget {
               ),
               Switch(
                   value: isAdded,
-                  onChanged:isEditable
+                  onChanged: isEditable
                       ? (value) {
                           isAdded
                               ? FirebaseFirestore.instance.runTransaction(
@@ -114,13 +117,26 @@ class ConfigListItem extends ConsumerWidget {
   }
 
   addEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {
-    var data = (await FirebaseFirestore.instance.doc(path).get()).data();
-    //print("hit${data}");
+    var listData = (await FirebaseFirestore.instance.doc(path).get()).data();
+
+    // if (listData!['required'] == 'both') {
+    //   listData.addAll(await getSelfAccountDetails(entityId, "Beneficiary"));
+    //   listData.addAll(await getSelfAccountDetails(entityId, "Remitter"));
+    // } else if (listData['required'] == 'rem') {
+    //   listData.addAll(await getSelfAccountDetails(entityId, "Remitter"));
+    // } else {
+    //   listData.addAll(await getSelfAccountDetails(entityId, "Beneficiary"));
+    // }
+    listData!
+        .addAll(await addSelfAccountDetails(entityId, listData['required']));
+
+    ///(await FirebaseFirestore.instance.doc(path).get()).data()!
+    print("hit: ${listData}");
     FirebaseFirestore.instance
         .collection('entity')
         .doc(entityId)
         .collection(configType)
         .doc(d.id)
-        .set((await FirebaseFirestore.instance.doc(path).get()).data()!);
+        .set(listData);
   }
 }

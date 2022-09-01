@@ -352,9 +352,11 @@ class AddConfigField extends ConsumerWidget {
                       ref.read(categorySelector) != null) {
                 //print(getListData(context, ref));
 
-                await getListData(context, ref, configType).then((resData) {
-                  print(resData);
+                await getListData(context, ref, configType)
+                    .then((resData) async {
                   if (configType == 'specificConfig') {
+                    resData.addAll(await addSelfAccountDetails(
+                        entityId, resData['required']));
                     FirebaseFirestore.instance
                         .collection('entity')
                         .doc(entityId)
@@ -362,6 +364,8 @@ class AddConfigField extends ConsumerWidget {
                         .doc(title_inp.text)
                         .set(resData)
                         .then((res) {
+                      print(resData);
+
                       print("Done");
                       Navigator.of(context).pop();
                     });
@@ -410,16 +414,19 @@ class AddConfigField extends ConsumerWidget {
     if (ref.watch(categorySelector) == 'linked account transfer' ||
         ref.watch(categorySelector) == 'cash withdrawal' ||
         ref.watch(categorySelector) == 'cash deposit') {
-      listData.addAll(await getSelfAccountDetails(entityId, "Beneficiary"));
-      listData.addAll(await getSelfAccountDetails(entityId, "Remitter"));
+      // listData.addAll(await getSelfAccountDetails(entityId, "Beneficiary"));
+      // listData.addAll(await getSelfAccountDetails(entityId, "Remitter"));
+      listData['required'] = "both";
     } else if (ref.watch(creditDebit)) {
-      listData.addAll(await getSelfAccountDetails(entityId, "Beneficiary"));
+      // listData.addAll(await getSelfAccountDetails(entityId, "Beneficiary"));
+      listData['required'] = "ben";
       listData["Remitter_Name"] = remName_inp.text;
       listData["Remitter_Account"] = int.parse(remAccount_inp.text);
       listData["Remitter_Bank"] = remBank_inp.text;
       listData["Remitter_BSB"] = int.parse(remBSB_inp.text);
     } else {
-      listData.addAll(await getSelfAccountDetails(entityId, "Remitter"));
+      //listData.addAll(await getSelfAccountDetails(entityId, "Remitter"));
+      listData['required'] = "rem";
       listData["Beneficiary_Name"] = benName_inp.text;
       listData["Beneficiary_Account"] = int.parse(benAccount_inp.text);
       listData["Beneficiary_Bank"] = benBank_inp.text;
@@ -447,4 +454,18 @@ Future<Map<String, dynamic>> getSelfAccountDetails(
     selBenData["Remitter_BSB"] = data.data()!['bsb'];
   }
   return selBenData;
+}
+
+Future<Map<String, dynamic>> addSelfAccountDetails(
+    String entityId, String requiredData) async {
+  Map<String, dynamic> addSelBenData = {};
+  if (requiredData == 'both') {
+    addSelBenData.addAll(await getSelfAccountDetails(entityId, "Beneficiary"));
+    addSelBenData.addAll(await getSelfAccountDetails(entityId, "Remitter"));
+  } else if (requiredData == 'rem') {
+    addSelBenData.addAll(await getSelfAccountDetails(entityId, "Remitter"));
+  } else {
+    addSelBenData.addAll(await getSelfAccountDetails(entityId, "Beneficiary"));
+  }
+  return addSelBenData;
 }
