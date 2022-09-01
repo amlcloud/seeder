@@ -11,6 +11,13 @@ class MyAppBar {
   static PreferredSizeWidget getBar(BuildContext context, WidgetRef ref) {
     return AppBar(
       automaticallyImplyLeading: false,
+      leadingWidth: 100,
+      leading: Padding(
+        padding: EdgeInsets.all(10),
+        child: Image.asset(
+          "assets/amlcloudlogodark_removebg_crop.png",
+        ),
+      ),
       title: Align(
           alignment: Alignment.centerLeft,
           child: SizedBox(
