@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class Transaction extends ConsumerWidget {
   final DocumentSnapshot<Map<String, dynamic>> trnDoc;
 
-  Transaction(this.trnDoc);
+  const Transaction(this.trnDoc);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => !trnDoc.exists

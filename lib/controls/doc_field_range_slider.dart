@@ -9,6 +9,7 @@ class DocFieldRangeSlider extends ConsumerStatefulWidget {
   final String maxfield;
   final double maxValue;
   final double minValue;
+  final bool isEditable;
   //final Map mapData;
   const DocFieldRangeSlider(
       this.docRef,
@@ -17,6 +18,7 @@ class DocFieldRangeSlider extends ConsumerStatefulWidget {
       //this.mapData,
       this.minValue,
       this.maxValue,
+      this.isEditable,
       {Key? key})
       : super(key: key);
 
@@ -38,7 +40,6 @@ class DocFieldRangeSliderState extends ConsumerState<DocFieldRangeSlider> {
       currentRangeValues = setrange;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return ref.watch(docSP(widget.docRef.path)).when(
@@ -54,17 +55,17 @@ class DocFieldRangeSliderState extends ConsumerState<DocFieldRangeSlider> {
                     "\$${currentRangeValues.end.round().toString()}",
                   ),
                   divisions: widget.maxValue.round(),
-                  onChanged: (RangeValues values) {
+                  onChanged: widget.isEditable? (RangeValues values) {
                     setState(() {
                       currentRangeValues = values;
                     });
-                  },
-                  onChangeEnd: (RangeValues endValues) {
+                  }:null,
+                  onChangeEnd:widget.isEditable? (RangeValues endValues) {
                     widget.docRef.set({
                       widget.minfield: endValues.start.toInt(),
                       widget.maxfield: endValues.end.toInt(),
                     }, SetOptions(merge: true));
-                  },
+                  }:null,
             ));
   }
 }

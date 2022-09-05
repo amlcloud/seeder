@@ -49,12 +49,15 @@ class TransactionList extends ConsumerWidget {
     var selectedColumnList = columnSelectedMap.keys
         .where((element) => columnSelectedMap[element] == true);
     // print("data rows selectedColumnList" + selectedColumnList.toString());
-    return docs.map((trnDoc) {
+    return (docs
+          ..sort(((a, b) =>
+              a.data()['dayTime'].compareTo(b.data()['dayTime']))))
+        .map((trnDoc) {
       var dataList = trnDoc.data().entries.toList();
       var selectedDataList = dataList.where((element) {
         return selectedColumnList.contains(element.key);
       });
-      debugPrint(selectedDataList.toString());
+      //debugPrint(selectedDataList.toString());
       if (selectedDataList.isEmpty) {
         return DataRow(cells: [DataCell(Text('no data rows'))]);
       } else {
@@ -70,13 +73,12 @@ class TransactionList extends ConsumerWidget {
             return DataCell(Text(d.toString()));
           }
           if (cell.key == "Type") {
-                return DataCell(Text(
-                  cell.value.toString(),
-                  style: TextStyle(
-                      color:
-                          cell.value == "Credit" ? Colors.green : Colors.red),
-                ));
-              }
+            return DataCell(Text(
+              cell.value.toString(),
+              style: TextStyle(
+                  color: cell.value == "Credit" ? Colors.green : Colors.red),
+            ));
+          }
           return DataCell(Text(cell.value.toString()));
         }).toList());
       }
@@ -95,7 +97,7 @@ class TransactionList extends ConsumerWidget {
     var dataColumnNameList = transactionDataMap.keys
         .toList()
         .where((element) => selectedColumnList.contains(element));
-    dataColumnNameList.toList().sort();
+    dataColumnNameList = dataColumnNameList.toList()..sort();
     // print(dataEntryList);
     List<DataColumn> dataColumnList = [];
     dataColumnNameList.forEach((columnName) {
@@ -107,7 +109,7 @@ class TransactionList extends ConsumerWidget {
       );
       dataColumnList.add(dataColumn);
     });
-    debugPrint(dataColumnList.toString());
+    //debugPrint(dataColumnList.toString());
     return dataColumnList.isEmpty
         ? [DataColumn(label: Text('no column'))]
         : dataColumnList;

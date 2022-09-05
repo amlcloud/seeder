@@ -110,64 +110,64 @@ class BatchExport extends ConsumerWidget {
       //return Container();
     }).toList();
   }
-
-  Future<List<List>> generateListData(WidgetRef ref) async {
-    final List<List> exportList = [];
-    List temp = [];
-    bool headerOnce = true;
-    var colRef = await FirebaseFirestore.instance
-        .collection('batch')
-        .doc(ref.watch(activeBatch)!)
-        .collection('SelectedEntity')
+}
+Future<List<List>> generateListData(WidgetRef ref) async {
+  final List<List> exportList = [];
+  List temp = [];
+  bool headerOnce = true;
+  var colRef = await FirebaseFirestore.instance
+      .collection('batch')
+      .doc(ref.watch(activeBatch)!)
+      .collection('SelectedEntity')
+      .get();
+  for (var element in colRef.docs) {
+    var dataRef = await FirebaseFirestore.instance
+        .collection("${element.data()['ref'].path}/transaction")
         .get();
-    for (var element in colRef.docs) {
-      var dataRef = await FirebaseFirestore.instance
-          .collection("${element.data()['ref'].path}/transaction")
-          .get();
-      dataRef.docs.forEach((tranData) {
-        // print("I am working${tranData.data()}");
-        if (headerOnce) {
-          (tranData.data().entries.toList()
-                ..sort((a, b) => a.key.compareTo(b.key)))
-              .forEach((element) {
-            temp.add(element.key);
-          });
-          exportList.add(temp);
-          temp = [];
-          headerOnce = false;
-        }
+    dataRef.docs.forEach((tranData) {
+      // print("I am working${tranData.data()}");
+      if (headerOnce) {
         (tranData.data().entries.toList()
               ..sort((a, b) => a.key.compareTo(b.key)))
             .forEach((element) {
-          temp.add(element.value);
+          temp.add(element.key);
         });
         exportList.add(temp);
         temp = [];
+        headerOnce = false;
+      }
+      (tranData.data().entries.toList()..sort((a, b) => a.key.compareTo(b.key)))
+          .forEach((element) {
+        temp.add(element.value);
       });
-    }
-    return exportList;
+      exportList.add(temp);
+      temp = [];
+    });
   }
-
-  exportCSV(WidgetRef ref) async {
-    var retrieveData = await generateListData(ref);
-    String csv = ListToCsvConverter().convert(retrieveData).toString();
-    Clipboard.setData(ClipboardData(text: csv));
-    Fluttertoast.showToast(msg: 'Copied to clipboard');
-  }
-
-  generateCSV(WidgetRef ref) async {
-    var retrieveData = await generateListData(ref);
-    String csv = ListToCsvConverter().convert(retrieveData).toString();
-    String timestamp = DateTime.now().toString();
-    final bytes = Utf8Encoder().convert(csv);
-    final blob = html.Blob([bytes]);
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    final anchor = html.document.createElement('a') as html.AnchorElement
-      ..href = url
-      ..style.display = 'none'
-      ..download = 'file_$timestamp.csv';
-    html.document.body!.children.add(anchor);
-    anchor.click();
-    html.Url.revokeObjectUrl(url);
-  }
+  return exportList;
 }
+
+exportCSV(WidgetRef ref) async {
+  var retrieveData = await generateListData(ref);
+  String csv = ListToCsvConverter().convert(retrieveData).toString();
+  Clipboard.setData(ClipboardData(text: csv));
+  Fluttertoast.showToast(msg: 'Copied to clipboard');
+}
+
+generateCSV(WidgetRef ref) async {
+  var retrieveData = await generateListData(ref);
+  String csv = ListToCsvConverter().convert(retrieveData).toString();
+  String timestamp = DateTime.now().toString();
+  final bytes = Utf8Encoder().convert(csv);
+  final blob = html.Blob([bytes]);
+  final url = html.Url.createObjectUrlFromBlob(blob);
+  final anchor = html.document.createElement('a') as html.AnchorElement
+    ..href = url
+    ..style.display = 'none'
+    ..download = 'file_$timestamp.csv';
+  html.document.body!.children.add(anchor);
+  anchor.click();
+  html.Url.revokeObjectUrl(url);
+}
+
+
