@@ -60,7 +60,7 @@ class MyAppBar {
         ///
         SettingPageIconButton(),
         ThemeIconButton(),
-        Icon(Icons.person),
+        //Icon(Icons.person),
         IconButton(
             tooltip: 'sign out',
             onPressed: () {
