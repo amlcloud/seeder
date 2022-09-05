@@ -28,27 +28,52 @@ class PeriodicConfig extends ConsumerWidget {
                     Text('available periodic templates'),
                     Expanded(
                       child: SingleChildScrollView(
-                          child: ConfigList(entityId, "periodicConfig",entityDoc.data()!["author"]==currentAuthor)),
+                          child: ConfigList(entityId, "periodicConfig",
+                              entityDoc.data()!["author"] == currentAuthor)),
                     ),
                     Divider(),
-                    Card(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text('Add templates '),
-                        IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed:entityDoc.data()!['author'] == currentAuthor? () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AddConfigField("periodicConfig", entityId);
-                            ;
-                                  });
-                          }:null,
-                        )
-                      ],
-                    ))
+                    // Card(
+                    //     child: Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: <Widget>[
+                    //     Text('Add templates '),
+                    //     IconButton(
+                    //       icon: Icon(Icons.add),
+                    //       onPressed:
+                    //           entityDoc.data()!['author'] == currentAuthor
+                    //               ? () {
+                    //                   showDialog(
+                    //                       context: context,
+                    //                       builder: (BuildContext context) {
+                    //                         return AddConfigField(
+                    //                             "periodicConfig", entityId);
+                    //                         ;
+                    //                       });
+                    //                 }
+                    //               : null,
+                    //     )
+                    //   ],
+                    // )),
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(400, 40),
+                        ),
+                        label: const Text('Add periodic config'),
+                        onPressed: entityDoc.data()!['author'] == currentAuthor
+                            ? () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AddConfigField(
+                                          "periodicConfig", entityId);
+                                    });
+                              }
+                            : null,
+                        icon: Icon(Icons.add),
+                      ),
+                    ),
                   ],
                 ))
               ])));
