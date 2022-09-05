@@ -48,10 +48,6 @@ class BatchList extends ConsumerWidget {
       .watch(filteredColSP(QueryParams(
           path: 'batch',
           orderBy: ref.watch(sortStateNotifierProvider) ?? 'id',
-          distinct: (a, b) {
-            return true;
-            // a.size = b.size;
-          },
           queries: [
             QueryParam(
                 'author',

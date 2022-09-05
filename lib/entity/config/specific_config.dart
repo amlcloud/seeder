@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/dialogs/add_specific_config.dart';
+import 'package:seeder/dialogs/add_config_field.dart';
 import 'package:seeder/entity/config/specific_config_list.dart';
+import 'package:seeder/providers/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SpecificConfig extends ConsumerWidget {
   final String entityId;
-  const SpecificConfig(this.entityId);
+  final String currentAuthor = FirebaseAuth.instance.currentUser!.uid;
+  SpecificConfig(this.entityId);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,27 +24,44 @@ class SpecificConfig extends ConsumerWidget {
             children: [
               Text('available periodic templates'),
               Expanded(
-                child: SingleChildScrollView(
-                    child: SpecificConfigList(entityId)),
+                child:
+                    SingleChildScrollView(child: SpecificConfigList(entityId)),
               ),
               Divider(),
-              Card(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('Add templates '),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AddSpecificConfig(entityId);
-                          });
-                    },
-                  )
-                ],
-              ))
+              // Card(
+              //     child: Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: <Widget>[
+              //     Text('Add templates '),
+              //     IconButton(
+              //       icon: Icon(Icons.add),
+              //       onPressed: () {
+              //         showDialog(
+              //             context: context,
+              //             builder: (BuildContext context) {
+              //               return AddConfigField("specificConfig", entityId);
+              //             });
+              //       },
+              //     )
+              //   ],
+              // )),
+              Padding(
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(400, 40),
+                  ),
+                  label: const Text('Add specific config'),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AddConfigField("periodicConfig", entityId);
+                        });
+                  },
+                  icon: Icon(Icons.add),
+                ),
+              ),
             ],
           ))
         ]));

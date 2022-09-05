@@ -1,20 +1,17 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:data_table_2/data_table_2.dart';
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/batch/batch_page.dart';
-import 'package:csv/csv.dart';
-import 'package:seeder/providers/selected_list.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:seeder/batch/batch_page.dart';
 import "package:universal_html/html.dart" as html;
-import 'package:data_table_2/data_table_2.dart';
 
-class BatchViewCsv extends ConsumerWidget {
+class BatchExport extends ConsumerWidget {
   final String batchId;
-  const BatchViewCsv(this.batchId);
+  const BatchExport(this.batchId);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -64,7 +61,7 @@ class BatchViewCsv extends ConsumerWidget {
               ),
             ]),
       ),
-      Container(
+      /*Container(
         margin: EdgeInsets.all(20.0),
         child: ref.watch(selectedTransactionList(ref.watch(activeBatch)!)).when(
             loading: () => Text("loading"),
@@ -74,7 +71,7 @@ class BatchViewCsv extends ConsumerWidget {
                   columns: batchCsvHeader(entities),
                   rows: batchCsvRows(entities));
             }),
-      )
+      )*/
     ]);
   }
 
@@ -113,64 +110,64 @@ class BatchViewCsv extends ConsumerWidget {
       //return Container();
     }).toList();
   }
-
-  Future<List<List>> generateListData(WidgetRef ref) async {
-    final List<List> exportList = [];
-    List temp = [];
-    bool headerOnce = true;
-    var colRef = await FirebaseFirestore.instance
-        .collection('batch')
-        .doc(ref.watch(activeBatch)!)
-        .collection('SelectedEntity')
+}
+Future<List<List>> generateListData(WidgetRef ref) async {
+  final List<List> exportList = [];
+  List temp = [];
+  bool headerOnce = true;
+  var colRef = await FirebaseFirestore.instance
+      .collection('batch')
+      .doc(ref.watch(activeBatch)!)
+      .collection('SelectedEntity')
+      .get();
+  for (var element in colRef.docs) {
+    var dataRef = await FirebaseFirestore.instance
+        .collection("${element.data()['ref'].path}/transaction")
         .get();
-    for (var element in colRef.docs) {
-      var dataRef = await FirebaseFirestore.instance
-          .collection("${element.data()['ref'].path}/transaction")
-          .get();
-      dataRef.docs.forEach((tranData) {
-        // print("I am working${tranData.data()}");
-        if (headerOnce) {
-          (tranData.data().entries.toList()
-                ..sort((a, b) => a.key.compareTo(b.key)))
-              .forEach((element) {
-            temp.add(element.key);
-          });
-          exportList.add(temp);
-          temp = [];
-          headerOnce = false;
-        }
+    dataRef.docs.forEach((tranData) {
+      // print("I am working${tranData.data()}");
+      if (headerOnce) {
         (tranData.data().entries.toList()
               ..sort((a, b) => a.key.compareTo(b.key)))
             .forEach((element) {
-          temp.add(element.value);
+          temp.add(element.key);
         });
         exportList.add(temp);
         temp = [];
+        headerOnce = false;
+      }
+      (tranData.data().entries.toList()..sort((a, b) => a.key.compareTo(b.key)))
+          .forEach((element) {
+        temp.add(element.value);
       });
-    }
-    return exportList;
+      exportList.add(temp);
+      temp = [];
+    });
   }
-
-  exportCSV(WidgetRef ref) async {
-    var retrieveData = await generateListData(ref);
-    String csv = ListToCsvConverter().convert(retrieveData).toString();
-    Clipboard.setData(ClipboardData(text: csv));
-    Fluttertoast.showToast(msg: 'Copied to clipboard');
-  }
-
-  generateCSV(WidgetRef ref) async {
-    var retrieveData = await generateListData(ref);
-    String csv = ListToCsvConverter().convert(retrieveData).toString();
-    String timestamp = DateTime.now().toString();
-    final bytes = Utf8Encoder().convert(csv);
-    final blob = html.Blob([bytes]);
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    final anchor = html.document.createElement('a') as html.AnchorElement
-      ..href = url
-      ..style.display = 'none'
-      ..download = 'file_$timestamp.csv';
-    html.document.body!.children.add(anchor);
-    anchor.click();
-    html.Url.revokeObjectUrl(url);
-  }
+  return exportList;
 }
+
+exportCSV(WidgetRef ref) async {
+  var retrieveData = await generateListData(ref);
+  String csv = ListToCsvConverter().convert(retrieveData).toString();
+  Clipboard.setData(ClipboardData(text: csv));
+  Fluttertoast.showToast(msg: 'Copied to clipboard');
+}
+
+generateCSV(WidgetRef ref) async {
+  var retrieveData = await generateListData(ref);
+  String csv = ListToCsvConverter().convert(retrieveData).toString();
+  String timestamp = DateTime.now().toString();
+  final bytes = Utf8Encoder().convert(csv);
+  final blob = html.Blob([bytes]);
+  final url = html.Url.createObjectUrlFromBlob(blob);
+  final anchor = html.document.createElement('a') as html.AnchorElement
+    ..href = url
+    ..style.display = 'none'
+    ..download = 'file_$timestamp.csv';
+  html.document.body!.children.add(anchor);
+  anchor.click();
+  html.Url.revokeObjectUrl(url);
+}
+
+

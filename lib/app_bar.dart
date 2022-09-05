@@ -3,17 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/avatar_image.dart';
 import 'package:seeder/main.dart';
+import 'package:seeder/setting/setting_page.dart';
+import 'package:seeder/state/theme_state_notifier.dart';
 
 class MyAppBar {
-  static final List<String> _tabs = ['entities', 'batches'];
+  static final List<String> _tabs = ['entities', 'batches', 'feeds'];
 
   static PreferredSizeWidget getBar(BuildContext context, WidgetRef ref) {
     return AppBar(
       automaticallyImplyLeading: false,
+      leadingWidth: 100,
+      leading: Padding(
+        padding: EdgeInsets.all(10),
+        child: Image.asset(
+          "assets/amlcloudlogodark_removebg_crop.png",
+        ),
+      ),
       title: Align(
           alignment: Alignment.centerLeft,
           child: SizedBox(
-              width: 300,
+              width: 500,
               child: TabBar(
                 tabs: _tabs
                     .map((t) => Tab(
@@ -38,11 +47,25 @@ class MyAppBar {
                 },
               ))),
       actions: [
+<<<<<<< HEAD
         Container(
           margin: EdgeInsets.all(2),
           child: AvatarImage(),
         ),
+=======
+        //Text('${FirebaseAuth.instance.currentUser!.uid}'),
+        ///
+        /// if person is not logged-in or anonymous show person icon
+        /// otherwise show photo from his profile
+        ///
+        ///https://firebase.google.com/docs/auth/flutter/manage-users
+        ///
+        SettingPageIconButton(),
+        ThemeIconButton(),
+        Icon(Icons.person),
+>>>>>>> 18b66d2aee020054c702226a3ef8b725413fe3d2
         IconButton(
+            tooltip: 'sign out',
             onPressed: () {
               ref.read(isLoggedIn.notifier).value = false;
               FirebaseAuth.instance.signOut();
@@ -52,5 +75,33 @@ class MyAppBar {
         // AvatarImage(),
       ],
     );
+  }
+}
+
+class ThemeIconButton extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var isDarkState = ref.watch(themeStateNotifierProvider);
+    return IconButton(
+        tooltip: 'dark/light mode',
+        onPressed: () {
+          ref.read(themeStateNotifierProvider.notifier).changeTheme();
+        },
+        icon: Icon(isDarkState == true
+            ? Icons.nightlight
+            : Icons.nightlight_outlined));
+  }
+}
+
+class SettingPageIconButton extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return IconButton(
+        onPressed: () => Navigator.push(context, MaterialPageRoute(
+              builder: (context) {
+                return SettingPage();
+              },
+            )),
+        icon: Icon(Icons.settings));
   }
 }

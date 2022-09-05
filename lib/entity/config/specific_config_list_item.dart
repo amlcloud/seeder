@@ -3,15 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:seeder/dialogs/add_periodic_config.dart';
-import 'package:seeder/dialogs/add_specific_config.dart';
 import 'package:seeder/dialogs/edit_specific_config.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
+import 'package:seeder/providers/firestore.dart';
 
 class SpecificConfigListItem extends ConsumerWidget {
   final DocumentSnapshot<Map<String, dynamic>> configDoc;
   final String entityId;
-
+  final String currentAuthor = FirebaseAuth.instance.currentUser!.uid;
   SpecificConfigListItem(
     this.configDoc,
     this.entityId,
@@ -32,9 +31,14 @@ class SpecificConfigListItem extends ConsumerWidget {
               title: Text(configDoc.id.toString()),
               subtitle: Column(
                 children: <Widget>[
-                  Text("Amount: ${configDoc.data()!['amount']}"),
-                  Text(formatter
-                      .format(configDoc.data()!['timestamp']!.toDate()))
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Amount: ${configDoc.data()!['amount']}"),
+                  ),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(formatter
+                          .format(configDoc.data()!['timestamp']!.toDate()))),
                 ],
               ),
               trailing: Column(
@@ -62,17 +66,24 @@ class SpecificConfigListItem extends ConsumerWidget {
               : Container(),
           Switch(
               value: configDoc.data()!['isAddedToTran'] ?? false,
-              onChanged: (value) {
-                FirebaseFirestore.instance
-                    .collection('entity')
-                    .doc(entityId)
-                    .collection('specificConfig')
-                    .doc(configDoc.id)
-                    .update({
-                  'isAddedToTran': (configDoc.data()!['isAddedToTran']) ?? false
-                      ? false
-                      : true
+              onChanged: (value) async {
+                String author = '';
+                ref.read(docFP('entity/${entityId}')).whenData((value) {
+                  author = value.data()!['author'];
                 });
+                if (author == currentAuthor) {
+                  FirebaseFirestore.instance
+                      .collection('entity')
+                      .doc(entityId)
+                      .collection('specificConfig')
+                      .doc(configDoc.id)
+                      .update({
+                    'isAddedToTran':
+                        (configDoc.data()!['isAddedToTran']) ?? false
+                            ? false
+                            : true
+                  });
+                }
               })
         ],
       )

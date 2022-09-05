@@ -5,13 +5,20 @@ import 'package:seeder/controls/doc_field_range_slider.dart';
 import 'package:seeder/controls/doc_field_slider.dart';
 import 'package:seeder/controls/group.dart';
 import 'package:seeder/providers/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../dialogs/add_config_field.dart';
 
 class ConfigListItem extends ConsumerWidget {
+  final String currentAuthor = FirebaseAuth.instance.currentUser!.uid;
   final String path;
   final String entityId;
   final String configType;
   final bool isAdded;
-  const ConfigListItem(this.path, this.entityId, this.configType, this.isAdded);
+  final bool isEditable;
+
+  ConfigListItem(
+      this.path, this.entityId, this.configType, this.isAdded, this.isEditable);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(docSP(path)).when(
@@ -46,7 +53,8 @@ class ConfigListItem extends ConsumerWidget {
                                                 .toString()),
                                             double.parse(configDoc
                                                 .data()!['maxAmount']!
-                                                .toString())
+                                                .toString()),
+                                            isEditable
                                             //configDoc.data()!,
                                             ),
                                         configType == 'randomConfig'
@@ -70,7 +78,8 @@ class ConfigListItem extends ConsumerWidget {
                                                                       'period'] ==
                                                                   'Month'
                                                               ? 28
-                                                              : 84)
+                                                              : 84,
+                                                      isEditable)
                                                 ],
                                               )
                                             : Container()
@@ -89,29 +98,45 @@ class ConfigListItem extends ConsumerWidget {
               ),
               Switch(
                   value: isAdded,
-                  onChanged: (value) {
-                    isAdded
-                        ? FirebaseFirestore.instance
-                            .runTransaction((Transaction myTransaction) async {
-                            myTransaction.delete(FirebaseFirestore.instance
-                                .collection('entity')
-                                .doc(entityId)
-                                .collection(configType)
-                                .doc(configDoc.id));
-                          })
-                        : addEntity(context, ref, configDoc);
-                  })
+                  onChanged: isEditable
+                      ? (value) {
+                          isAdded
+                              ? FirebaseFirestore.instance.runTransaction(
+                                  (Transaction myTransaction) async {
+                                  myTransaction.delete(FirebaseFirestore
+                                      .instance
+                                      .collection('entity')
+                                      .doc(entityId)
+                                      .collection(configType)
+                                      .doc(configDoc.id));
+                                })
+                              : addEntity(context, ref, configDoc);
+                        }
+                      : null)
             ])));
   }
 
   addEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {
-    var data = (await FirebaseFirestore.instance.doc(path).get()).data();
-    print("hit${data}");
+    var listData = (await FirebaseFirestore.instance.doc(path).get()).data();
+
+    // if (listData!['required'] == 'both') {
+    //   listData.addAll(await getSelfAccountDetails(entityId, "Beneficiary"));
+    //   listData.addAll(await getSelfAccountDetails(entityId, "Remitter"));
+    // } else if (listData['required'] == 'rem') {
+    //   listData.addAll(await getSelfAccountDetails(entityId, "Remitter"));
+    // } else {
+    //   listData.addAll(await getSelfAccountDetails(entityId, "Beneficiary"));
+    // }
+    listData!
+        .addAll(await addSelfAccountDetails(entityId, listData['required']));
+
+    ///(await FirebaseFirestore.instance.doc(path).get()).data()!
+    print("hit: ${listData}");
     FirebaseFirestore.instance
         .collection('entity')
         .doc(entityId)
         .collection(configType)
         .doc(d.id)
-        .set((await FirebaseFirestore.instance.doc(path).get()).data()!);
+        .set(listData);
   }
 }
