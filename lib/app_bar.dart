@@ -47,12 +47,10 @@ class MyAppBar {
                 },
               ))),
       actions: [
-<<<<<<< HEAD
         Container(
           margin: EdgeInsets.all(2),
           child: AvatarImage(),
         ),
-=======
         //Text('${FirebaseAuth.instance.currentUser!.uid}'),
         ///
         /// if person is not logged-in or anonymous show person icon
@@ -63,7 +61,6 @@ class MyAppBar {
         SettingPageIconButton(),
         ThemeIconButton(),
         Icon(Icons.person),
->>>>>>> 18b66d2aee020054c702226a3ef8b725413fe3d2
         IconButton(
             tooltip: 'sign out',
             onPressed: () {
