@@ -28,26 +28,47 @@ class RandomConfig extends ConsumerWidget {
                     Text('available periodic templates'),
                     Expanded(
                       child: SingleChildScrollView(
-                          child: ConfigList(entityId, "randomConfig",entityDoc.data()!["author"]==currentAuthor)),
+                          child: ConfigList(entityId, "randomConfig",
+                              entityDoc.data()!["author"] == currentAuthor)),
                     ),
                     Divider(),
-                    Card(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text('Add templates '),
-                        IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed: entityDoc.data()!['author'] == currentAuthor? () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AddConfigField("randomConfig", entityId);
-                                  });
-                          }:null,
-                        )
-                      ],
-                    ))
+                    // Card(
+                    //     child: Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: <Widget>[
+                    //     Text('Add templates '),
+                    //     IconButton(
+                    //       icon: Icon(Icons.add),
+                    //       onPressed: entityDoc.data()!['author'] == currentAuthor? () {
+                    //           showDialog(
+                    //               context: context,
+                    //               builder: (BuildContext context) {
+                    //                 return AddConfigField("randomConfig", entityId);
+                    //               });
+                    //       }:null,
+                    //     )
+                    //   ],
+                    // )),
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(400, 40),
+                        ),
+                        label: const Text('Add random config'),
+                        onPressed: entityDoc.data()!['author'] == currentAuthor
+                            ? () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AddConfigField(
+                                          "randomConfig", entityId);
+                                    });
+                              }
+                            : null,
+                        icon: Icon(Icons.add),
+                      ),
+                    ),
                   ],
                 ))
               ])));

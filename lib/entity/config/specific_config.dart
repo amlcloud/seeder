@@ -28,23 +28,40 @@ class SpecificConfig extends ConsumerWidget {
                     SingleChildScrollView(child: SpecificConfigList(entityId)),
               ),
               Divider(),
-              Card(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('Add templates '),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AddConfigField("specificConfig", entityId);
-                          });
-                    },
-                  )
-                ],
-              ))
+              // Card(
+              //     child: Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: <Widget>[
+              //     Text('Add templates '),
+              //     IconButton(
+              //       icon: Icon(Icons.add),
+              //       onPressed: () {
+              //         showDialog(
+              //             context: context,
+              //             builder: (BuildContext context) {
+              //               return AddConfigField("specificConfig", entityId);
+              //             });
+              //       },
+              //     )
+              //   ],
+              // )),
+              Padding(
+                padding: EdgeInsets.all(5),
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(400, 40),
+                  ),
+                  label: const Text('Add specific config'),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AddConfigField("periodicConfig", entityId);
+                        });
+                  },
+                  icon: Icon(Icons.add),
+                ),
+              ),
             ],
           ))
         ]));
