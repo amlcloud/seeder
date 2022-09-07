@@ -18,8 +18,6 @@ class EntityListItem extends ConsumerWidget {
           data: (entityDoc) => entityDoc.exists == false
               ? Center(child: Text('No entity data exists'))
               : ListTile(
-                  // tileColor: Color.fromARGB(255, 44, 44, 44),
-                  // focusColor: Color.fromARGB(255, 133, 116, 116),
                   trailing: Column(children: <Widget>[
                     IconButton(
                       onPressed: () => {
