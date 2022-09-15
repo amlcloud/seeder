@@ -9,10 +9,13 @@ class FilterMyEntities extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => Row(children: [
         Text('Mine Only'),
-        Switch(
-            value: ref.watch(filterMine) ?? false,
-            onChanged: (value) {
-              ref.read(filterMine.notifier).value = value;
-            })
+        Tooltip(
+          message: 'Mine only',
+          child: Switch(
+              value: ref.watch(filterMine) ?? false,
+              onChanged: (value) {
+                ref.read(filterMine.notifier).value = value;
+              }),
+        )
       ]);
 }
