@@ -56,7 +56,7 @@ class SpecificConfig extends ConsumerWidget {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AddConfigField("periodicConfig", entityId);
+                          return AddConfigField("specificConfig", entityId);
                         });
                   },
                   icon: Icon(Icons.add),
