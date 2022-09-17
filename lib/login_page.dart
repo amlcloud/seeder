@@ -16,6 +16,7 @@ class LoginPage extends ConsumerWidget {
         "loginEmail": true,
         "loginAnonymous": true,
         "loginSSO": true,
+        "signupOption": true,
       },
       mainTitle: "AML Cloud",
     ));
