@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:seeder/avatar_image.dart';
 import 'package:seeder/main.dart';
 import 'package:seeder/setting/setting_page.dart';
 import 'package:seeder/state/theme_state_notifier.dart';
@@ -46,6 +47,10 @@ class MyAppBar {
                 },
               ))),
       actions: [
+        Container(
+          margin: EdgeInsets.all(2),
+          child: AvatarImage(),
+        ),
         //Text('${FirebaseAuth.instance.currentUser!.uid}'),
         ///
         /// if person is not logged-in or anonymous show person icon
@@ -55,7 +60,7 @@ class MyAppBar {
         ///
         SettingPageIconButton(),
         ThemeIconButton(),
-        Icon(Icons.person),
+        //Icon(Icons.person),
         IconButton(
             tooltip: 'sign out',
             onPressed: () {
@@ -63,7 +68,8 @@ class MyAppBar {
               FirebaseAuth.instance.signOut();
               // print("Signed out");
             },
-            icon: Icon(Icons.exit_to_app))
+            icon: Icon(Icons.exit_to_app)),
+        // AvatarImage(),
       ],
     );
   }
