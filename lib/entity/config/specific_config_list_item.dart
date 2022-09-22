@@ -64,27 +64,30 @@ class SpecificConfigListItem extends ConsumerWidget {
                   },
                 )
               : Container(),
-          Switch(
-              value: configDoc.data()!['isAddedToTran'] ?? false,
-              onChanged: (value) async {
-                String author = '';
-                ref.read(docFP('entity/${entityId}')).whenData((value) {
-                  author = value.data()!['author'];
-                });
-                if (author == currentAuthor) {
-                  FirebaseFirestore.instance
-                      .collection('entity')
-                      .doc(entityId)
-                      .collection('specificConfig')
-                      .doc(configDoc.id)
-                      .update({
-                    'isAddedToTran':
-                        (configDoc.data()!['isAddedToTran']) ?? false
-                            ? false
-                            : true
-                  });
-                }
-              })
+          Tooltip(
+              waitDuration: const Duration(seconds: 2),
+              message: configDoc.id,
+              child: Switch(
+                  value: configDoc.data()!['isAddedToTran'] ?? false,
+                  onChanged: (value) async {
+                    String author = '';
+                    ref.read(docFP('entity/${entityId}')).whenData((value) {
+                      author = value.data()!['author'];
+                    });
+                    if (author == currentAuthor) {
+                      FirebaseFirestore.instance
+                          .collection('entity')
+                          .doc(entityId)
+                          .collection('specificConfig')
+                          .doc(configDoc.id)
+                          .update({
+                        'isAddedToTran':
+                            (configDoc.data()!['isAddedToTran']) ?? false
+                                ? false
+                                : true
+                      });
+                    }
+                  }))
         ],
       )
     ]));

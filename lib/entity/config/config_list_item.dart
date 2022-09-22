@@ -96,23 +96,26 @@ class ConfigListItem extends ConsumerWidget {
                       ],
                     )),
               ),
-              Switch(
-                  value: isAdded,
-                  onChanged: isEditable
-                      ? (value) {
-                          isAdded
-                              ? FirebaseFirestore.instance.runTransaction(
-                                  (Transaction myTransaction) async {
-                                  myTransaction.delete(FirebaseFirestore
-                                      .instance
-                                      .collection('entity')
-                                      .doc(entityId)
-                                      .collection(configType)
-                                      .doc(configDoc.id));
-                                })
-                              : addEntity(context, ref, configDoc);
-                        }
-                      : null)
+              Tooltip(
+                  waitDuration: const Duration(seconds: 2),
+                  message: configDoc.id,
+                  child: Switch(
+                      value: isAdded,
+                      onChanged: isEditable
+                          ? (value) {
+                              isAdded
+                                  ? FirebaseFirestore.instance.runTransaction(
+                                      (Transaction myTransaction) async {
+                                      myTransaction.delete(FirebaseFirestore
+                                          .instance
+                                          .collection('entity')
+                                          .doc(entityId)
+                                          .collection(configType)
+                                          .doc(configDoc.id));
+                                    })
+                                  : addEntity(context, ref, configDoc);
+                            }
+                          : null))
             ])));
   }
 

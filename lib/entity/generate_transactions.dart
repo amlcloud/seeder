@@ -140,7 +140,7 @@ generateSeparatePeriodicList(QuerySnapshot<Map<String, dynamic>> periodicList,
       .where((weekEl) => weekEl['period'] == period)
       .forEach((element) {
     var temp = element.data();
-
+    temp['config id'] = element.id;
     tempPeriodicList.add(temp);
   });
   //print('PeriodicList: ${tempPeriodicList}');
@@ -157,6 +157,7 @@ generateSeparateRandomList(QuerySnapshot<Map<String, dynamic>> randomList,
       .forEach((element) {
     List periodArray = [];
     var temp = element.data();
+    temp['config id'] = element.id;
     //temp['benName'] = element.id.toString();
 
     while (periodArray.length < element['frequency']) {
@@ -194,7 +195,7 @@ addPeriodicDataToList(
     double amount = configData['minAmount'] +
         random.nextInt(configData['maxAmount'] - configData['minAmount']);
     tempMap['amount'] = amount;
-  
+
     listData.add(tempMap);
   });
   return listData;
@@ -222,7 +223,7 @@ addRandomDataToList(List<Map<String, dynamic>> configList, String period,
       double amount = configData['minAmount'] +
           random.nextInt(configData['maxAmount'] - configData['minAmount']);
       tempMap['amount'] = amount;
-  
+
       listData.add(tempMap);
     });
   });
@@ -234,8 +235,6 @@ addSpecificDataToList(
     Jiffy dateIterator) {
   List<Map<String, dynamic>> listData = [];
   var random = math.Random();
-  configList.forEach((element) {
-  });
   configList
       .where((ele) =>
           ele.data()['timestamp'].toDate() == dateIterator.dateTime &&
@@ -255,6 +254,7 @@ addSpecificDataToList(
     tempMap['dayTime'] =
         "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}";
     var temp = configData.data();
+    temp['config id'] = configData.id;
     temp.remove('timestamp');
     tempMap.addAll(temp);
     tempMap.remove('isAddedToTran');
