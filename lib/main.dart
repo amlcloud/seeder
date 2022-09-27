@@ -9,7 +9,7 @@ import 'package:seeder/login_page.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
 import 'package:seeder/state/theme_state_notifier.dart';
 import 'package:seeder/theme.dart';
-
+import 'package:cloud_functions/cloud_functions.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,7 +18,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
   runApp(ProviderScope(child: MainApp()));
 }
 
