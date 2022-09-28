@@ -75,6 +75,7 @@ class EntityListItem extends ConsumerWidget {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context, 'OK');
+                      ref.read(activeEntity.notifier).value = null;
                       FirebaseFirestore.instance
                           .runTransaction((Transaction myTransaction) async {
                         myTransaction.delete(doc);

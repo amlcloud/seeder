@@ -24,13 +24,13 @@ class BatchListItem extends ConsumerWidget {
                     title: EntityHeadline(entityDoc),
                     trailing: Column(children: <Widget>[
                       Text(entityDoc.data()!['id'] ?? 'id'),
-                      buildDeleteEntityButton(
-                          context,
-                          ref,
-                          FirebaseFirestore.instance
-                              .collection('batch')
-                              .doc(batchId),
-                          Icon(Icons.delete))
+                      buildDeleteBatchButton(
+                        context,
+                        ref,
+                        FirebaseFirestore.instance
+                            .collection('batch')
+                            .doc(batchId),
+                      )
                     ]),
                     onTap: () {
                       ref.read(activeBatch.notifier).value = batchId;
@@ -39,4 +39,42 @@ class BatchListItem extends ConsumerWidget {
                 ],
               )));
   }
+}
+
+buildDeleteBatchButton(
+  BuildContext context,
+  WidgetRef ref,
+  doc,
+) {
+  return IconButton(
+    onPressed: () {
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Deleting entity'),
+          content: const Text('Are you sure you want to delete this entity?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'Cancel'),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, 'OK');
+                ref.read(activeBatch.notifier).value = null;
+                FirebaseFirestore.instance
+                    .runTransaction((Transaction myTransaction) async {
+                  myTransaction.delete(doc);
+                });
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    },
+    icon: Icon(Icons.delete),
+    padding: EdgeInsets.zero,
+    constraints: BoxConstraints(),
+  );
 }
