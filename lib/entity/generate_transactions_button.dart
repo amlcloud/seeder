@@ -64,11 +64,13 @@ class GenerateTransactions extends ConsumerWidget {
               children: <Widget>[
                 Expanded(
                     child: Center(
-                  child: ElevatedButton(
-                      onPressed: () {
-                        _show();
-                      },
-                      child: Icon(Icons.date_range)),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      _show();
+                    },
+                    icon: Icon(Icons.date_range),
+                    label: Text("Pick date range"),
+                  ),
                 )),
                 Expanded(
                     child: Center(

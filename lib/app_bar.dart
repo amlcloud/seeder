@@ -93,12 +93,16 @@ class ThemeIconButton extends ConsumerWidget {
 class SettingPageIconButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return IconButton(
-        onPressed: () => Navigator.push(context, MaterialPageRoute(
-              builder: (context) {
-                return SettingPage();
-              },
-            )),
-        icon: Icon(Icons.settings));
+    return Tooltip(
+      message: "Setting",
+      waitDuration: Duration(seconds: 2),
+      child: IconButton(
+          onPressed: () => Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return SettingPage();
+                },
+              )),
+          icon: Icon(Icons.settings)),
+    );
   }
 }
