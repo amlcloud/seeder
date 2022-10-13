@@ -5,6 +5,7 @@ import 'package:seeder/avatar_image.dart';
 import 'package:seeder/main.dart';
 import 'package:seeder/setting/setting_page.dart';
 import 'package:seeder/state/theme_state_notifier.dart';
+import 'package:userprofile/userprofile.dart';
 
 class MyAppBar {
   static final List<String> _tabs = ['entities', 'batches', 'feeds'];
@@ -49,7 +50,7 @@ class MyAppBar {
       actions: [
         Container(
           margin: EdgeInsets.all(2),
-          child: AvatarImage(),
+          child: AppBarUserProfile(),
         ),
         //Text('${FirebaseAuth.instance.currentUser!.uid}'),
         ///
