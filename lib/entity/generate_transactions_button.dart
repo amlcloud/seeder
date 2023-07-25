@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:seeder/entity/generate_transactions.dart';
 import 'package:seeder/providers/firestore.dart';
@@ -80,12 +80,12 @@ class GenerateTransactions extends ConsumerWidget {
                           addTrnsactionToServer(
                               selectedDateRange!, entityId, ref);
                         } else {
-                          Fluttertoast.showToast(
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 2,
-                            msg:
-                                'Please select a date range for this transaction',
-                          );
+                          // Fluttertoast.showToast(
+                          //   gravity: ToastGravity.CENTER,
+                          //   timeInSecForIosWeb: 2,
+                          //   msg:
+                          //       'Please select a date range for this transaction',
+                          // );
                         }
                       },
                       child: Text('Generate')),

@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/login_page.dart';
+import 'package:seeder/custom_login_page.dart';
 
 class AvatarImage extends ConsumerWidget {
   const AvatarImage({Key? key}) : super(key: key);

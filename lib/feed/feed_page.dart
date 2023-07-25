@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/app_bar.dart';
+import 'package:seeder/app_bar_old.dart';
 import 'package:seeder/controls/custom_dropdown.dart';
 import 'package:seeder/feed/feed_info.dart';
 import 'package:seeder/feed/feed_list.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
+
+import '../main_app_bar.dart';
 
 final activeFeed =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
@@ -19,7 +21,7 @@ class FeedsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-        appBar: MyAppBar.getBar(context, ref),
+        appBar: MainAppBar.getBar(context, ref),
         body: Container(
             alignment: Alignment.topLeft,
             child: Row(

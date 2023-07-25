@@ -6,6 +6,7 @@ import 'package:seeder/batch/batch_transactions.dart';
 import 'package:seeder/batch/entities_selector.dart';
 import 'package:seeder/controls/doc_field_text_edit.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
+import 'package:widgets/doc_field_text_field.dart';
 
 final activeEntity =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
@@ -35,16 +36,16 @@ class BatchDetails extends ConsumerWidget {
             children: [
               Row(children: [
                 Flexible(
-                    child: DocFieldTextEdit(
+                    child: DocFieldTextField(
                         FirebaseFirestore.instance.doc('batch/${entityId}'),
                         'id')),
                 Flexible(
-                    child: DocFieldTextEdit(
+                    child: DocFieldTextField(
                   FirebaseFirestore.instance.doc('batch/${entityId}'),
                   'name',
                 )),
                 Flexible(
-                    child: DocFieldTextEdit(
+                    child: DocFieldTextField(
                   FirebaseFirestore.instance.doc('batch/${entityId}'),
                   'desc',
                 ))

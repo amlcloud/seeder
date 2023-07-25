@@ -5,7 +5,7 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:seeder/batch/batch_page.dart';
 import "package:universal_html/html.dart" as html;
 
@@ -111,6 +111,7 @@ class BatchExport extends ConsumerWidget {
     }).toList();
   }
 }
+
 Future<List<List>> generateListData(WidgetRef ref) async {
   final List<List> exportList = [];
   List temp = [];
@@ -151,7 +152,7 @@ exportCSV(WidgetRef ref) async {
   var retrieveData = await generateListData(ref);
   String csv = ListToCsvConverter().convert(retrieveData).toString();
   Clipboard.setData(ClipboardData(text: csv));
-  Fluttertoast.showToast(msg: 'Copied to clipboard');
+  // Fluttertoast.showToast(msg: 'Copied to clipboard');
 }
 
 generateCSV(WidgetRef ref) async {
@@ -169,5 +170,3 @@ generateCSV(WidgetRef ref) async {
   anchor.click();
   html.Url.revokeObjectUrl(url);
 }
-
-

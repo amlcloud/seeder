@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/controls/doc_field_text_edit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:widgets/doc_field_text_field.dart';
 import '../providers/firestore.dart';
 
 class EntityInfo extends ConsumerWidget {
@@ -20,46 +21,46 @@ class EntityInfo extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Flexible(
-                      child: DocFieldTextEdit(
+                      child: DocFieldTextField(
                           FirebaseFirestore.instance.doc('entity/${entityId}'),
                           'id',
                           decoration: InputDecoration(hintText: "ID"),
-                          isEnabled: entityDoc.exists &&
+                          enabled: entityDoc.exists &&
                               entityDoc.data()!['author'] == currentAuthor)),
                   Flexible(
-                      child: DocFieldTextEdit(
+                      child: DocFieldTextField(
                           FirebaseFirestore.instance.doc('entity/${entityId}'),
                           'name',
                           decoration: InputDecoration(hintText: "Name"),
-                          isEnabled: entityDoc.exists &&
+                          enabled: entityDoc.exists &&
                               entityDoc.data()!['author'] == currentAuthor)),
                   Flexible(
-                      child: DocFieldTextEdit(
+                      child: DocFieldTextField(
                           FirebaseFirestore.instance.doc('entity/${entityId}'),
                           'desc',
                           decoration: InputDecoration(hintText: "Description"),
-                          isEnabled: entityDoc.exists &&
+                          enabled: entityDoc.exists &&
                               entityDoc.data()!['author'] == currentAuthor)),
                   Flexible(
-                      child: DocFieldTextEdit(
+                      child: DocFieldTextField(
                           FirebaseFirestore.instance.doc('entity/${entityId}'),
                           'bank',
                           decoration: InputDecoration(hintText: "Bank"),
-                          isEnabled: entityDoc.exists &&
+                          enabled: entityDoc.exists &&
                               entityDoc.data()!['author'] == currentAuthor)),
                   Flexible(
-                      child: DocFieldTextEdit(
+                      child: DocFieldTextField(
                           FirebaseFirestore.instance.doc('entity/${entityId}'),
                           'bsb',
                           decoration: InputDecoration(hintText: "BSB"),
-                          isEnabled: entityDoc.exists &&
+                          enabled: entityDoc.exists &&
                               entityDoc.data()!['author'] == currentAuthor)),
                   Flexible(
-                      child: DocFieldTextEdit(
+                      child: DocFieldTextField(
                           FirebaseFirestore.instance.doc('entity/${entityId}'),
                           'account',
                           decoration: InputDecoration(hintText: "Account No"),
-                          isEnabled: entityDoc.exists &&
+                          enabled: entityDoc.exists &&
                               entityDoc.data()!['author'] == currentAuthor))
                 ],
               ));

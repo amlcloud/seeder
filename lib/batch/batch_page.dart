@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seeder/app_bar.dart';
+import 'package:seeder/app_bar_old.dart';
 import 'package:seeder/batch/batch_details.dart';
 import 'package:seeder/batch/batch_list.dart';
 import 'package:seeder/state/generic_state_notifier.dart';
+
+import '../main_app_bar.dart';
 
 final activeBatch =
     StateNotifierProvider<GenericStateNotifier<String?>, String?>(
@@ -15,7 +17,7 @@ class BatchesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-        appBar: MyAppBar.getBar(context, ref),
+        appBar: MainAppBar.getBar(context, ref),
         body: Container(
             alignment: Alignment.topLeft,
             child: Row(

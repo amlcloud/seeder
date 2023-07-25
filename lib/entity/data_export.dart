@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:seeder/batch/batch_page.dart';
 import "package:universal_html/html.dart" as html;
 
@@ -50,7 +50,7 @@ generateClipboardCSV(WidgetRef ref, String entityId) async {
   var retrieveData = await generateListForCsv(ref, entityId);
   String csv = ListToCsvConverter().convert(retrieveData).toString();
   Clipboard.setData(ClipboardData(text: csv));
-  Fluttertoast.showToast(msg: 'Copied to clipboard');
+  // Fluttertoast.showToast(msg: 'Copied to clipboard');
 }
 
 generateExportCSV(WidgetRef ref, String entityId) async {

@@ -54,26 +54,6 @@ class PeriodicConfig extends ConsumerWidget {
                     //     )
                     //   ],
                     // )),
-                    Padding(
-                      padding: EdgeInsets.all(5),
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(400, 40),
-                        ),
-                        label: const Text('Add periodic config'),
-                        onPressed: entityDoc.data()!['author'] == currentAuthor
-                            ? () {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AddConfigField(
-                                          "periodicConfig", entityId);
-                                    });
-                              }
-                            : null,
-                        icon: Icon(Icons.add),
-                      ),
-                    ),
                   ],
                 ))
               ])));
