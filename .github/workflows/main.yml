@@ -1,4 +1,4 @@
-name: Build and Deploy Website
+name: Build, Deploy, Run Automation
 on:
   push:
     branches:
@@ -9,14 +9,13 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v1
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.1'
           channel: 'stable'
       - run: flutter pub get
   #     - run: flutter test
-      - run: flutter build web 
+      - run: flutter build web
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
@@ -34,9 +33,58 @@ jobs:
         with:
           name: public
           path: build/web          
-      - name: Deploy to Firebase
+      - name: Deploy Website to Firebase
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+      - name: Deploy Firestore rules to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only firestore:rules
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}          
+
+# name: Build and Deploy Website
+# on:
+#   push:
+#     branches:
+#     - main
+          
+# jobs:
+#   build:
+#     name: Build
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: subosito/flutter-action@v1
+#         with:
+#           flutter-version: '3.0.1'
+#           channel: 'stable'
+#       - run: flutter pub get
+#   #     - run: flutter test
+#       - run: flutter build web 
+#       - name: Archive Production Artifact
+#         uses: actions/upload-artifact@master
+#         with:
+#           name: public
+#           path: build/web
+#   deploy:
+#     name: Deploy
+#     needs: build
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout Repo
+#         uses: actions/checkout@master
+#       - name: Download Artifact
+#         uses: actions/download-artifact@master
+#         with:
+#           name: public
+#           path: build/web          
+#       - name: Deploy to Firebase
+#         uses: w9jds/firebase-action@master
+#         with:
+#           args: deploy --only hosting
+#         env:
+#           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
