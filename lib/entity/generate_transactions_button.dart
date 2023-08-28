@@ -6,9 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:seeder/entity/generate_transactions.dart';
 import 'package:seeder/providers/firestore.dart';
 
-class GenerateTransactions extends ConsumerWidget {
+class TransactionsWidget extends ConsumerWidget {
   final String entityId;
-  const GenerateTransactions(this.entityId);
+  const TransactionsWidget(this.entityId);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,67 +32,57 @@ class GenerateTransactions extends ConsumerWidget {
     }
 
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    return Container(
-        margin: EdgeInsets.all(16.0),
-        padding: EdgeInsets.only(bottom: 20, top: 20),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            border: Border.all(
-              color: Colors.grey,
-            )),
-        child: Column(
+    return Column(
+      children: <Widget>[
+        Center(
+            child: Container(
+                padding: EdgeInsets.only(bottom: 20, top: 20),
+                child: ref.watch(docSP('entity/${entityId}')).when(
+                    loading: () => Container(),
+                    error: (e, s) => ErrorWidget(e),
+                    data: (docSnapshot) {
+                      if (docSnapshot.data()!['startDate'] != null) {
+                        selectedDateRange = DateTimeRange(
+                            start: docSnapshot.data()!['startDate'].toDate(),
+                            end: docSnapshot.data()!['endDate'].toDate());
+                      }
+                      return selectedDateRange == null
+                          ? Text("Select date range")
+                          : Text(
+                              "${formatter.format(selectedDateRange!.start)} - ${formatter.format(selectedDateRange!.end)}");
+                    }))),
+        Row(
           children: <Widget>[
-            Center(
-                child: Container(
-                    padding: EdgeInsets.only(bottom: 20, top: 20),
-                    child: ref.watch(docSP('entity/${entityId}')).when(
-                        loading: () => Container(),
-                        error: (e, s) => ErrorWidget(e),
-                        data: (docSnapshot) {
-                          if (docSnapshot.data()!['startDate'] != null) {
-                            selectedDateRange = DateTimeRange(
-                                start:
-                                    docSnapshot.data()!['startDate'].toDate(),
-                                end: docSnapshot.data()!['endDate'].toDate());
-                          }
-                          return selectedDateRange == null
-                              ? Text("Select date range")
-                              : Text(
-                                  "${formatter.format(selectedDateRange!.start)} - ${formatter.format(selectedDateRange!.end)}");
-                        }))),
-            Row(
-              children: <Widget>[
-                Expanded(
-                    child: Center(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      _show();
-                    },
-                    icon: Icon(Icons.date_range),
-                    label: Text("Pick date range"),
-                  ),
-                )),
-                Expanded(
-                    child: Center(
-                  child: ElevatedButton(
-                      onPressed: () {
-                        if (selectedDateRange != null) {
-                          addTrnsactionToServer(
-                              selectedDateRange!, entityId, ref);
-                        } else {
-                          // Fluttertoast.showToast(
-                          //   gravity: ToastGravity.CENTER,
-                          //   timeInSecForIosWeb: 2,
-                          //   msg:
-                          //       'Please select a date range for this transaction',
-                          // );
-                        }
-                      },
-                      child: Text('Generate')),
-                )),
-              ],
-            )
+            Expanded(
+                child: Center(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  _show();
+                },
+                icon: Icon(Icons.date_range),
+                label: Text("Pick date range"),
+              ),
+            )),
+            Expanded(
+                child: Center(
+              child: ElevatedButton(
+                  onPressed: () {
+                    if (selectedDateRange != null) {
+                      addTrnsactionToServer(selectedDateRange!, entityId, ref);
+                    } else {
+                      // Fluttertoast.showToast(
+                      //   gravity: ToastGravity.CENTER,
+                      //   timeInSecForIosWeb: 2,
+                      //   msg:
+                      //       'Please select a date range for this transaction',
+                      // );
+                    }
+                  },
+                  child: Text('Generate')),
+            )),
           ],
-        ));
+        )
+      ],
+    );
   }
 }

@@ -21,11 +21,15 @@ Future<List<List>> generateListForCsv(WidgetRef ref, String entityId) async {
         ..sort(
             ((a, b) => a.data()['timestamp'].compareTo(b.data()['timestamp']))))
       .forEach((tranData) {
-    print("I am working${tranData.data()}");
+    print("export trn ${tranData.data()}");
     if (headerOnce) {
       (tranData.data().entries.toList()..sort((a, b) => a.key.compareTo(b.key)))
           .forEach((element) {
-        temp.add(element.key);
+        if (element.key != 'timestamp')
+          temp.add(element.key);
+        else
+          // add element to the beginning of the list
+          temp.insert(0, element.key);
       });
       exportList.add(temp);
       temp = [];
@@ -34,7 +38,7 @@ Future<List<List>> generateListForCsv(WidgetRef ref, String entityId) async {
     (tranData.data().entries.toList()..sort((a, b) => a.key.compareTo(b.key)))
         .forEach((element) {
       if (element.key == 'timestamp') {
-        temp.add(element.value.toDate());
+        temp.insert(0, element.value.toDate());
       } else {
         temp.add(element.value);
       }

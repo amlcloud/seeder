@@ -6,6 +6,7 @@ import 'package:seeder/controls/doc_field_slider.dart';
 import 'package:seeder/controls/group.dart';
 import 'package:seeder/providers/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:seeder/tran_config/tran_config_details.dart';
 
 import '../../dialogs/add_config_field.dart';
 
@@ -87,14 +88,16 @@ class ConfigListItem extends ConsumerWidget {
                                     ))
                         : Text(
                             "Min Amount: ${configDoc.data()!['minAmount']} - Max Amount: ${configDoc.data()!['maxAmount']}"),
-                    trailing: Column(
-                      children: [
-                        Text((configDoc.data()!['credit'] == true
-                            ? 'Credit'
-                            : 'Debit')),
-                        Text(configDoc.data()!['period'])
-                      ],
-                    )),
+                    trailing: Column(children: [
+                      Text((configDoc.data()!['credit'] == true
+                          ? 'Credit'
+                          : 'Debit')),
+                      Text(configDoc.data()!['period']),
+                      SizedBox(
+                          width: 20,
+                          child: DocFieldTextField2(configDoc.reference, 'day',
+                              type: DocFieldTextField2Type.Number))
+                    ])),
               ),
               Tooltip(
                   waitDuration: const Duration(seconds: 2),
@@ -120,7 +123,7 @@ class ConfigListItem extends ConsumerWidget {
   }
 
   addEntity(BuildContext context, WidgetRef ref, DocumentSnapshot d) async {
-    var listData = (await FirebaseFirestore.instance.doc(path).get()).data();
+    final listData = (await FirebaseFirestore.instance.doc(path).get()).data();
 
     // if (listData!['required'] == 'both') {
     //   listData.addAll(await getSelfAccountDetails(entityId, "Beneficiary"));
@@ -130,16 +133,16 @@ class ConfigListItem extends ConsumerWidget {
     // } else {
     //   listData.addAll(await getSelfAccountDetails(entityId, "Beneficiary"));
     // }
-    listData!
-        .addAll(await addSelfAccountDetails(entityId, listData['required']));
+    // listData!
+    //     .addAll(await addSelfAccountDetails(entityId, listData['required']));
 
     ///(await FirebaseFirestore.instance.doc(path).get()).data()!
-    print("hit: ${listData}");
+    // print("hit: ${listData}");
     FirebaseFirestore.instance
         .collection('entity')
         .doc(entityId)
         .collection(configType)
         .doc(d.id)
-        .set(listData);
+        .set(listData!);
   }
 }

@@ -316,10 +316,10 @@ class AddConfigField extends ConsumerWidget {
                           ],
                           decoration: InputDecoration(
                               labelText: ref.watch(periodSelector) == "Week"
-                                  ? 'Selecy ${dayOrFrequence} 1-7'
+                                  ? 'Select ${dayOrFrequence} 1-7'
                                   : ref.watch(periodSelector) == "Month"
-                                      ? 'Selecy ${dayOrFrequence} 1-28'
-                                      : 'Selecy ${dayOrFrequence} 1-84'),
+                                      ? 'Select ${dayOrFrequence} 1-28'
+                                      : 'Select ${dayOrFrequence} 1-84'),
                         ),
                         Container(
                           width: 200,
@@ -443,15 +443,15 @@ Future<Map<String, dynamic>> getSelfAccountDetails(
       await FirebaseFirestore.instance.collection('entity').doc(entityId).get();
   Map<String, dynamic> selBenData = {};
   if (requiredDetail == "Beneficiary") {
-    selBenData["Beneficiary_Name"] = data.data()!['name'];
-    selBenData["Beneficiary_Account"] = data.data()!['account'];
-    selBenData["Beneficiary_Bank"] = data.data()!['bank'];
-    selBenData["Beneficiary_BSB"] = data.data()!['bsb'];
+    selBenData["Ben_Name"] = data.data()!['name'];
+    selBenData["Ben_Account"] = data.data()!['account'];
+    selBenData["Ben_Bank"] = data.data()!['bank'];
+    selBenData["Ben_BSB"] = data.data()!['bsb'];
   } else {
-    selBenData["Remitter_Name"] = data.data()!['name'];
-    selBenData["Remitter_Account"] = data.data()!['account'];
-    selBenData["Remitter_Bank"] = data.data()!['bank'];
-    selBenData["Remitter_BSB"] = data.data()!['bsb'];
+    selBenData["Rem_Name"] = data.data()!['name'];
+    selBenData["Rem_Account"] = data.data()!['account'];
+    selBenData["Rem_Bank"] = data.data()!['bank'];
+    selBenData["Rem_BSB"] = data.data()!['bsb'];
   }
   return selBenData;
 }

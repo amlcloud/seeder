@@ -29,7 +29,7 @@ void main() async {
     AuthConfig.enableFacebookOption = false;
     AuthConfig.enableTwitterOption = false;
 
-    ThemeModeConfig.enableSave = true;
+    // ThemeModeConfig. = true;
     ThemeModeConfig.defaultToLightTheme = true;
 
     await Firebase.initializeApp(

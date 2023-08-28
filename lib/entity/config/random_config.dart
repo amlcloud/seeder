@@ -25,7 +25,7 @@ class RandomConfig extends ConsumerWidget {
                 Expanded(
                     child: Column(
                   children: [
-                    Text('available periodic templates'),
+                    Text('available random templates'),
                     Expanded(
                       child: SingleChildScrollView(
                           child: ConfigList(entityId, "randomConfig",

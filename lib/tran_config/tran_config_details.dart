@@ -5,6 +5,7 @@ import 'package:common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:providers/generic.dart';
 import 'package:seeder/controls/doc_field_text_edit2.dart';
 import 'package:widgets/doc_field_drop_down.dart';
@@ -23,26 +24,70 @@ class TranConfigDetails extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => Column(children: [
         Text('Tran Config Details'),
         DocFieldTextField(tranConfigRef, 'description'),
-        DocFieldRadioGroup(tranConfigRef, 'direction', ['credit', 'debit'],
-            (context, items) {
-          return Group(
-              child: Column(children: <Widget>[
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Choose Transaction type')),
-            Row(children: items)
-          ]));
-        }, (context, index, name, radioWidget) {
-          return Row(children: [
-            radioWidget,
-            Text(name.toString()),
-          ]);
-        }),
-        //DocEditor(tranConfigRef)
-        // DocEditor(tranConfigRef,
-        // {
-        //   // 'direction':
-        // })
+        // DocFieldRadioGroup(tranConfigRef, 'direction', ['credit', 'debit'],
+        //     (context, items) {
+        //   return Group(
+        //       child: Column(children: <Widget>[
+        //     Align(
+        //         alignment: Alignment.centerLeft,
+        //         child: Text('Choose Transaction type')),
+        //     Row(children: items)
+        //   ]));
+        // }, (context, index, name, radioWidget) {
+        //   return Row(children: [
+        //     radioWidget,
+        //     Text(name.toString()),
+        //   ]);
+        // }),
+
+        DocEditor(
+          tranConfigRef,
+          schema: {
+            'direction': {
+              'type': 'select',
+              'options': ['credit', 'debit']
+            },
+            'account': {
+              'type': 'string',
+            },
+            'bsb': {
+              'type': 'string',
+            },
+            'bank': {
+              'type': 'string',
+            },
+            'name': {
+              'type': 'string',
+            },
+            'category': {
+              'type': 'select',
+              'options': [
+                'direct deposit',
+                'cash withdrawal',
+                'transfer',
+                'fee',
+                'interest',
+                'other'
+              ]
+            },
+            'maxAmount': {
+              'type': 'number',
+            },
+            'minAmount': {
+              'type': 'number',
+            },
+            'period': {
+              'type': 'select',
+              'options': ['week', 'month', 'quarter']
+            },
+            'reference': {
+              'type': 'string',
+            },
+          },
+          divider: SizedBox(
+            height: 8,
+          ),
+        ),
       ]);
 }
 
@@ -81,8 +126,17 @@ class DocFieldRadioGroup<T> extends ConsumerWidget {
 class DocEditor extends ConsumerWidget {
   final DR docRef;
   final Map<String, dynamic>? schema;
+  final bool capitalizeLabels;
+  final Widget divider;
+  final bool shrinkWrap;
 
-  DocEditor(this.docRef, {this.schema});
+  DocEditor(this.docRef,
+      {key,
+      this.schema,
+      this.capitalizeLabels = true,
+      this.divider = const Divider(),
+      this.shrinkWrap = true})
+      : super(key: key);
 
   bool distinct(Map<String, dynamic>? b, Map<String, dynamic>? a) {
     Map<String, dynamic> before = b ?? {};
@@ -104,17 +158,45 @@ class DocEditor extends ConsumerWidget {
         return !doc.exists
             ? Container()
             : schema != null
-                ? ListView.builder(
+                ? ListView.separated(
+                    shrinkWrap: shrinkWrap,
+                    separatorBuilder: (context, index) => divider,
                     itemCount: schema!.keys.length,
                     itemBuilder: (context, index) {
-                      final key = schema!.keys.elementAt(index);
-                      final def = schema![key];
+                      final label = schema!.keys.elementAt(index);
+                      final def = schema![label];
                       print('type: ${def}');
-                      return Row(
+                      return
+                          // Container(
+                          //     color: Colors.purple,
+                          //     child:
+                          Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Flexible(child: Text(key)),
+                          // code to change:
+                          // Flexible(child: Text(label)),
+// make the label start with a capital letter based on the parameter provided to the widget
+                          Flexible(
+                              child: Text(
+                                  capitalizeLabels
+                                      ? label[0].toUpperCase() +
+                                          label.substring(1)
+                                      : label,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                          color: Theme.of(context).hintColor))),
+                          Text(':',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      color: Theme.of(context).hintColor)),
+
                           SizedBox(width: 8),
-                          Flexible(child: buildInputField(key, def)),
+                          Expanded(child: buildInputField(label, def)),
                         ],
                       );
                     },
@@ -189,10 +271,76 @@ class DocEditor extends ConsumerWidget {
               .map((option) =>
                   DropdownMenuItem<String>(value: option, child: Text(option)))
               .toList());
+    } else if (type == "timestamp") {
+      // show date picker for user to select the date
+      return DocFieldDatePicker(docRef, key);
     }
     // TODO: Add cases for other data types.
     // We're only considering String and Number for simplicity.
     return Container();
+  }
+}
+
+/// DocFieldDatePicker is the widget that lets a user select a date.
+/// It uses the [showDatePicker] method to show the date picker.
+/// The selected date is saved to the Firestore document.
+///
+class DocFieldDatePicker extends ConsumerStatefulWidget {
+  final DocumentReference<Map<String, dynamic>> docRef;
+  final String field;
+  final InputDecoration? decoration;
+  final int saveDelay;
+  final bool showSaveStatus;
+  final bool enabled;
+  final Function(String)? onChanged;
+  final TextStyle? style;
+  final bool canAddLines;
+  final List<TextInputFormatter>? inputFormatters;
+
+  DocFieldDatePicker(this.docRef, this.field,
+      {this.decoration,
+      this.saveDelay = 1000,
+      this.showSaveStatus = true,
+      this.enabled = true,
+      this.onChanged,
+      this.style,
+      this.canAddLines = false,
+      this.inputFormatters});
+
+  @override
+  _DocFieldDatePickerState createState() => _DocFieldDatePickerState();
+}
+
+class _DocFieldDatePickerState extends ConsumerState<DocFieldDatePicker> {
+  DateTime? _selectedDate;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        final DateTime? picked = await showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2015, 8),
+            lastDate: DateTime(2101));
+        if (picked != null) {
+          setState(() {
+            _selectedDate = picked;
+          });
+          widget.docRef.set({widget.field: Timestamp.fromDate(picked)},
+              SetOptions(merge: true));
+        }
+      },
+      child: Container(
+        child: Text(
+          _selectedDate == null
+              ? 'Select Date'
+              : Jiffy(_selectedDate).format('dd MMM yyyy'),
+          //DateFormat('yyyy-MM-dd').format(_selectedDate!),
+          style: widget.style,
+        ),
+      ),
+    );
   }
 }
 

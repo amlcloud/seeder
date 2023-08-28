@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seeder/controls/doc_field_text_edit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:widgets/copy_to_clipboard_widget.dart';
 import 'package:widgets/doc_field_text_field.dart';
 import '../providers/firestore.dart';
 
@@ -20,6 +21,11 @@ class EntityInfo extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  Flexible(
+                      child: CopyToClipboardWidget(
+                    child: Text(entityDoc.id),
+                    text: entityDoc.id,
+                  )),
                   Flexible(
                       child: DocFieldTextField(
                           FirebaseFirestore.instance.doc('entity/${entityId}'),

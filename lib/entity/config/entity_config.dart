@@ -62,7 +62,6 @@ class EntityConfigState extends ConsumerState<EntityConfig>
             ],
           ),
         ),
-        GenerateTransactions(widget.entityId),
       ],
     );
   }

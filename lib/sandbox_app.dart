@@ -24,23 +24,33 @@ class SandboxApp extends StatelessWidget {
                 body: SizedBox(
                     width: 800,
                     height: 600,
-                    child: DocEditor(
-                      kDB.doc('test/1'),
-                      schema: {
-                        'name': {
-                          'type': 'string',
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DocEditor(
+                        key: ValueKey('test'),
+                        kDB.doc('test/1'),
+                        schema: {
+                          'name': {
+                            'type': 'string',
+                          },
+                          'age': {
+                            'type': 'number',
+                          },
+                          'single': {
+                            'type': 'boolean',
+                          },
+                          'dob': {
+                            'type': 'timestamp',
+                          },
+                          'gender': {
+                            'type': 'select',
+                            'options': ['male', 'female', 'other']
+                          }
                         },
-                        'age': {
-                          'type': 'number',
-                        },
-                        'test': {
-                          'type': 'boolean',
-                        },
-                        'select': {
-                          'type': 'select',
-                          'options': ['one', 'two', 'three']
-                        }
-                      },
+                        divider: SizedBox(
+                          height: 8,
+                        ),
+                      ),
                     )
                     // MatchesWidget(kDB.doc(
                     //     '/user/AA4JoO0fvSWtTxeROjRhTUYMIY52/case/hBjBqqeDDH0d27uNDfpb'))

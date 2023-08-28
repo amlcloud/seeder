@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math' as math;
@@ -6,7 +7,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:seeder/common.dart';
 import 'package:seeder/entity/entity_details.dart';
 
-Future<List<Map<String, dynamic>>> generate(
+Future<List<Map<String, dynamic>>> generateTransactions(
     DateTimeRange selectedDateRange, String entityId) async {
   List<Map<String, dynamic>> dataList = [];
 
@@ -19,34 +20,34 @@ Future<List<Map<String, dynamic>>> generate(
   /// Example: If user select January 23 so the counter start from 23 not from 1 or 0
   /// Example: If user select August 15 and it is 3rd quater so the counter start from 45 not from 1 or 0
 
-  var quaterCounter = startDate.dayOfYear - (84 * (startDate.quarter - 1));
-
-  //print("Test date 1: ${startDate.dayOfYear - (84 * (startDate.quarter - 1))}");
-
-  QuerySnapshot<Map<String, dynamic>> data =
+  QuerySnapshot<Map<String, dynamic>> transactionFields =
       await FirebaseFirestore.instance.collection("field").get();
-  Map<String, dynamic> mapData = {};
-  //print("example data:${data.docs}");
-  data.docs.forEach((element) {
-    mapData[element.data()['name']] = element.data()['name'];
+
+  Map<String, dynamic> transactionFieldsAsMap = {};
+
+  transactionFields.docs.forEach((field) {
+    transactionFieldsAsMap[field.data()['name']] = field.data()['name'];
   });
 
-  List dates = generateDays(
+  List transactionDays = generateDays(
       Jiffy(selectedDateRange.start), Jiffy(selectedDateRange.end));
 
-  var periodicList = await FirebaseFirestore.instance
+  final entity =
+      await FirebaseFirestore.instance.collection('entity').doc(entityId).get();
+
+  final periodicTrnConfigs = await FirebaseFirestore.instance
       .collection('entity')
       .doc(entityId)
       .collection('periodicConfig')
       .get();
 
-  var randomList = await FirebaseFirestore.instance
+  final randomTrnConfigs = await FirebaseFirestore.instance
       .collection('entity')
       .doc(entityId)
       .collection('randomConfig')
       .get();
 
-  var specificList = await FirebaseFirestore.instance
+  final specificTrnConfigs = await FirebaseFirestore.instance
       .collection('entity')
       .doc(entityId)
       .collection('specificConfig')
@@ -56,40 +57,51 @@ Future<List<Map<String, dynamic>>> generate(
   List<Map<String, dynamic>> randMonthList = [];
   List<Map<String, dynamic>> randQuaterList = [];
 
-  /// separate  periodic list periods
-  List<Map<String, dynamic>> weekList =
-      await generateSeparatePeriodicList(periodicList, "Week", 7);
-  List<Map<String, dynamic>> monthList =
-      await generateSeparatePeriodicList(periodicList, "Month", 28);
-  List<Map<String, dynamic>> quaterList =
-      await generateSeparatePeriodicList(periodicList, "Quarter", 84);
+  /// separate periodic list configs into 3 different lists
+  List<Map<String, dynamic>> weeklyTrnConfigs =
+      await extractPeriodicTrnConfigs(periodicTrnConfigs, "week");
+  List<Map<String, dynamic>> monthlyTrnConfigs =
+      await extractPeriodicTrnConfigs(periodicTrnConfigs, "month");
+  print('monthly configs: ${monthlyTrnConfigs}');
+  List<Map<String, dynamic>> quaterlyTrnConfigs =
+      await extractPeriodicTrnConfigs(periodicTrnConfigs, "quarter");
 
   /// separate random List periods
-  randWeekList = await generateSeparateRandomList(randomList, "Week", 7);
-  randMonthList = await generateSeparateRandomList(randomList, "Month", 28);
-  randQuaterList = await generateSeparateRandomList(randomList, "Quarter", 84);
+  randWeekList = await generateSeparateRandomList(randomTrnConfigs, "week", 7);
+  randMonthList =
+      await generateSeparateRandomList(randomTrnConfigs, "month", 28);
+  randQuaterList =
+      await generateSeparateRandomList(randomTrnConfigs, "quarter", 84);
 
   ///* Date loop starts at this point_________
-  for (Jiffy dateIterator in dates) {
+  for (Jiffy currentDay in transactionDays) {
     /// add PeriodicData To List
-    List<Map<String, dynamic>> periodicWeekData = await addPeriodicDataToList(
-        weekList, dateIterator, dateIterator.dateTime.weekday);
-    List<Map<String, dynamic>> periodicMonthData = await addPeriodicDataToList(
-        monthList, dateIterator, dateIterator.dateTime.day);
+    List<Map<String, dynamic>> periodicWeekData =
+        await generatePeriodicTransactions(weeklyTrnConfigs, currentDay,
+            currentDay.dateTime.weekday, entity, 'week');
+    List<Map<String, dynamic>> periodicMonthData =
+        await generatePeriodicTransactions(monthlyTrnConfigs, currentDay,
+            currentDay.dateTime.day, entity, 'month');
     List<Map<String, dynamic>> periodicQuaterData =
-        await addPeriodicDataToList(quaterList, dateIterator, quaterCounter);
+        await generatePeriodicTransactions(quaterlyTrnConfigs, currentDay,
+            dayOfQuarter(currentDay.dateTime), entity, 'quarter');
 
     /// Add random data to the list
     List<Map<String, dynamic>> randomWeekData = await addRandomDataToList(
-        randWeekList, "week", dateIterator, dateIterator.dateTime.weekday);
+        randWeekList, "week", currentDay, currentDay.dateTime.weekday);
     List<Map<String, dynamic>> randomMonthData = await addRandomDataToList(
-        randMonthList, "month", dateIterator, dateIterator.dateTime.day);
+        randMonthList, "month", currentDay, currentDay.dateTime.day);
     List<Map<String, dynamic>> randomQuaterData = await addRandomDataToList(
-        randQuaterList, "quarter", dateIterator, quaterCounter);
+        randQuaterList,
+        "quarter",
+        currentDay,
+        dayOfQuarter(startDate.dateTime));
 
     /// Add specific data to the list
     List<Map<String, dynamic>> specificData =
-        await addSpecificDataToList(specificList.docs, dateIterator);
+        await addSpecificDataToList(specificTrnConfigs.docs, currentDay);
+
+    print('Merging');
 
     /// Merging the list together
     dataList.addAll(periodicWeekData);
@@ -106,55 +118,52 @@ Future<List<Map<String, dynamic>>> generate(
 
     /// DateTime.weekday returns integer number from 1 to 7 , Monday represents 1 and Sunday represents 7.
     /// Have to pick random day for every week/month/quarter
-    /// example: Week 1 jhon drink coffee on monday, teusday, and friday,
-    /// Week 2 jhon drink coffee on monday, wednesday, and sunday.
+    /// example: week 1 jhon drink coffee on monday, teusday, and friday,
+    /// week 2 jhon drink coffee on monday, wednesday, and sunday.
     ///
-    if (dateIterator.dateTime.weekday == 7) {
-      //weekCounter = 1;
-
-      randWeekList = await generateSeparateRandomList(randomList, "Week", 7);
+    if (currentDay.dateTime.weekday == 7) {
+      randWeekList =
+          await generateSeparateRandomList(randomTrnConfigs, "week", 7);
     }
-    if (dateIterator.dateTime.day == 28) {
-      //monthCounter = 1;
-
-      randMonthList = await generateSeparateRandomList(randomList, "Month", 28);
+    if (currentDay.dateTime.day == 28) {
+      randMonthList =
+          await generateSeparateRandomList(randomTrnConfigs, "month", 28);
     }
-    if (quaterCounter == 84) {
-      quaterCounter = 1;
-
+    if (dayOfQuarter(startDate.dateTime) == 84) {
       randQuaterList =
-          await generateSeparateRandomList(randomList, "Quarter", 84);
+          await generateSeparateRandomList(randomTrnConfigs, "quarter", 84);
     }
-    quaterCounter++;
-    // monthCounter++;
-    // weekCounter++;
   }
   return dataList;
 }
 
 /// generate Separate List According to the period in PeriodicList
-generateSeparatePeriodicList(QuerySnapshot<Map<String, dynamic>> periodicList,
-    String period, int dayCount) {
+extractPeriodicTrnConfigs(
+    QuerySnapshot<Map<String, dynamic>> periodicTrnConfigs, String period) {
   List<Map<String, dynamic>> tempPeriodicList = [];
-  periodicList.docs
+  periodicTrnConfigs.docs
       .where((weekEl) => weekEl['period'] == period)
       .forEach((element) {
     var temp = element.data();
     temp['config id'] = element.id;
     tempPeriodicList.add(temp);
   });
-  //print('PeriodicList: ${tempPeriodicList}');
+  print('PeriodicList: ${tempPeriodicList}');
   return tempPeriodicList;
 }
 
 /// generate Separate List According to the period in randomList
 generateSeparateRandomList(QuerySnapshot<Map<String, dynamic>> randomList,
     String period, int dayCount) {
+  print('generate random list...');
   List<Map<String, dynamic>> randPeriodicList = [];
   var random = math.Random();
+
   randomList.docs
       .where((weekEl) => weekEl['period'] == period)
       .forEach((element) {
+    print('generating ${element}...');
+
     List periodArray = [];
     var temp = element.data();
     temp['config id'] = element.id;
@@ -166,34 +175,64 @@ generateSeparateRandomList(QuerySnapshot<Map<String, dynamic>> randomList,
         periodArray.add(randomWeek);
       }
     }
+    print('period array:  ${periodArray}...');
     temp[period.toLowerCase()] = periodArray;
     randPeriodicList.add(temp);
   });
-  //print('randList: ${randPeriodicList}');
+  print('randList: ${randPeriodicList}');
   return randPeriodicList;
 }
 
-addPeriodicDataToList(
-    List<Map<String, dynamic>> configList, Jiffy dateIterator, int Counter) {
+///
+///
+///
+generatePeriodicTransactions(List<Map<String, dynamic>> trnConfigs,
+    Jiffy currentDay, int dayInPeriod, DS entity, String period) {
   List<Map<String, dynamic>> listData = [];
   var random = math.Random();
 
-  configList.where((ele) => ele['day'] == Counter).forEach((configData) {
+  trnConfigs
+      .where((trnConfig) =>
+          trnConfig['day'] == dayInPeriod && trnConfig['period'] == period)
+      .forEach((configData) {
+    print(
+        'generating ${period}-ly transactions for ${currentDay.format(DATE_FORMAT)}, dayInPeriod: ${dayInPeriod} for ${configData}');
+
     Map<String, dynamic> tempMap = {};
     DateTime configDate = DateTime(
-        dateIterator.year,
-        dateIterator.month,
-        dateIterator.date,
+        currentDay.year,
+        currentDay.month,
+        currentDay.date,
         random.nextInt(24),
         random.nextInt(60),
         random.nextInt(3600),
         random.nextInt(3600000));
     tempMap['timestamp'] = configDate;
-    tempMap['dayTime'] =
-        "${dateIterator.format(DATE_FORMAT)}/${dateIterator.EEEE}";
+    tempMap['customer_id'] = entity.id;
+    tempMap['dayTime'] = "${currentDay.format(DATE_FORMAT)}/${currentDay.EEEE}";
     tempMap.addAll(configData);
-    double amount = configData['minAmount'] +
-        random.nextInt(configData['maxAmount'] - configData['minAmount']);
+
+    if (configData['credit'] == true) {
+      tempMap['Rem_Account'] = configData['account'];
+      tempMap['Ben_Account'] = entity.get('account');
+      tempMap['Rem_BSB'] = configData['bsb'];
+      tempMap['Ben_BSB'] = entity.get('bsb');
+      tempMap['Rem_Bank'] = configData['bank'];
+      tempMap['Ben_Bank'] = entity.get('bank');
+    } else {
+      tempMap['Ben_Account'] = configData['account'];
+      tempMap['Rem_Account'] = entity.get('account');
+      tempMap['Ben_BSB'] = configData['bsb'];
+      tempMap['Rem_BSB'] = entity.get('bsb');
+      tempMap['Ben_Bank'] = configData['bank'];
+      tempMap['Rem_Bank'] = entity.get('bank');
+    }
+
+    double amount = configData['minAmount'] == configData['maxAmount']
+        ? configData['minAmount']
+        : configData['minAmount'] +
+            random.nextInt(configData['maxAmount'] - configData['minAmount']);
+
     tempMap['amount'] = amount;
 
     listData.add(tempMap);
@@ -268,13 +307,13 @@ addSpecificDataToList(
 
 addTrnsactionToServer(
     DateTimeRange selectedDateRange, String entityId, WidgetRef ref) async {
-  ref.read(isTranLoading.notifier).value = true;
+  // ref.read(isTranLoading.notifier).value = true;
 
   var batch = FirebaseFirestore.instance.batch();
   var deleteBatch = FirebaseFirestore.instance.batch();
 
   List<Map<String, dynamic>> tranData =
-      await generate(selectedDateRange, entityId);
+      await generateTransactions(selectedDateRange, entityId);
   //print("final data: ${tranData}");
   List<Map<String, dynamic>> commonTranData = [];
   tranData.forEach((elementList) {
@@ -330,7 +369,7 @@ addTrnsactionToServer(
   }
   await batch.commit();
 
-  ref.read(isTranLoading.notifier).value = false;
+  // ref.read(isTranLoading.notifier).value = false;
 }
 
 List<Map<String, dynamic>> calculateBalance(

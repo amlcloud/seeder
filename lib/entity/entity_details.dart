@@ -8,6 +8,7 @@ import 'package:seeder/timeline/timeline.dart';
 
 import '../controls/group.dart';
 import 'data_export_button.dart';
+import 'generate_transactions_button.dart';
 
 final isTranLoading = StateNotifierProvider<GenericStateNotifier<bool>, bool>(
     (ref) => GenericStateNotifier<bool>(false));
@@ -33,23 +34,26 @@ class EntityDetails extends ConsumerWidget {
               Flexible(flex: 1, child: EntityConfig(entityId)),
               Flexible(
                   flex: 3,
-                  child: ref.watch(isTranLoading)
-                      ? Center(
-                          child: Container(
-                            alignment: Alignment(0.0, 0.0),
-                            child: CircularProgressIndicator(),
-                          ),
-                        )
-                      : Column(
-                          children: [
-                            Timeline(entityId),
-                            Expanded(
-                              flex: 10,
-                              child: TransactionList(entityId),
-                            ),
-                            DataExportButton(entityId),
-                          ],
-                        ))
+                  child:
+                      // ref.watch(isTranLoading)
+                      //     ? Center(
+                      //         child: Container(
+                      //           alignment: Alignment(0.0, 0.0),
+                      //           child: CircularProgressIndicator(),
+                      //         ),
+                      //       )
+                      //     :
+                      Column(
+                    children: [
+                      Timeline(entityId),
+                      TransactionsWidget(entityId),
+                      Expanded(
+                        flex: 10,
+                        child: TransactionList(entityId),
+                      ),
+                      DataExportButton(entityId),
+                    ],
+                  ))
             ]))
           ]));
 }
